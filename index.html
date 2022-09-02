@@ -5,54 +5,69 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="shortcut icon" href="  " type="image/x-icon">
+  <link rel="stylesheet" href="build/tailwind.css">
+  <link rel="stylesheet" href="css/header-style.css">
+  <link rel="stylesheet" href="css/home-style.css">
+  <link rel="stylesheet" href="css/footer-style.css">
   <title>Anythingpretty.ng</title>
 </head>
 <body>
-  <div class="app">
+  <div class="app w-screen">
 
-    <div class="banner__discount">
-      <p class="banner__discount__content">
-        5% discount on all orders starting from N20,000.00
-      </p>
-    </div>
+    <div class="header__container">
 
-    <div class="banner__help">
-      <div class="banner__help__links">
-        <a href="#" class="banner__help__link">Shipping</a>
-        <a href="#" class="banner__help__link">Return Policy</a>
-        <a href="#" class="banner__help__link">Size Guide</a>
-        <a href="#" class="banner__help__link">Contact Us</a>
-        <a href="#" class="banner__help__link">FAQ</a>
+      <!-- The announcement banner -->
+      <div class="banner__announcement py-3">
+        <p class="banner__announcement__content mx-auto text-white text-center uppercase flex wrap">
+          5% discount on all orders starting from ₦20,000.00 
+        </p>
       </div>
-    </div>
 
-    <header class="header">
-      <div class="header__content">
-        <div class="header__logo">
-          <a href="#">
-            <img src="" alt="">
-          </a>
-        </div>
-
-        <div>
-          <span>Earrings</span>
-          <span>Necklaces</span>
-          <span>Bracelets</span>
-          <span>Rings</span>
-          <span>Anklets</span>
-        </div>
-
-        <div class="header__links">
-          <a href="" class="favorite__link">
-            <img src="" alt="">
-          </a>
-
-          <a href="" class="cart__link">
-            <img src="" alt="">
-          </a>
+      <!-- The customer care banner -->
+      <div class="banner__help page--width py-3">
+        <!-- py-3 isnt working, why? -->
+        <div class="banner__help__links relative w-full flex justify-between">
+          <a href="#" class="banner__help__link">Shipping</a>
+          <a href="#" class="banner__help__link">Return Policy</a>
+          <a href="#" class="banner__help__link">Size Guide</a>
+          <a href="#" class="banner__help__link">Contact Us</a>
+          <a href="#" class="banner__help__link">FAQ</a>
         </div>
       </div>
-    </header>
+
+      <!-- The main header -->
+      <header class="header page--width py-3">
+        <div class="header__content">
+
+          <!-- The brand logo -->
+          <div class="header__logo">
+            <a href="#">
+              <img src="images/brand.png" alt="">
+            </a>
+          </div>
+
+          <!-- List of items sold by brand -->
+          <div class="brand__items">
+            <span class="brand__item">Earrings</span>
+            <span class="brand__item">Necklaces</span>
+            <span class="brand__item">Bracelets</span>
+            <span class="brand__item">Rings</span>
+            <span class="brand__item">Anklets</span>
+          </div>
+
+          <!--  -->
+          <div class="header__links">
+            <a href="" class="favorite__link">
+              <img src="" alt="">
+            </a>
+
+            <a href="" class="cart__link">
+              <img src="" alt="">
+            </a>
+          </div>
+        </div>
+      </header>
+    </div>
 
     <section class="section__introduction">
       <div>
@@ -79,7 +94,7 @@
           <div class="product__info">
             <p class="product__stock">In Stock●</p>
             <!-- <p class="product__soldout">Sold outv</p> -->
-            <p class="product__price">N,7,550.00</p>
+            <p class="product__price">₦7,550.00</p>
           </div>
 
           <div class="product__options">
@@ -98,12 +113,12 @@
               <img src="" alt="">
             </button>
             <button class="btn__buy">
-              <img src="" alt="">
+              Buy
             </button>
           </div>
         </div>
 
-
+        <!-- add many copies of the product -->
       </div>
     </section>
 
