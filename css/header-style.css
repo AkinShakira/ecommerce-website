@@ -1,0 +1,33 @@
+
+/* Base/Mobile css */
+.app{
+  font-size: 0.75rem;
+}
+
+.banner__announcement {
+  background-color: rgb(216, 164, 142);
+  border-bottom: 0.1rem solid rgb(33, 33, 33);
+}
+
+.banner__announcement__content  {
+  width: max-content;
+  max-width: 90%; 
+}
+
+
+/* .header {
+  background-color: blue;
+} */
+
+
+/* Tablet css */
+@media only screen and (min-width: 450px) {
+
+}
+
+
+
+/* Desktop css */
+@media only screen and (min-width: 960px) {
+
+}
