@@ -14,6 +14,18 @@
   max-width: 90%; 
 }
 
+.banner__help {
+  background-color: rgb(210, 210, 210);
+  padding: 2rem 0;
+}
+
+.banner__help__link  {
+  color: rgb(40, 40, 40)
+}
+
+.banner__help__link:hover  {
+  color: rgb(80, 80, 80)
+}
 
 /* .header {
   background-color: blue;
@@ -22,12 +34,21 @@
 
 /* Tablet css */
 @media only screen and (min-width: 450px) {
+  .banner__help {
+    background-color: rgb(210, 209, 209);
+    font-size: 0.8rem;
+  }
 
+  .banner__help__links  {
+    right: 0;
+    gap: 1.5rem;
+    width: max-content;
+  }
 }
 
 
 
 /* Desktop css */
 @media only screen and (min-width: 960px) {
-
+  
 }

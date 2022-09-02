@@ -1,11 +1,11 @@
 .page--width  {
-  padding: 0 1.5rem;
+  padding: 0 1rem;
 }
 
 /* For Tablets */
 @media only screen and (min-width: 450px) {
   .page--width  {
-  padding: 0 2.5rem;
+  padding: 0 2rem;
   }
 }
 
@@ -13,5 +13,7 @@
 
 /* For Desktop */
 @media only screen and (min-width: 960px) {
-
+   .page--width  {
+    padding: 0 2.5rem;
+  }
 }
