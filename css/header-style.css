@@ -5,8 +5,8 @@
 }
 
 .banner__announcement {
-  background-color: rgb(216, 164, 142);
-  border-bottom: 0.1rem solid rgb(33, 33, 33);
+  background-color: rgb(0, 0, 0);
+  border-bottom: 0.1rem solid rgb(200, 200, 200);
 }
 
 .banner__announcement__content  {
@@ -15,8 +15,9 @@
 }
 
 .banner__help {
-  background-color: rgb(210, 210, 210);
   padding: 2rem 0;
+  background-color: rgb(220, 220, 220);
+  border-bottom: 0.1rem solid rgb(200, 200, 200);
 }
 
 .banner__help__link  {
@@ -28,14 +29,13 @@
 }
 
 /* .header {
-  background-color: blue;
+  background-color: rgb(255, 255, 255);
 } */
 
 
 /* Tablet css */
 @media only screen and (min-width: 450px) {
   .banner__help {
-    background-color: rgb(210, 209, 209);
     font-size: 0.8rem;
   }
 
