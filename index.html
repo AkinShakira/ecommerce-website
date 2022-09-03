@@ -76,32 +76,44 @@
           <span class="brand__item">Rings,</span>
           <span class="brand__item">Anklets and more...</span>
         </div>
-        
+
         <!-- TODO: animate the items - typing animation -->
       </div>
     </section>
 
-    <section class="section__product">
+    <section class="section__product py-10">
       <!-- use grid css here -->
-      <div class="product--list">
+      <div class="product__list page--width">
 
         <div class="product">
-          <img src="" alt="" class="product__image">
+          <!-- product image -->
+          <div class="product__image__container mb-2">
+            <img src="images/product.png" alt="Product Image" class="product__image" >
+          </div>
           <!-- on hover change image src -->
 
-          <p class="product__name"></p>
+          <p class="product__name">destructured chunky rings</p>
 
           <div class="product__info">
-            <p class="product__stock">In Stock●</p>
-            <!-- <p class="product__soldout">Sold outv</p> -->
+            <p class="product__stock__icon product--instock product--soldout"></p>
+            <p class="product__stock__note mr-3">In Stock</p>
+            <!-- <p class="product__soldout">Sold out</p> -->
             <p class="product__price">₦7,550.00</p>
           </div>
 
           <div class="product__options">
-            <div class="product__quantity"></div>
+            <!-- Add a reducer, counter and adder here = - 4 + -->
+            <div class="product__quantity mr-3">
+              4
+            </div>
             <div class="product__variant">
-              <div class="product__colour"></div>
-              <div class="product__size"></div>
+              <div class="product__color">
+                <select name="product__color" id="product__color">
+                  <option value="rosegold">Rosegold</option>
+                  <option value="gold">Gold</option>
+                  <option value="silver">Silver</option>
+                </select>
+              </div>
             </div>
           </div>
 
@@ -117,6 +129,143 @@
             </button>
           </div>
         </div>
+
+        <div class="product">
+          <!-- product image -->
+          <div class="product__image__container mb-2">
+            <img src="images/product.png" alt="Product Image" class="product__image" >
+          </div>
+          <!-- on hover change image src -->
+
+          <p class="product__name">destructured chunky rings</p>
+
+          <div class="product__info">
+            <p class="product__stock__icon product--instock product--soldout"></p>
+            <p class="product__stock__note mr-3">In Stock</p>
+            <!-- <p class="product__soldout">Sold out</p> -->
+            <p class="product__price">₦7,550.00</p>
+          </div>
+
+          <div class="product__options">
+            <!-- Add a reducer, counter and adder here = - 4 + -->
+            <div class="product__quantity mr-3">
+              4
+            </div>
+            <div class="product__variant">
+              <div class="product__color">
+                <select name="product__color" id="product__color">
+                  <option value="rosegold">Rosegold</option>
+                  <option value="gold">Gold</option>
+                  <option value="silver">Silver</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div class="product__actions">
+            <button class="btn__add-favorite">
+              <img src="images/add-favorite.png">
+            </button>
+            <button class="btn__add-cart">
+              <img src="images/add-cart.png" alt="">
+            </button>
+            <button class="btn__buy">
+              Buy
+            </button>
+          </div>
+        </div>
+
+        <div class="product">
+          <!-- product image -->
+          <div class="product__image__container mb-2">
+            <img src="images/product.png" alt="Product Image" class="product__image" >
+          </div>
+          <!-- on hover change image src -->
+
+          <p class="product__name">destructured chunky rings</p>
+
+          <div class="product__info">
+            <p class="product__stock__icon product--instock product--soldout"></p>
+            <p class="product__stock__note mr-3">In Stock</p>
+            <!-- <p class="product__soldout">Sold out</p> -->
+            <p class="product__price">₦7,550.00</p>
+          </div>
+
+          <div class="product__options">
+            <!-- Add a reducer, counter and adder here = - 4 + -->
+            <div class="product__quantity mr-3">
+              4
+            </div>
+            <div class="product__variant">
+              <div class="product__color">
+                <select name="product__color" id="product__color">
+                  <option value="rosegold">Rosegold</option>
+                  <option value="gold">Gold</option>
+                  <option value="silver">Silver</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div class="product__actions">
+            <button class="btn__add-favorite">
+              <img src="images/add-favorite.png">
+            </button>
+            <button class="btn__add-cart">
+              <img src="images/add-cart.png" alt="">
+            </button>
+            <button class="btn__buy">
+              Buy
+            </button>
+          </div>
+        </div>
+
+        <div class="product">
+          <!-- product image -->
+          <div class="product__image__container mb-2">
+            <img src="images/product.png" alt="Product Image" class="product__image" >
+          </div>
+          <!-- on hover change image src -->
+
+          <p class="product__name">destructured chunky rings</p>
+
+          <div class="product__info">
+            <p class="product__stock__icon product--instock product--soldout"></p>
+            <p class="product__stock__note mr-3">In Stock</p>
+            <!-- <p class="product__soldout">Sold out</p> -->
+            <p class="product__price">₦7,550.00</p>
+          </div>
+
+          <div class="product__options">
+            <!-- Add a reducer, counter and adder here = - 4 + -->
+            <div class="product__quantity mr-3">
+              4
+            </div>
+            <div class="product__variant">
+              <div class="product__color">
+                <select name="product__color" id="product__color">
+                  <option value="rosegold">Rosegold</option>
+                  <option value="gold">Gold</option>
+                  <option value="silver">Silver</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div class="product__actions">
+            <button class="btn__add-favorite">
+              <img src="images/add-favorite.png">
+            </button>
+            <button class="btn__add-cart">
+              <img src="images/add-cart.png" alt="">
+            </button>
+            <button class="btn__buy">
+              Buy
+            </button>
+          </div>
+        </div>
+
+         
 
         <!-- add many copies of the product -->
       </div>
@@ -179,3 +328,4 @@
   </div>
 </body>
 </html>
+<!-- Add vertical scroll bar to page -->
