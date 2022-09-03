@@ -1,3 +1,4 @@
+/* Base/Mobile css */
 .page--width  {
   padding: 0 1rem;
 }
@@ -7,18 +8,74 @@
   top: 0;
 }
 
-/* For Tablets */
-@media only screen and (min-width: 450px) {
-  .page--width  {
-  padding: 0 2rem;
-  }
+.section__brand {
+  background-color: black;
+  /* background: fixed url(../images/brand-image-mobile.png) center/cover no-repeat; */
+}
+
+.brand__heading {
+  font-size: 1.5rem;
+}
+
+.brand__item__action  {
+  font-size: 1.2rem;
+}
+
+.brand__items {
+  font-size: 0.8rem;
+  max-width: 70%;
 }
 
 
 
-/* For Desktop */
+
+
+
+
+
+
+
+/* Tablet css */
+@media only screen and (min-width: 450px) {
+  .page--width  {
+  padding: 0 2rem;
+  }
+
+  /* .section__brand {
+    background-image: url(../images/brand-image-tablet.png);
+  } */
+
+  .brand__heading {
+    font-size: 1.8rem;
+  }
+
+  .brand__item__action  {
+    font-size: 1.5rem;
+  }
+
+  .brand__items {
+    font-size: 0.9rem;
+  }
+
+}
+
+
+
+
+
+
+
+
+
+
+/* Desktop css */
 @media only screen and (min-width: 960px) {
    .page--width  {
     padding: 0 2.5rem;
   }
+
+  /* .section__brand {
+    background-image: url(../images/brand-image-desktop.png);
+  } */
+
 }

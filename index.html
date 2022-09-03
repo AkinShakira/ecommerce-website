@@ -12,7 +12,7 @@
   <title>Anythingpretty.ng</title>
 </head>
 <body>
-  <div class="app w-screen">
+  <div class="app w-screen tracking-normal">
 
     <div class="header__container">
 
@@ -41,7 +41,7 @@
           <!-- The brand logo -->
           <div class="header__logo">
             <a href="#">
-              <img src="images/brand.png" alt="Brand Logo" class="">
+              <img src="images/brand-name.png" alt="Brand Logo" class="">
             </a>
           </div>
 
@@ -59,22 +59,25 @@
       </header>
     </div>
 
-    <section class="section__brand">
-      <div>
-        <!-- The image will be the background -->
-        <h1 class="brand__heading">
+    <section class="section__brand py-10">
+      <div class="brand__container page--width mt-10 mb-32 text-white">
+        <!-- The image will be the background-->
+        <!-- TODO: Get images of different sizes for each device type  -->
+        <h1 class="brand__heading pb-2 uppercase font-semibold">
           Affordable Timeless Pieces
         </h1>
         
         <!-- List of items sold by brand -->
-        <div class="brand__items uppercase flex justify-center gap-2">
-          <span class="brand__item__action">Shop</span>
-          <span class="brand__item">Earrings</span>
-          <span class="brand__item">Necklaces</span>
-          <span class="brand__item">Bracelets</span>
-          <span class="brand__item">Rings</span>
+        <div class="brand__items capitalize flex flex-wrap items-baseline gap-1">
+          <span class="brand__item__action font-serif pr-1">Shop</span>
+          <span class="brand__item">Earrings,</span>
+          <span class="brand__item">Necklaces,</span>
+          <span class="brand__item">Bracelets,</span>
+          <span class="brand__item">Rings,</span>
           <span class="brand__item">Anklets and more...</span>
         </div>
+        
+        <!-- TODO: animate the items - typing animation -->
       </div>
     </section>
 
@@ -128,7 +131,7 @@
 
         <div class="footer__logo">
           <a href="">
-            <img src="images/brand.png" alt="">
+            <img src="images/brand-name.png" alt="">
           </a>
         </div>
 
