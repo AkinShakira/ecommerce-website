@@ -35,47 +35,46 @@
       </div>
 
       <!-- The main header -->
-      <header class="header page--width">
-        <div class="header__content py-3">
+      <header class="header sticky page--width">
+        <!-- check on the sticky class -->
+        <div class="header__content py-3 flex justify-between items-center">
           <!-- The brand logo -->
           <div class="header__logo">
             <a href="#">
-              <img src="images/brand.png" alt="">
+              <img src="images/brand.png" alt="Brand Logo" class="">
             </a>
           </div>
 
-          <!-- List of items sold by brand -->
-          <div class="brand__items">
-            <span class="brand__item">Earrings</span>
-            <span class="brand__item">Necklaces</span>
-            <span class="brand__item">Bracelets</span>
-            <span class="brand__item">Rings</span>
-            <span class="brand__item">Anklets</span>
-          </div>
-
-          <!--  -->
-          <div class="header__links">
+          <!-- Links to cart and list of favorites -->
+          <div class="header__links flex gap-3">
             <a href="" class="favorite__link">
-              <img src="" alt="">
+              <img src="images/favorite.png" alt="">
             </a>
 
             <a href="" class="cart__link">
-              <img src="" alt="">
+              <img src="images/cart.png" alt="">
             </a>
           </div>
         </div>
       </header>
     </div>
 
-    <section class="section__introduction">
+    <section class="section__brand">
       <div>
         <!-- The image will be the background -->
-        <h1>
+        <h1 class="brand__heading">
           Affordable Timeless Pieces
         </h1>
-        <p>
-          Shop now
-        </p>
+        
+        <!-- List of items sold by brand -->
+        <div class="brand__items uppercase flex justify-center gap-2">
+          <span class="brand__item__action">Shop</span>
+          <span class="brand__item">Earrings</span>
+          <span class="brand__item">Necklaces</span>
+          <span class="brand__item">Bracelets</span>
+          <span class="brand__item">Rings</span>
+          <span class="brand__item">Anklets and more...</span>
+        </div>
       </div>
     </section>
 
@@ -104,11 +103,11 @@
           </div>
 
           <div class="product__actions">
-            <button class="btn__add-to-favorite">
-              <img src="" alt="">
+            <button class="btn__add-favorite">
+              <img src="images/add-favorite.png">
             </button>
-            <button class="btn__add-to-cart">
-              <img src="" alt="">
+            <button class="btn__add-cart">
+              <img src="images/add-cart.png" alt="">
             </button>
             <button class="btn__buy">
               Buy
@@ -129,7 +128,7 @@
 
         <div class="footer__logo">
           <a href="">
-            <img src="" alt="">
+            <img src="images/brand.png" alt="">
           </a>
         </div>
 

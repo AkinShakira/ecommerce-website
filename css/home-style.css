@@ -2,6 +2,11 @@
   padding: 0 1rem;
 }
 
+.sticky {
+  position: sticky;
+  top: 0;
+}
+
 /* For Tablets */
 @media only screen and (min-width: 450px) {
   .page--width  {
