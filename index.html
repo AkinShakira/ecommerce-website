@@ -41,7 +41,7 @@
         <div class="header__content py-3 flex justify-between items-center">
           <!-- The brand logo -->
           <div class="header__logo">
-            <a href="#">
+            <a href="index.html">
               <img src="images/brand-name.png" alt="Brand Logo">
             </a>
           </div>
@@ -228,8 +228,10 @@
           </div>
           <!-- on hover change image src -->
 
+          <!-- product name -->
           <p class="product__name">destructured chunky rings</p>
 
+          <!-- product price and stock level -->
           <div class="product__info">
             <p class="product__stock__icon product--instock product--soldout"></p>
             <p class="product__stock__note mr-3">In Stock</p>
@@ -237,6 +239,7 @@
             <p class="product__price">₦7,550.00</p>
           </div>
 
+          <!-- product quantity and variant -->
           <div class="product__options">
             <!-- Add a reducer, counter and adder here = - 4 + -->
             <div class="product__quantity">
@@ -254,12 +257,17 @@
           </div>
 
           <div class="product__actions">
+            <!-- add to favorite list button -->
             <button class="btn__add-favorite">
               <img src="images/add-favorite.png">
             </button>
+
+            <!-- add to cart button -->
             <button class="btn__add-cart">
               <img src="images/add-cart.png" alt="">
             </button>
+
+            <!-- buy buttton -->
             <button class="btn__buy">
               Buy
             </button>
@@ -268,20 +276,31 @@
 
          
 
-        <!-- add many copies of the product -->
+        <!-- add more products dynamically with js-->
       </div>
     </section>
 
-    <section class="section__reviews">
+    <section class="section__reviews bg-black text-white py-4">
+      <!-- reveiw slides container -->
+      <div class="slider page--width">
+        <!-- each review slide -->
+        <div class="review__slide slide py-4">
+          <blockquote class="review__body">The accessories are super stylish and minimalist. The earrings I got are lightweight just as advertised.</blockquote>
 
+          <div class="review__footer">
+            <span>Temilade</span>
+            <span>● Lagos, NG</span>
+          </div>
+        </div>
+      </div>
     </section>
 
-    <footer class="footer">
-      <div class="footer__content">
+    <footer class="footer py-10">
+      <div class="footer__content page--width">
 
         <div class="footer__logo">
-          <a href="">
-            <img src="images/brand-name.png" alt="">
+          <a href="index.html">
+            <img src="images/brand-name.png" alt="Brand Image">
           </a>
         </div>
 
