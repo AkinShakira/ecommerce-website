@@ -6,26 +6,27 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="shortcut icon" href="  " type="image/x-icon">
   <link rel="stylesheet" href="build/tailwind.css">
+  <link rel="stylesheet" href="css/app.css">
   <link rel="stylesheet" href="css/header-style.css">
   <link rel="stylesheet" href="css/home-style.css">
   <link rel="stylesheet" href="css/footer-style.css">
   <title>Anythingpretty.ng</title>
 </head>
 <body>
-  <div class="app w-screen tracking-normal">
+  <div class="app">
 
     <div class="header__container">
 
       <!-- The announcement banner -->
-      <div class="banner__announcement py-3">
-        <p class="banner__announcement__content mx-auto text-white text-center uppercase">
+      <div class="banner__announcement">
+        <p class="banner__announcement__content">
           5% discount on all orders starting from ₦20,000.00 
         </p>
       </div>
 
       <!-- The customer care banner -->
-      <div class="banner__help page--width flex justify-end">
-        <div class="banner__help__links w-full py-3 flex justify-between">
+      <div class="banner__help page--width">
+        <div class="banner__help__links w-full py-3 flex flex-wrap justify-between">
           <a href="#" class="banner__help__link">Shipping</a>
           <a href="#" class="banner__help__link">Return Policy</a>
           <a href="#" class="banner__help__link">Size Guide</a>
@@ -41,18 +42,18 @@
           <!-- The brand logo -->
           <div class="header__logo">
             <a href="#">
-              <img src="images/brand-name.png" alt="Brand Logo" class="">
+              <img src="images/brand-name.png" alt="Brand Logo">
             </a>
           </div>
 
           <!-- Links to cart and list of favorites -->
           <div class="header__links flex gap-3">
             <a href="" class="favorite__link">
-              <img src="images/favorite.png" alt="">
+              <img src="images/favorite.png" alt="Favorite List Image">
             </a>
 
             <a href="" class="cart__link">
-              <img src="images/cart.png" alt="">
+              <img src="images/cart.png" alt="Cart Image">
             </a>
           </div>
         </div>
@@ -63,12 +64,12 @@
       <div class="brand__container page--width mt-10 mb-32 text-white">
         <!-- The image will be the background-->
         <!-- TODO: Get images of different sizes for each device type  -->
-        <h1 class="brand__heading pb-2 uppercase font-semibold">
+        <h1 class="brand__heading">
           Affordable Timeless Pieces
         </h1>
         
         <!-- List of items sold by brand -->
-        <div class="brand__items capitalize flex flex-wrap items-baseline gap-1">
+        <div class="brand__items">
           <span class="brand__item__action font-serif pr-1">Shop</span>
           <span class="brand__item">Earrings,</span>
           <span class="brand__item">Necklaces,</span>
@@ -103,7 +104,7 @@
 
           <div class="product__options">
             <!-- Add a reducer, counter and adder here = - 4 + -->
-            <div class="product__quantity mr-3">
+            <div class="product__quantity">
               4
             </div>
             <div class="product__variant">
@@ -148,7 +149,7 @@
 
           <div class="product__options">
             <!-- Add a reducer, counter and adder here = - 4 + -->
-            <div class="product__quantity mr-3">
+            <div class="product__quantity">
               4
             </div>
             <div class="product__variant">
@@ -193,7 +194,7 @@
 
           <div class="product__options">
             <!-- Add a reducer, counter and adder here = - 4 + -->
-            <div class="product__quantity mr-3">
+            <div class="product__quantity">
               4
             </div>
             <div class="product__variant">
@@ -238,7 +239,7 @@
 
           <div class="product__options">
             <!-- Add a reducer, counter and adder here = - 4 + -->
-            <div class="product__quantity mr-3">
+            <div class="product__quantity">
               4
             </div>
             <div class="product__variant">
@@ -272,7 +273,7 @@
     </section>
 
     <section class="section__reviews">
-      
+
     </section>
 
     <footer class="footer">
