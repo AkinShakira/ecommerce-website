@@ -1,14 +1,71 @@
+/* Base/Mobile css */
+.footer__logo {
+  padding-bottom: 0.5rem;
+  margin-bottom: 0.5rem;
+  border-bottom: 0.1rem solid rgb(200, 200, 200);
+}
 
+.footer__logo img {
+  width: 10rem;
+}
 
+.footer__content  {
+  display: flex;
+  flex-direction: column;
+  row-gap: 0.8rem;
+}
 
-/* For Tablets */
-@media only screen and (min-width: 450px) {
+.footer__content, .footer__copyright, .footer__signature   {
+  padding: 0 0.5rem;
+}
 
+.footer__content  {
+  margin-bottom: 2rem;
+}
+
+.footer__heading  {
+  font-size: 1rem;
+  font-weight: 500;
+  margin-bottom: 0.25rem;
+}
+
+.footer__help__links, .footer__social__links {
+  display: flex;
+  flex-direction: column;
+  row-gap: 0.25rem;
+}
+
+.footer__help__link, .footer__social__link  {
+  color: rgb(80, 80, 80)
+}
+
+.footer__help__link:hover, .footer__social__link:hover  {
+  color: rgb(150, 150, 150)
 }
 
 
 
-/* For Desktop */
-@media only screen and (min-width: 960px) {
+.footer__copyright  {
+  font-weight: 500;
+  margin-bottom: 3rem;
+}
 
+
+
+/* Tablet css */
+@media only screen and (min-width: 450px) {
+  .footer__content  {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    column-gap: 1.2rem;
+  }
+}
+
+
+
+/* Desktop css */
+@media only screen and (min-width: 960px) {
+.footer__content  {
+    column-gap: 10rem;
+  }
 }
