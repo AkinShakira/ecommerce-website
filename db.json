@@ -1,5 +1,39 @@
-
+{ "products": [
   {
-    "name": "Damilola",
-    "age": 25
+    "name": "Zoey Ring",
+    "price": 5550,
+    "stock": 10,
+    "variant" : ["Silver", "Gold", "Rosegold"]
+  },
+  {
+    "name": "Sizzle Ring",
+    "price": 4590,
+    "stock": 10,
+    "variant": ["Gold", "Rosegold"]
+  },
+  {
+    "name": "Gemma Zirconium Cuff",
+    "price": 7590,
+    "stock": 10,
+    "variant": ["Silver", "Gold"]
+  },
+  {
+    "name": "Maia Set",
+    "price": 12500,
+    "stock": 10,
+    "variant": ["Silver", "Gold"]
+  },
+  {
+    "name": "Elyse Bracelet",
+    "price": 6500,
+    "stock": 10,
+    "variant": ["Silver", "Gold", "Rosegold"]
+  },
+  {
+    "name": "Aida Minimal Set",
+    "price": 10500,
+    "stock": 10,
+    "variant": ["Silver", "Gold", "Rosegold"]
   }
+]
+ }
