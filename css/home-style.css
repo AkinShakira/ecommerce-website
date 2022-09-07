@@ -34,6 +34,8 @@
   max-width: 70%;
 }
 
+
+/* Product css */
 .product__list  {
   display: grid;
   grid-template-columns: auto;
@@ -81,20 +83,60 @@
   background-color: green;
 }
 
-/* .product--soldout {
+.product--soldout {
   background-color: red;
-} */
+}
 
 .product__options {
+  width: 100%;
   display: flex;
-  column-gap: 0.75rem;
+  justify-content: center;
+  column-gap: 1rem;
   margin-bottom: 0.5rem;
+}
+
+.product__quantity__form {
+  display: flex;
+}
+
+.product__quantity--increment, .product__quantity--decrement  {
+  width: 1.2rem;
+  background-color: rgb(220, 220, 220);
+  text-align: center;
+  font-size: 1rem;
+}
+
+.product__quantity--increment:hover, .product__quantity--decrement:hover  {
+  background-color: rgb(190, 190, 190);
+}
+
+.product__quantity__value {
+  width: 1.5rem;
+  text-align: center;
+}
+
+.product__quantity__value:hover{
+  border: 1px solid black;
+}
+
+.product__color {
+  -webkit-appearance: none; 
+  appearance: none;
+  width: 4rem;
+  text-align: center;
+  border: 2px solid rgb(0, 0, 0); 
+  border-radius: 0.5rem;
+  padding: 0.1rem 0;
+}
+
+.product__color:hover {
+  color: rgb(255, 255, 255);
+  background-color: rgb(0, 0, 0)
 }
 
 .product__actions {
   display: flex;
   gap: 0.8rem;
-
 }
 
 .btn__buy {
@@ -109,6 +151,15 @@
   background-color: rgb(33, 33, 33);
 }
 
+
+
+
+
+
+
+
+
+/* reviews css */
 .review__slide  {
   width: 75%;
   margin: 0 auto;
