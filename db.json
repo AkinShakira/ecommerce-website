@@ -3,36 +3,42 @@
     "name": "Zoey Ring",
     "price": 5550,
     "stock": 10,
+    "imageUrl" : "images/product.png",
     "variant" : ["Silver", "Gold", "Rosegold"]
   },
   {
     "name": "Sizzle Ring",
     "price": 4590,
     "stock": 10,
+    "imageUrl": "images/product.png",
     "variant": ["Gold", "Rosegold"]
   },
   {
     "name": "Gemma Zirconium Cuff",
     "price": 7590,
     "stock": 10,
+    "imageUrl": "images/product.png",
     "variant": ["Silver", "Gold"]
   },
   {
     "name": "Maia Set",
     "price": 12500,
-    "stock": 10,
+    "stock": 0,
+    "imageUrl": "images/product.png",
     "variant": ["Silver", "Gold"]
   },
   {
     "name": "Elyse Bracelet",
     "price": 6500,
     "stock": 10,
+    "imageUrl": "images/product.png",
     "variant": ["Silver", "Gold", "Rosegold"]
   },
   {
     "name": "Aida Minimal Set",
     "price": 10500,
     "stock": 10,
+    "imageUrl": "images/product.png",
     "variant": ["Silver", "Gold", "Rosegold"]
   }
 ]
