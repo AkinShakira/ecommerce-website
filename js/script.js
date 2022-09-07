@@ -48,16 +48,20 @@ function renderProducts(product) {
           </div>
 
           <div class="product__options">
-            <!-- Add a reducer, counter and adder here = - 4 + -->
-            <div class="product__quantity">
-              4
+            <div class="product__quantity__container">
+              <form id="product__quantity__form" class="product__quantity__form" action='#'>
+                <input type="button" value="-" class="product__quantity--decrement"/>
+                <input type="text" name="product__quantity__value" value='1' class="product__quantity__value"/>
+                <input type="button" value="+" class="product__quantity--increment"/>
+              </form>
             </div>
+
             <div class="product__variant">
-              <div class="product__color">
-                <select name="product__color" id="product__color">
-                  ${product.variant.map((option) => renderVariants(option))}               
-                </select>
-              </div>
+              <select name="product__color" class="product__color">
+                  ${product.variant.map((option) =>
+                    renderVariants(option)
+                  )}               
+              </select>
             </div>
           </div>
 
