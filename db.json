@@ -9,7 +9,7 @@
   {
     "name": "Sizzle Ring",
     "price": 4590,
-    "stock": 10,
+    "stock": 8,
     "imageUrl": "images/product.png",
     "variant": ["Gold", "Rosegold"]
   },
@@ -42,4 +42,16 @@
     "variant": ["Silver", "Gold", "Rosegold"]
   }
 ]
+ },
+
+ {
+  "cart":[
+    
+  ]
+ },
+
+  {
+  "favorite":[
+    
+  ]
  }
