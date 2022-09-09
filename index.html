@@ -9,57 +9,56 @@
   <link rel="stylesheet" href="css/app.css">
   <link rel="stylesheet" href="css/header-style.css">
   <link rel="stylesheet" href="css/home-style.css">
+  <link rel="stylesheet" href="css/product.css">
   <link rel="stylesheet" href="css/footer-style.css">
+  <link rel="stylesheet" href="css/error.css">
+  <link rel="stylesheet" href="css/cart.css">
   <script defer src="js/script.js"></script>
   <title>Anythingpretty.ng</title>
 </head>
 <body>
-  <div class="app">
-
-    <div class="header__container">
-
-      <!-- The announcement banner -->
-      <div class="banner__announcement">
-        <p class="banner__announcement__content">
-          5% discount on all orders starting from ₦20,000.00 
-        </p>
-      </div>
-
-      <!-- The customer care banner -->
-      <div class="banner__help page--width">
-        <div class="banner__help__links w-full py-3 flex flex-wrap justify-between">
-          <a href="#" class="banner__help__link">Shipping</a>
-          <a href="#" class="banner__help__link">Return Policy</a>
-          <a href="#" class="banner__help__link">Size Guide</a>
-          <a href="#" class="banner__help__link">Contact Us</a>
-          <a href="#" class="banner__help__link">FAQ</a>
-        </div>
-      </div>
-
-      <!-- The main header -->
-      <header class="header sticky page--width">
-        <!-- check on the sticky class -->
-        <div class="header__content py-3 flex justify-between items-center">
-          <!-- The brand logo -->
-          <div class="header__logo">
-            <a href="index.html">
-              <img src="images/brand-name.png" alt="Brand Logo">
-            </a>
-          </div>
-
-          <!-- Links to cart and list of favorites -->
-          <div class="header__links flex gap-3">
-            <a href="" class="favorite__link">
-              <img src="images/favorite.png" alt="Favorite List Image">
-            </a>
-
-            <a href="" class="cart__link">
-              <img src="images/cart.png" alt="Cart Image">
-            </a>
-          </div>
-        </div>
-      </header>
+  <div class="app relative">
+    <!-- The announcement banner -->
+    <div class="banner__announcement">
+      <p class="banner__announcement__content">
+        5% discount on all orders starting from ₦20,000.00 
+      </p>
     </div>
+
+    <!-- The customer care or help banner -->
+    <div class="banner__help page--width">
+      <div class="banner__help__links w-full py-3 flex flex-wrap justify-between">
+        <a href="#" class="banner__help__link">Shipping</a>
+        <a href="#" class="banner__help__link">Return Policy</a>
+        <a href="#" class="banner__help__link">Size Guide</a>
+        <a href="#" class="banner__help__link">Contact Us</a>
+        <a href="#" class="banner__help__link">FAQ</a>
+      </div>
+    </div>
+
+    <!-- The navigation bar -->
+    <header class="nav nav--sticky page--width">
+      <div class="nav__content py-3 flex justify-between items-center">
+        <!-- The brand logo -->
+        <div class="nav__logo">
+          <a href="index.html">
+            <img src="images/brand-name.png" alt="Brand Logo">
+          </a>
+        </div>
+
+        <!-- Links to cart and list of favorites -->
+        <div class="nav__btns flex gap-3">
+          <button class="btn__favorite">
+            <img src="images/favorite.png" alt="Favorite List Image">
+          </button>
+
+          <button class="btn__cart">
+            <img src="images/cart.png" alt="Cart Image">
+          </button>
+        </div>
+      </div>
+    </header>
+ 
 
     <section class="section__brand py-10">
       <div class="brand__container page--width mt-10 mb-32 text-white">
@@ -162,7 +161,120 @@
         </div>
       </div>
     </footer>
+
+
+    <!-- FOR POP UPS/OVERLAYS -->
+    <!-- OVERLAY -->
+    <div class="overlay hidden absolute w-full top-0 bottom-0 left-0 bg-black bg-opacity-50 z-10"> 
+    </div>
+
+    
+    <!-- CART PAGE -->
+    <div class="cart__page hidden">
+      <div class="cart__container">
+        <div class="cart__heading">
+          <p class="cart__name">
+            Your Cart
+          </p>
+          <button class="btn__cart--clear">
+            Remove all
+          </button>
+        </div>
+
+        <div class="cart__items">
+          <div class="cart__item">
+            <div class="cart__item__image">
+              <img src="images/product.png" alt="Product image">
+            </div>
+
+            <div class="cart__content">
+              <p class="cart__item__name">Maia rings</p>
+
+              <div class="product__quantity__container">
+                <form id="product__quantity__form" class="product__quantity__form" action='#'>
+                  <input type="button" value="-" class="product__quantity--decrement"/>
+                  <input type="number" name="product__quantity__value" min="0" value='1' class="product__quantity__value"/>
+                  <input type="button" value="+" class="product__quantity--increment"/>
+                </form>
+              </div>
+
+              <div class="product__variant">
+                <select name="product__color" class="product__color">
+                  <option value="gold">Gold</option>              
+                  <option value="rosegold">Rosegold</option>              
+                </select>
+              </div>
+
+              <p class="cart__item__price">₦12000 <span>each</span></p>
+
+              <p class="cart__item__total__price"><span>X</span><span class="total__item__quantity">2</span> ₦12000 </p>
+
+              <button class="btn__cart--remove-item">X</button>
+
+            </div>
+          </div>
+
+          <div class="cart__item">
+            <div class="cart__item__image">
+              <img src="images/product.png" alt="Product image">
+            </div>
+
+            <div class="cart__content">
+              <p class="cart__item__name">Maia rings</p>
+
+              <div class="product__quantity__container">
+                <form id="product__quantity__form" class="product__quantity__form" action='#'>
+                  <input type="button" value="-" class="product__quantity--decrement"/>
+                  <input type="number" name="product__quantity__value" min="0" value='1' class="product__quantity__value"/>
+                  <input type="button" value="+" class="product__quantity--increment"/>
+                </form>
+              </div>
+
+              <div class="product__variant">
+                <select name="product__color" class="product__color">
+                  <option value="gold">Gold</option>              
+                  <option value="rosegold">Rosegold</option>              
+                </select>
+              </div>
+
+              <p class="cart__item__price">₦12000 <span>each</span></p>
+
+              <p class="cart__item__total__price"><span>X</span><span class="total__item__quantity">2</span> ₦12000 </p>
+
+              <button class="btn__cart--remove-item">X</button>
+
+            </div>
+          </div>
+        </div>
+
+        <div class="cart__total__container">
+          <div class="cart__total"><span>TOTAL</span> ₦24000 </div>
+        </div>
+      </div>
+
+      <!-- <div class="btn__checkout__container"> -->
+        <button class="btn__checkout">
+          Checkout
+        </button>
+      <!-- </div> -->
+
+
+      <button class="btn__cart--close ">
+        &times;
+      </button>
+        
+    </div>
+    
+    
+    
+    
+    
+    
+    <!-- <button class="btn-close-overlay text-white text-xl absolute top-0 right-2 ">
+      &times;
+    </button>
+         -->
+
   </div>
 </body>
 </html>
-<!-- Add vertical scroll bar to page -->

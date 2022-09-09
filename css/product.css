@@ -13,7 +13,6 @@
   text-align: center;
   padding: 0.5rem 1rem;
   text-transform: capitalize;
-  font-size: 0.8rem;
 }
 
 .product__image {
@@ -23,7 +22,8 @@
 }
 
 .product__name  {
-  font-size: 1rem;
+  /* min-height: 2rem;; */
+  font-size: 0.9rem;
   margin-bottom: 0.4rem;
 }
 
@@ -98,7 +98,7 @@
 
 .product__color:hover {
   color: rgb(255, 255, 255);
-  background-color: rgb(0, 0, 0)
+  background-color: rgb(35, 35, 35);
 }
 
 .product__actions {
@@ -110,22 +110,19 @@
   padding: 0.5rem 1.5rem;
   background-color: rgb(0, 0, 0);
   color: white;
-  border: 1px solid;
   border-radius: 0.5rem;
   font-weight: 600;
 }
 
 .btn__buy:hover{
-  background-color: rgb(255, 255, 255);
-  color: rgb(0, 0, 0);
-  border: 1px solid rgb(0, 0, 0);
+  background-color: rgb(35, 35, 35);
 }
 
-.btn__buy:active{
+/* .btn__buy:active{
   background-color: rgb(0, 0, 0);
   color: white;
   border: 1px solid;
-}
+} */
 
 /* Tablet css */
 @media only screen and (min-width: 450px) {
