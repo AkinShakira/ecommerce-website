@@ -19,10 +19,7 @@
   justify-content: flex-end;
   background-color: rgb(220, 220, 220);
   border-bottom: 0.1rem solid rgb(200, 200, 200);
-}
-
-.banner__help__link  {
-  color: rgb(40, 40, 40)
+  color: rgb(40, 40, 40);
 }
 
 .banner__help__link:hover  {
@@ -32,7 +29,6 @@
 .nav {
   background-color: rgb(255, 255, 255);
   border-bottom: 0.1rem solid rgb(200, 200, 200);
-
 }
 
 .nav__logo img {
@@ -40,7 +36,7 @@
 }
 
 .nav__btns img  {
-  width: 25px;
+  width: 1.5rem;
 }
 
 .nav--sticky {

@@ -43,14 +43,14 @@ function renderProducts(product) {
               product.stock > 0 ? "In Stock" : "Sold Out"
             }</p>
               
-            <p class="product__price">₦${product.price}</p>
+            <p class="product__price">₦${Number(product.price).toLocaleString('en-NG')}</p>
           </div>
 
           <div class="product__options">
             <div class="product__quantity__container">
               <form id="product__quantity__form" class="product__quantity__form" action='#'>
                 <input type="button" value="-" class="product__quantity--decrement"/>
-                <input type="number" name="product__quantity__value" min="0" value='${
+                <input type="text" name="product__quantity__value" value='${
                   product.stock > 0 ? "1" : "0"
                 }' class="product__quantity__value"/>
                 <input type="button" value="+" class="product__quantity--increment"/>
@@ -253,7 +253,6 @@ overlay.addEventListener("click", closeAllOverlay)
 
 // STARTING CONDITIONS
 displayProducts();
-
 
 
 
