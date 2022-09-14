@@ -50,6 +50,10 @@
   background-color: red;
 }
 
+/* .product--disabled  {
+  filter: blur(50%);
+} */
+
 .product__options {
   width: 100%;
   display: flex;

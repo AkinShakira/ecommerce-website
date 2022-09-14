@@ -1,18 +1,27 @@
 /* Base/Mobile css */
 .banner__announcement {
   padding: 0.75rem 0;
+  text-align: left;
   background-color: rgb(0, 0, 0);
   border-bottom: 0.1rem solid rgb(200, 200, 200);
 }
 
 .banner__announcement__content {
-  margin: 0 auto;
+  position: relative;
+  /* margin: 0 auto; */
   color: rgb(255, 255, 255);
   text-transform: uppercase;
-  text-align: center;
-  width: max-content;
-  max-width: 90%; 
+  width: fit-content;
+  animation: banner 10s linear 0s infinite backwards;
 }
+
+@keyframes banner {
+  0% {left: 100%;}
+  25% {left: 50%;}
+  50% {left: 0%;}
+  75% {left: -50%;}
+  100% {left: -100%;}
+} 
 
 .banner__help {
   display: flex;
@@ -39,13 +48,39 @@
   width: 1.5rem;
 }
 
+.btn__cart  {
+  position: relative;
+}
+
+.cart__count  {
+  position: absolute;
+  top: -0.2rem;
+  right: -0.2rem;
+  width: 1rem;
+  height: 1rem;
+  border: 0 solid;
+  border-radius: 100%;
+  background-color: rgb(202, 146, 156);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  font-size: 0.7rem;
+}
+
 .nav--sticky {
   position: sticky;
   top: 0;
 }
 
+
+
+/* fix: The banner animation is too slow on tablets and desktop */
 /* Tablet css */
 @media only screen and (min-width: 450px) {
+  .banner__announcement__content {
+    animation: banner 17s linear -2s infinite backwards;
+  }
+
   .banner__help, .brand__items {
     font-size: 0.8rem;
   }

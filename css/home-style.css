@@ -1,7 +1,12 @@
 /* Base/Mobile css */
 .section__brand {
-  background-color: black;
-  /* background: fixed url(../images/brand-image-mobile.png) center/cover no-repeat; */
+  /* background-color: black; */
+  background: scroll url(../images/brand-image-mobile.jpg) center/cover no-repeat;
+  padding: 1.5rem 0;
+}
+
+.brand__container {
+  margin: 1rem 0 3rem;
 }
 
 .brand__heading {
@@ -54,9 +59,14 @@
 
 /* Tablet css */
 @media only screen and (min-width: 450px) {
-  /* .section__brand {
-    background-image: url(../images/brand-image-tablet.png);
-  } */
+  .section__brand {
+    background-image: url(../images/brand-image-tablet.jpg);
+    padding: 2.5rem 0;
+  }
+
+  .brand__container {
+    margin: 2.5rem 0 8rem;
+  }
 
   .brand__heading {
     font-size: 1.8rem;
@@ -89,8 +99,8 @@
 /* Desktop css */
 @media only screen and (min-width: 960px) {
 
-  /* .section__brand {
-    background-image: url(../images/brand-image-desktop.png);
-  } */
+  .section__brand {
+    background-image: url(../images/brand-image-desktop.jpg);
+  }
 
 }
