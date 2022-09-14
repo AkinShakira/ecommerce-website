@@ -17,11 +17,11 @@
   <title>Anythingpretty.ng</title>
 </head>
 <body>
-  <div class="app relative">
+  <div class="app">
     <!-- The announcement banner -->
     <div class="banner__announcement">
       <p class="banner__announcement__content">
-        5% discount on all orders starting from ₦20,000.00 
+        5% discount on all orders above ₦20,000.00 
       </p>
     </div>
 
@@ -54,16 +54,16 @@
 
           <button class="btn__cart">
             <img src="images/cart.png" alt="Cart Image">
+            <!-- FIX: SCRIPT THIS -->
+            <p class="cart__count">25</p>
           </button>
         </div>
       </div>
     </header>
  
 
-    <section class="section__brand py-10">
-      <div class="brand__container page--width mt-10 mb-32 text-white">
-        <!-- The image will be the background-->
-        <!-- TODO: Get images of different sizes for each device type  -->
+    <section class="section__brand">
+      <div class="brand__container page--width text-white">
         <h1 class="brand__heading">
           Affordable Timeless Pieces
         </h1>
@@ -78,12 +78,11 @@
           <span class="brand__item">Anklets and more...</span>
         </div>
 
-        <!-- TODO: animate the items - typing animation -->
+        <!-- FIX: animate the items - typing animation -->
       </div>
     </section>
 
     <section class="section__product py-10 bg-white text-black">
-      <!-- use grid css here -->
       <div class="product__list page--width">
         <!-- add products dynamically with js-->
         <!-- add products dynamically with js-->
@@ -164,86 +163,94 @@
 
 
     <!-- FOR POP UPS/OVERLAYS -->
+
     <!-- OVERLAY -->
-    <div class="overlay hidden absolute w-full top-0 bottom-0 left-0 bg-black bg-opacity-50 z-10"> 
+    <!-- <div class="overlay hidden absolute w-full top-0 bottom-0 left-0 bg-black bg-opacity-50 z-10">  -->
     </div>
 
-    
     <!-- CART PAGE -->
-    <div class="cart__page hidden">
-      <div class="cart__container">
-        <div class="cart__title__container">
-          <p class="cart__title">
-            Your Cart
-          </p>
-          <button class="btn__cart--clear">
-            Empty Cart
-          </button>
+    <div class="cart__page ">
+      <div class="cart__page__content">
+        <div class="cart__container">
+          <div class="cart__title__container">
+            <p class="cart__title">
+              My Cart
+            </p>
+            <button class="btn__cart--clear">
+              Empty Cart
+            </button>
+          </div>
+
+          <div class="cart__items">
+            <!-- cart items are added here dynamically -->
+            <!-- cart items are added here dynamically -->
+            <!-- cart items are added here dynamically -->
+          </div>
+
         </div>
+        
+        <div class="order__summary">
+          <div class="order__summary__container">
+            <h1 class="order__summary__heading">
+              Order Summary
+            </h1>
 
-        <div class="cart__items">
-
-          <div class="cart__item">
-            <div class="cart__item__image">
-              <img src="images/product.png" alt="Product image">
-            </div>
-
-            <div class="cart__content">
-              <p class="cart__item__name order-1">Maia rings</p>
-
-              <div class="product__quantity__container order-6">
-                <form id="product__quantity__form" class="product__quantity__form" action='#'>
-                  <input type="button" value="-" class="product__quantity--decrement"/>
-                  <input type="number" name="product__quantity__value" min="0" value='1' class="product__quantity__value"/>
-                  <input type="button" value="+" class="product__quantity--increment"/>
-                </form>
+            <div class="price__summary">
+              <div class="cart__subtotal">
+                <span>Subtotal</span> <span class="cart__subtotal__value">00000</span>
               </div>
 
-              <div class="product__variant order-4">
-                <select name="product__color" class="product__color">
-                  <option value="gold">Gold</option>              
-                  <option value="rosegold">Rosegold</option>              
+              <div class="cart__shipping">
+                <span>Shipping</span> <span class="cart__shipping__value">00000</span>
+              </div>
+
+              <div class="shipping__selector__container">
+                <select name="shipping" id="shipping" class="shipping__selector">
+                  <option value="1500" data-price="1500">Lagos Mainland - ₦1,500.00</option>
+                  <option value="2000" data-price="2000">Lagos Island - ₦2,000.00</option>
+                  <option value="2500" data-price="2500">Lagos Outskirts - ₦2,500.00</option>
                 </select>
               </div>
-
-              <div class="cart__item__price order-3">₦120000 <span class="note">each</span></div>
-
-              <div class="cart__item__subtotal order-5"> ₦1200000 <span class="note">Subtotal</span></div>
-
-              <button class="btn__cart--remove-item order-2">X</button>
-
             </div>
-          </div> 
 
+
+            <div class="cart__total">
+              <span class="">TOTAL</span> 
+              <span class="cart__total__value">
+                000000
+              </span>
+            </div>
+                    
+            <button class="btn__checkout">
+              <img src="images/checkout.png" alt="Checkout image">
+              <span class="checkout__note">Checkout</span>
+            </button>
+
+          </div>
         </div>
-
+          
       </div>
-      
-      <div class="cart__total__container">
-        <div class="cart__total">
-          <span class="note">TOTAL</span> 
-            <span class="cart__total__value">
-              000000
-            </span>
-        </div>
-      </div>
-      
-
-      <!-- <div class="btn__checkout__container"> -->
-        <button class="btn__checkout">
-          <img src="images/checkout.png" alt="Checkout image">
-          <span class="checkout__note">Checkout</span>
-        </button>
-      <!-- </div> -->
-
 
       <button class="btn__cart--close ">
         &times;
       </button>
-        
+
     </div>
     <!-- CART END -->
 
+      <!-- FIX: EMPTY CART ALERT -->
+    <div class="cart__page__empty ">
+      <div class="empty__cart__message">
+        <div>
+        You haven't added any item to cart..
+        </div>
+        <img src="" alt="Sad Face">
+      </div>
+    </div>
+
+      <button class="btn__cart--close ">
+        &times;
+      </button>
   </div>
 </body>
 </html>
