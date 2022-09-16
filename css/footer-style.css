@@ -6,7 +6,7 @@
 }
 
 .footer__logo img {
-  width: 10rem;
+  width: 4rem;
 }
 
 .footer__content  {
@@ -54,6 +54,10 @@
 
 /* Tablet css */
 @media only screen and (min-width: 450px) {
+  .footer__logo img {
+    width: 5rem;
+  }
+
   .footer__content  {
     display: grid;
     grid-template-columns: 2fr 1fr 1fr;

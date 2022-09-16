@@ -36,12 +36,13 @@
 }
 
 .nav {
+  z-index: 2;
   background-color: rgb(255, 255, 255);
   border-bottom: 0.1rem solid rgb(200, 200, 200);
 }
 
 .nav__logo img {
-  width: 10rem;
+  width: 7rem;
 }
 
 .nav__btns img  {
@@ -91,9 +92,8 @@
     width: max-content;
   }
 
- .header__logo img {
-    width: 15rem;
+  .nav__logo img {
+    width: 10rem;
   }
-
 }
 

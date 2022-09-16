@@ -34,6 +34,7 @@
 /* reviews css */
 .review__slide  {
   width: 75%;
+  padding: 1rem 0;
   margin: 0 auto;
   text-align: center;
 }
