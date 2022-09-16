@@ -1,6 +1,8 @@
 "use strict";
 // ELEMENT SELECTION
+const app = document.querySelector('.app')
 const productContainer = document.querySelector(".product__list");
+const cartCount = document.querySelector('.cart__count');
 const cartPage = document.querySelector('.cart__page');
 const cartPageContent = document.querySelector(".cart__page__content ");
 const cartPageEmpty = document.querySelector(".cart__page__empty");
@@ -8,7 +10,7 @@ const overlay = document.querySelector(".overlay");
 const cartItemsContainer = document.querySelector(".cart__items")
 const cartTotal = document.querySelector(".cart__total__value")
 const cartSubotal = document.querySelector(".cart__subtotal__value")
-let cartShippingValue = document.querySelector(".cart__shipping__value")
+const cartShippingValue = document.querySelector(".cart__shipping__value")
 const shippingPrice = document.querySelector(".shipping__selector")
 
 
@@ -23,6 +25,10 @@ const btnCloseCart = document.querySelector(".btn__cart--close")
 
 
 // FUNCTIONS
+
+// // //  //
+// PRODUCT RENDERING FUNTIONS
+
 function renderVariants(option) {
   const variant = `<option value="${option}">${option}</option>`
   return variant;
@@ -31,7 +37,9 @@ function renderVariants(option) {
 
 function renderProducts(product) {
   const html = `
-        <div class="product" data-image="${product.imageUrl}" data-name="${product.name}" data-stock="${product.stock}" data-price="${
+        <div class="product" data-id="${product.productID}" data-image="${
+    product.imageUrl
+  }" data-name="${product.name}" data-stock="${product.stock}" data-price="${
     product.price
   }" data-color="" data-quantity="">
           <!-- product image -->
@@ -52,22 +60,35 @@ function renderProducts(product) {
               product.stock > 0 ? "In Stock" : "Sold Out"
             }</p>
               
-            <p class="product__price">${new Intl.NumberFormat("en-Ng", {style: "currency", currency:"NGN"}).format(product.price)}</p>
+            <p class="product__price">${new Intl.NumberFormat("en-Ng", {
+              style: "currency",
+              currency: "NGN",
+            }).format(product.price)}</p>
           </div>
 
           <div class="product__options">
-            <div class="product__quantity__container">
-              <form id="product__quantity__form" class="product__quantity__form" action='#'>
-                <input type="button" value="-" class="product__quantity--decrement"/>
-                <input type="text" name="product__quantity__value" value='${
-                  product.stock > 0 ? "1" : "0"
-                }' class="product__quantity__value"/>
-                <input type="button" value="+" class="product__quantity--increment"/>
+            <div class="product__quantity__container" id="${
+              product.stock > 0 ? "" : "action--disabled"
+            }">
+              <form id="product__quantity__form" class="product__quantity__form" action="#">
+                <input type="button" value="-" class="product__quantity--decrement" id="${
+                  product.stock > 0 ? "" : "action--disabled"
+                }"/>
+                <input type="text" name="product__quantity__value" value="${
+                  product.stock > 0 ? 1 : 0
+                }" class="product__quantity__value" id="${
+    product.stock > 0 ? "" : "action--disabled"
+  }"/>
+                <input type="button" value="+" class="product__quantity--increment" id="${
+                  product.stock > 0 ? "" : "action--disabled"
+                }"/>
               </form>
             </div>
 
-            <div class="product__variant">
-              <select name="product__color" class="product__color">
+            <div class="product__variant" >
+              <select name="product__color" class="product__color" id="${
+                product.stock > 0 ? "" : "action--disabled"
+              }">
                   ${product.variant.map((option) =>
                     renderVariants(option)
                   )}               
@@ -75,7 +96,9 @@ function renderProducts(product) {
             </div>
           </div>
 
-          <div class="product__actions">
+          <div class="product__actions" id="${
+            product.stock > 0 ? "" : "action--disabled"
+          }">
             <button class="btn__add-favorite">
                 <img src="images/add-favorite.png">
             </button>
@@ -88,8 +111,8 @@ function renderProducts(product) {
           </div>
         </div>
       `;
-    productContainer.insertAdjacentHTML("beforeend", html);
-  };
+  productContainer.insertAdjacentHTML("beforeend", html);
+};
 
 async function getProductJson() {
   try {
@@ -102,6 +125,10 @@ async function getProductJson() {
   }
 }
 
+
+
+// // //  //
+// PRODUCT DISPLAY FUNTIONS
 async function displayProducts() {
   try {
     const data = await getProductJson();
@@ -112,15 +139,15 @@ async function displayProducts() {
   }
 }
 
-
+// // //  //
+// PRODUCT OPTION FUNCTIONS
 function pathQuantityChange(event) {
   const parentEl = event.path[1];
   const productEl = event.path[4];
-  const productStockEl = productEl.children[2].children[0];
   const productStock = Number(productEl.dataset.stock);
-  const productQtyEl = parentEl.children[1];
+  const productQtyEl = parentEl.querySelector(".product__quantity__value");
 
-  return {parentEl, productEl, productStockEl, productStock, productQtyEl}
+  return {parentEl, productEl, productStock, productQtyEl}
 }
 
 
@@ -165,33 +192,145 @@ function validateQtyInput(event) {
   }
 }
 
+function changeQtyAttr(event) {
+  if (
+    event.target.className === "product__quantity--decrement" ||
+    event.target.className === "product__quantity--increment"
+  ) {
+    const { productEl, productQtyEl } = pathQuantityChange(event);
+    let productQty = Number(productQtyEl.value);
+    productEl.dataset.quantity = productQty;
+  }
+}
+
+function changeColorAttribute(event) {
+  if (event.target.className === "product__color") {
+    let product = event.path[3];
+    product.dataset.color = event.target.value;
+  }
+}
+
+
+
+// MISC CART FUNCTIONS
+function displayCartCount() {
+  if (cartItemsContainer.childElementCount >= 1) {
+    cartCount.style.display = "block";
+    cartCount.textContent = cartItemsContainer.childElementCount;
+  }
+}
+
 
 function pathCart(event) {
   const productEl = event.path[3];
+  const productId = Number(productEl.dataset.id);
   const productImgSrc = productEl.dataset.image;
   const productName = productEl.dataset.name;
   const productPrice = productEl.dataset.price;
+  const productStock = productEl.dataset.stock;
+  const productColor = productEl.dataset.color;
+  const productQty = productEl.dataset.quantity;
 
-  return {productEl, productImgSrc, productName, productPrice}
+  return {
+    productEl,
+    productId,
+    productImgSrc,
+    productName,
+    productPrice,
+    productStock,
+    productColor
+  };
 }
 
+
+
+// // //  //
+// ADD TO CART FUNCTIONS
+
+function checkIdPresent(event) {
+  const { productId } = pathCart(event);
+  const cartArray = Array.from(cartItemsContainer.children);
+  const cartIDs = cartArray.map((item) => Number(item.dataset.id));
+  const idPresent = cartIDs.includes(productId);
+  return idPresent;
+}
+
+// // FIX: check if cart has same variant
+// function checkIdPresent(event) {
+//   const { productId, productColor } = pathCart(event);
+//   const cartIDs = cartArray.map((item) => Number(item.dataset.id));
+//   const idPresent = cartIDs.includes(productId);
+//   return idPresent;
+// }
+
+// function checkColorPresent(event) {
+//   const { productColor } = pathCart(event);
+//   const cartIs = cartArray.map((item) => Number(item.dataset.id));
+//   const idPresent = cartIDs.includes(productId);
+// }
+
+function noQuantitySelected(event) {
+  const { productEl } = pathCart(event);
+  const selectedProductQty = productEl.querySelector(
+    ".product__quantity__value"
+  ).value;
+  if (Number(selectedProductQty) === 0) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
+function outOfStock(event) {
+  const { productStock } = pathCart(event);
+  if (Number(productStock) === 0) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
+function btnAddToCartHandler(event) {
+  if (event.path[1].className === "btn__add-cart") {
+    const idPresent = checkIdPresent(event);
+    const QuantitySelected = noQuantitySelected(event);
+    const stockOut = outOfStock(event);
+
+    if (idPresent === false && QuantitySelected === false && stockOut === false) {
+      renderCartProduct(event);
+      displayCartCount();
+    }
+  } else {
+    return;
+  }
+}
+
+
+// // //  //
+// CART AND CONTENT RENDERING FUNCTIONS 
 
 function renderCartProduct(event) {
   const {
     productEl,
+    productId,
     productImgSrc,
     productName,
     productPrice,
+    productStock
   } = pathCart(event);
-  
+
   const selectedProductQty = productEl.querySelector(
     ".product__quantity__value"
   ).value;
   const selectedProductColor = productEl.querySelector(".product__color").value;
   productEl.dataset.quantity = selectedProductQty;
   productEl.dataset.color = selectedProductColor;
-  
-  const html = `<div class="cart__item">
+
+  const html = `<div class="cart__item" data-id="${productId}" data-name="${
+    productName
+  }" data-stock="${productStock}" data-price="${
+    productPrice
+  }" data-color="${selectedProductColor}" data-quantity="${selectedProductQty}">
             <div class="cart__item__image">
               <img src="${productImgSrc}" alt="Product image">
             </div>
@@ -202,7 +341,7 @@ function renderCartProduct(event) {
               <div class="product__quantity__container order-6">
                 <form id="product__quantity__form" class="product__quantity__form" action='#'>
                   <input type="button" value="-" class="product__quantity--decrement"/>
-                  <input type="number" name="product__quantity__value" min="0" value='${selectedProductQty}' class="product__quantity__value"/>
+                  <input type="text" name="product__quantity__value" value='${selectedProductQty}' class="product__quantity__value" disabled/>
                   <input type="button" value="+" class="product__quantity--increment"/>
                 </form>
               </div>
@@ -221,12 +360,12 @@ function renderCartProduct(event) {
 
               <p class="cart__item__subtotal order-5" data-subtotal="${
                 productPrice * selectedProductQty
-              }" >${new Intl.NumberFormat("en-Ng", {
+              }" > <span class="cart__item__subtotal__value">${new Intl.NumberFormat("en-Ng", {
     style: "currency",
     currency: "NGN",
   }).format(
     productPrice * selectedProductQty
-  )} <span class="note">Subtotal</span></p>
+  )} </span> <span class="note">Subtotal</span></p>
 
               <button class="btn__cart--remove-item order-2">X</button>
 
@@ -234,8 +373,9 @@ function renderCartProduct(event) {
           </div>`;
   
   cartItemsContainer.insertAdjacentHTML("beforeend", html);
-
 }
+
+
 
 function getShippingPrice() {
   cartShippingValue.textContent = `${new Intl.NumberFormat("en-Ng", {
@@ -245,14 +385,32 @@ function getShippingPrice() {
   return shippingPrice.value;
 }
 
-function calcCartTotal() {
+function calcItemSubtotal () {
   const cartItems = Array.from(
+    document.querySelectorAll(".cart__item")
+  );
+  cartItems.forEach(function (item) {
+    const itemQty = item.dataset.quantity;
+    const itemPrice = item.dataset.price;
+    const itemSubtotal = itemQty * itemPrice;
+    const itemSubtotalEl = item.querySelector(".cart__item__subtotal");
+    itemSubtotalEl.dataset.subtotal = itemSubtotal;
+    const cartItemSubtotalValue = item.querySelector(
+      ".cart__item__subtotal__value"
+    );
+    cartItemSubtotalValue.textContent = new Intl.NumberFormat(
+                "en-Ng", { style: "currency", currency: "NGN" }).format(itemSubtotal)
+  })
+}
+
+function calcCartTotal() {
+  const cartItemsSubtotal = Array.from(
     document.querySelectorAll(".cart__item__subtotal")
   );
 
   const shipping = getShippingPrice();
 
-  const subtotal = cartItems
+  const subtotal = cartItemsSubtotal
     .map(function (item) {
       return +item.dataset.subtotal;
     })
@@ -271,20 +429,18 @@ function calcCartTotal() {
   }).format(subtotal + Number(shipping))}`;
 }
 
-function btnAddToCartHandler(event) {
-  if (event.path[1].className === "btn__add-cart") {
-    renderCartProduct(event)
-  }
-}
+
+// // //  //
+// CART DISPLAY FUNCTIONS
 
 function center(page) {
   page.style.top = `${window.scrollY}px`;
 }
 
-
 function btnDisplayCartHandler() {
+  // FIX: PAGE SCROLL
   // cartPage.style.display = "block";
-console.log(cartItemsContainer.childElementCount);
+  // app.style.overflow = "hidden";
   if (cartItemsContainer.childElementCount >= 1) {
     center(cartPage);
     cartPage.style.display = "block";
@@ -297,11 +453,20 @@ console.log(cartItemsContainer.childElementCount);
 }
 
 
-function closeAllOverlay(){
-  cartPage.style.display = "none"
-  cartPageContent.style.display = "none"
-  cartPageEmpty.style.display = "none"
+// // //  //
+// MODAL FUNCTIONS
+function closeModals() {
+  // app.style.overflow = "auto";
+  cartPage.style.display = "none";
+  cartPageContent.style.display = "none";
+  cartPageEmpty.style.display = "none";
 }
+
+
+
+
+
+
 
 
 
@@ -313,25 +478,56 @@ productContainer.addEventListener("click", function (event) {
 productContainer.addEventListener("click", function (event) {
   btnDecreaseQtyHandler(event);
 });
+productContainer.addEventListener("click", function (event) {
+  changeQtyAttr(event);
+});
 productContainer.addEventListener("input", function (event) {
   validateQtyInput(event);
 });
+productContainer.addEventListener("input", function (event) {
+  changeColorAttribute(event);
+});
+
+
 // 
 productContainer.addEventListener("click", function (event) {
   btnAddToCartHandler(event);
 });
-shippingPrice.addEventListener("input", calcCartTotal)
 
 // 
 btnDisplayCart.addEventListener("click", btnDisplayCartHandler)
-btnCloseCart.addEventListener("click", closeAllOverlay)
-// overlay.addEventListener("click", closeAllOverlay)
+btnCloseCart.addEventListener("click", closeModals)
+// overlay.addEventListener("click", closeModals)
+
+
+//  //  //
+cartItemsContainer.addEventListener("click", function (event) {
+  btnIncreaseQtyHandler(event);
+  btnDecreaseQtyHandler(event);
+  changeQtyAttr(event);
+});
+
+cartItemsContainer.addEventListener("input", function (event) {
+  changeColorAttribute(event);
+});
+
+// shippingPrice.addEventListener("input", calcCartTotal)
+
+cartPage.addEventListener("input", function () {
+  calcItemSubtotal();
+  calcCartTotal()
+});
+cartPage.addEventListener("click", function () {
+  calcItemSubtotal();
+  calcCartTotal()
+});
 
 
 
 
 // STARTING CONDITIONS
 displayProducts();
+displayCartCount();
 
 
 
