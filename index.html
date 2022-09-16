@@ -30,7 +30,7 @@
       <div class="banner__help__links w-full py-3 flex flex-wrap justify-between">
         <a href="#" class="banner__help__link">Shipping</a>
         <a href="#" class="banner__help__link">Return Policy</a>
-        <a href="#" class="banner__help__link">Size Guide</a>
+        <a href="#" class="banner__help__link">Maintenance Guide</a>
         <a href="#" class="banner__help__link">Contact Us</a>
         <a href="#" class="banner__help__link">FAQ</a>
       </div>
@@ -42,7 +42,7 @@
         <!-- The brand logo -->
         <div class="nav__logo">
           <a href="index.html">
-            <img src="images/brand-name.png" alt="Brand Logo">
+            <img src="images/ap-full-logo.jpg" alt="Brand Logo">
           </a>
         </div>
 
@@ -54,8 +54,7 @@
 
           <button class="btn__cart">
             <img src="images/cart.png" alt="Cart Image">
-            <!-- FIX: SCRIPT THIS -->
-            <p class="cart__count">25</p>
+            <p class="cart__count"></p>
           </button>
         </div>
       </div>
@@ -90,11 +89,11 @@
       </div>
     </section>
 
-    <section class="section__reviews bg-black text-white py-4">
+    <section class="section__reviews bg-black text-white py-10">
       <!-- reveiw slides container -->
       <div class="slider page--width">
         <!-- each review slide -->
-        <div class="review__slide slide py-4">
+        <div class="review__slide slide">
           <blockquote class="review__body">The accessories are super stylish and minimalist. The earrings I got are lightweight just as advertised.</blockquote>
 
           <div class="review__footer">
@@ -111,7 +110,7 @@
         <!-- footer logo -->
         <div class="footer__logo">
         <a href="index.html">
-          <img src="images/brand-name.png" alt="Brand Image">
+          <img src="images/ap-logo.jpg" alt="Brand Image">
         </a>
         </div>
 
@@ -132,7 +131,7 @@
             <div class="footer__help__links">
               <a href="#" class="footer__help__link help__link">Shipping</a>
               <a href="#" class="footer__help__link help__link">Return Policy</a>
-              <a href="#" class="footer__help__link help__link">Size Guide</a>
+              <a href="#" class="footer__help__link help__link">Maintenance Guide</a>
               <a href="#" class="footer__help__link help__link">Contact Us</a>
               <a href="#" class="footer__help__link help__link">FAQ</a>
             </div>
@@ -206,6 +205,7 @@
 
               <div class="shipping__selector__container">
                 <select name="shipping" id="shipping" class="shipping__selector">
+                  <option value="0" data-price="0">Select A Shipping Destination</option>
                   <option value="1500" data-price="1500">Lagos Mainland - ₦1,500.00</option>
                   <option value="2000" data-price="2000">Lagos Island - ₦2,000.00</option>
                   <option value="2500" data-price="2500">Lagos Outskirts - ₦2,500.00</option>
@@ -246,11 +246,11 @@
         </div>
         <img src="" alt="Sad Face">
       </div>
-    </div>
 
       <button class="btn__cart--close ">
         &times;
       </button>
+    </div>
   </div>
 </body>
 </html>
