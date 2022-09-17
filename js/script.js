@@ -19,13 +19,20 @@ const btnAddToCart =document.querySelector(".btn__add-cart")
 const btnAddToFavorites =document.querySelector(".btn__add-favorite")
 const btnDisplayCart = document.querySelector(".btn__cart")
 const btnDisplayFavorites = document.querySelector(".btn__favorite")
+const btnClearCart = document.querySelector(".btn__cart--clear");
 const btnCloseCart = document.querySelector(".btn__cart--close")
 
 
 
 
-// FUNCTIONS
 
+// STARTING CONDITIONS
+displayProducts();
+displayCartCount();
+
+
+
+// FUNCTIONS
 // // //  //
 // PRODUCT RENDERING FUNTIONS
 
@@ -217,6 +224,8 @@ function displayCartCount() {
   if (cartItemsContainer.childElementCount >= 1) {
     cartCount.style.display = "block";
     cartCount.textContent = cartItemsContainer.childElementCount;
+  } else {
+    cartCount.style.display = "none";
   }
 }
 
@@ -375,8 +384,6 @@ function renderCartProduct(event) {
   cartItemsContainer.insertAdjacentHTML("beforeend", html);
 }
 
-
-
 function getShippingPrice() {
   cartShippingValue.textContent = `${new Intl.NumberFormat("en-Ng", {
     style: "currency",
@@ -453,6 +460,29 @@ function btnDisplayCartHandler() {
 }
 
 
+// CART ACTIONS
+function deleteCartItem(event) {
+  if (event.target.className === "btn__cart--remove-item order-2") {
+    const item = event.path[2];
+    item.remove();
+    calcItemSubtotal();
+    calcCartTotal();
+    displayCartCount();
+  }
+}
+
+function clearCart() {
+  const itemsContainer = Array.from(cartItemsContainer.children);
+  itemsContainer.forEach(function (item) {
+    item.remove();
+  })
+  calcItemSubtotal();
+  calcCartTotal();
+  displayCartCount();
+}
+  
+  
+
 // // //  //
 // MODAL FUNCTIONS
 function closeModals() {
@@ -472,35 +502,27 @@ function closeModals() {
 
 
 // EVENT LISTENERS
+// HOME/PRODUCT PAGE
 productContainer.addEventListener("click", function (event) {
   btnIncreaseQtyHandler(event);
-});
-productContainer.addEventListener("click", function (event) {
   btnDecreaseQtyHandler(event);
-});
-productContainer.addEventListener("click", function (event) {
+  btnAddToCartHandler(event);
   changeQtyAttr(event);
 });
+
 productContainer.addEventListener("input", function (event) {
-  validateQtyInput(event);
-});
-productContainer.addEventListener("input", function (event) {
+  validateQtyInput(event)
   changeColorAttribute(event);
 });
 
 
-// 
-productContainer.addEventListener("click", function (event) {
-  btnAddToCartHandler(event);
-});
-
-// 
+// MODALS
 btnDisplayCart.addEventListener("click", btnDisplayCartHandler)
 btnCloseCart.addEventListener("click", closeModals)
 // overlay.addEventListener("click", closeModals)
 
 
-//  //  //
+// CART PAGE
 cartItemsContainer.addEventListener("click", function (event) {
   btnIncreaseQtyHandler(event);
   btnDecreaseQtyHandler(event);
@@ -511,78 +533,15 @@ cartItemsContainer.addEventListener("input", function (event) {
   changeColorAttribute(event);
 });
 
-// shippingPrice.addEventListener("input", calcCartTotal)
+cartPage.addEventListener("click", function (event) {
+  calcItemSubtotal();
+  calcCartTotal();
+  deleteCartItem(event);
+});
 
 cartPage.addEventListener("input", function () {
   calcItemSubtotal();
-  calcCartTotal()
-});
-cartPage.addEventListener("click", function () {
-  calcItemSubtotal();
-  calcCartTotal()
-});
+  calcCartTotal();
+})
 
-
-
-
-// STARTING CONDITIONS
-displayProducts();
-displayCartCount();
-
-
-
-
-// <div class="cart__item">
-//             <div class="cart__item__image">
-//               <img src="" alt="">
-//             </div>
-
-//             <p class="cart__item__name"> </p>
-
-//             <div class="product__quantity__container">
-//               <form id="product__quantity__form" class="product__quantity__form" action='#'>
-//                 <input type="button" value="-" class="product__quantity--decrement"/>
-//                 <input type="number" name="product__quantity__value" min="0" value='${
-//                   product.stock > 0 ? "1" : "0"
-//                 }' class="product__quantity__value"/>
-//                 <input type="button" value="+" class="product__quantity--increment"/>
-//               </form>
-//             </div>
-
-//             <div class="product__variant">
-//               <select name="product__color" class="product__color">
-//                   ${product.variant.map((option) =>
-//                     renderVariants(option)
-//                   )}
-//               </select>
-//             </div>
-
-//             <button class="btn__cart--remove-item"></button>
-
-//             <p class="cart__item__price">₦${product.price}</p>
-
-//           </div>
-
-
-
-// const imageLoader = function (entries, observer) {
-//   const [entry] = entries;
-
-//   if (!entry.isIntersecting) return;
-//   entry.target.src = entry.target.dataset.src;
-//   entry.target.addEventListener("load", function () {
-//     entry.target.classList.remove("lazy-img");
-//   });
-//   observer.unobserve(entry.target);
-// };
-
-
-
-// const imageObsOptions = {
-//   root: null,
-//   threshold: 0,
-//   rootMargin: "200px",
-// };
-
-// const imageObserver = new IntersectionObserver(imageLoader, imageObsOptions);
-// featuresImages.forEach((image) => imageObserver.observe(image));
+btnClearCart.addEventListener("click", clearCart)
