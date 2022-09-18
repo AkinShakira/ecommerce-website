@@ -28,7 +28,7 @@ const btnCloseCart = document.querySelector(".btn__cart--close")
 
 // STARTING CONDITIONS
 displayProducts();
-displayCartCount();
+renderCartStorage();
 
 
 
@@ -304,13 +304,27 @@ function btnAddToCartHandler(event) {
       QuantitySelected === false &&
       stockOut === false
     ) {
-      renderCartProduct(event);
+      const cartItem = renderCartProduct(event);
       displayCartCount();
+      // clickcounter();
+      addCartItemLocalStorage(event, cartItem)
     }
   } else {
     return;
   }
 }
+
+// function clickcounter() {
+//   if (localStorage.clickcount) {
+//     localStorage.clickcount = Number(localStorage.clickcount) + 1
+//   } else {
+//     localStorage.clickcount = 1;
+//   }
+
+//   console.log(localStorage.clickcount)
+// }
+
+
 
 
 // // //  //
@@ -380,6 +394,8 @@ function renderCartProduct(event) {
           </div>`;
   
   cartItemsContainer.insertAdjacentHTML("beforeend", html);
+
+  return html;
 }
 
 function getShippingPrice() {
@@ -462,7 +478,9 @@ function btnDisplayCartHandler() {
 function deleteCartItem(event) {
   if (event.target.className === "btn__cart--remove-item order-2") {
     const item = event.path[2];
+
     item.remove();
+    delCartItemLocalStorage(event);
     calcItemSubtotal();
     calcCartTotal();
     displayCartCount();
@@ -477,9 +495,29 @@ function clearCart() {
   calcItemSubtotal();
   calcCartTotal();
   displayCartCount();
+  localStorage.clear();
 }
   
-  
+
+// STORAGE FUNCTIONS
+function addCartItemLocalStorage(event, item) {
+  const { productId } = pathCart(event);
+  localStorage.setItem(`${productId}`, item);
+}
+
+
+function delCartItemLocalStorage(event) {
+  const { productId } = pathCart(event);
+  localStorage.removeItem(`${productId}`);
+}
+
+function renderCartStorage() {
+  const cartStorage = Object.values(localStorage);
+  cartStorage.forEach(function (item) {
+    cartItemsContainer.insertAdjacentHTML("beforeend", item)
+  })
+  displayCartCount();
+}
 
 // // //  //
 // MODAL FUNCTIONS
