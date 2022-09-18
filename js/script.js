@@ -6,7 +6,7 @@ const cartCount = document.querySelector('.cart__count');
 const cartPage = document.querySelector('.cart__page');
 const cartPageContent = document.querySelector(".cart__page__content ");
 const cartPageEmpty = document.querySelector(".cart__page__empty");
-const overlay = document.querySelector(".overlay");
+// const overlay = document.querySelector(".overlay");
 const cartItemsContainer = document.querySelector(".cart__items")
 const cartTotal = document.querySelector(".cart__total__value")
 const cartSubotal = document.querySelector(".cart__subtotal__value")
@@ -18,7 +18,7 @@ const shippingPrice = document.querySelector(".shipping__selector")
 const btnAddToCart =document.querySelector(".btn__add-cart")
 const btnAddToFavorites =document.querySelector(".btn__add-favorite")
 const btnDisplayCart = document.querySelector(".btn__cart")
-const btnDisplayFavorites = document.querySelector(".btn__favorite")
+// const btnDisplayFavorites = document.querySelector(".btn__favorite")
 const btnClearCart = document.querySelector(".btn__cart--clear");
 const btnCloseCart = document.querySelector(".btn__cart--close")
 
@@ -106,14 +106,9 @@ function renderProducts(product) {
           <div class="product__actions" id="${
             product.stock > 0 ? "" : "action--disabled"
           }">
-            <button class="btn__add-favorite">
-                <img src="images/add-favorite.png">
-            </button>
             <button class="btn__add-cart">
-                <img src="images/add-cart.png" alt="">
-            </button>
-            <button class="btn__buy">
-                Buy
+              <img src="images/add-to-cart.png" alt="Add To Cart">
+              <span> Add To Bag </span>
             </button>
           </div>
         </div>
@@ -231,15 +226,14 @@ function displayCartCount() {
 
 
 function pathCart(event) {
-  const productEl = event.path[3];
+  const productEl = event.path[2];
   const productId = Number(productEl.dataset.id);
   const productImgSrc = productEl.dataset.image;
   const productName = productEl.dataset.name;
   const productPrice = productEl.dataset.price;
   const productStock = productEl.dataset.stock;
   const productColor = productEl.dataset.color;
-  const productQty = productEl.dataset.quantity;
-
+  
   return {
     productEl,
     productId,
@@ -300,12 +294,16 @@ function outOfStock(event) {
 }
 
 function btnAddToCartHandler(event) {
-  if (event.path[1].className === "btn__add-cart") {
+  if (event.target.className === "btn__add-cart") {
     const idPresent = checkIdPresent(event);
     const QuantitySelected = noQuantitySelected(event);
     const stockOut = outOfStock(event);
 
-    if (idPresent === false && QuantitySelected === false && stockOut === false) {
+    if (
+      idPresent === false &&
+      QuantitySelected === false &&
+      stockOut === false
+    ) {
       renderCartProduct(event);
       displayCartCount();
     }
