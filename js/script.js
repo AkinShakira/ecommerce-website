@@ -202,6 +202,9 @@ function changeQtyAttr(event) {
     const { productEl, productQtyEl } = pathQuantityChange(event);
     let productQty = Number(productQtyEl.value);
     productEl.dataset.quantity = productQty;
+    return true;
+  } else {
+    return false;
   }
 }
 
@@ -225,15 +228,14 @@ function displayCartCount() {
 }
 
 
-function pathCart(event) {
-  const productEl = event.path[2];
+function pathProductToCart(event) {
+  const productEl = event.target.closest(".product");
   const productId = Number(productEl.dataset.id);
   const productImgSrc = productEl.dataset.image;
   const productName = productEl.dataset.name;
   const productPrice = productEl.dataset.price;
   const productStock = productEl.dataset.stock;
   const productColor = productEl.dataset.color;
-  
   return {
     productEl,
     productId,
@@ -246,12 +248,34 @@ function pathCart(event) {
 }
 
 
+function pathInCart(event) {
+  const cartItem = event.target.closest(".cart__item");
+  const cartId = Number(cartItem.dataset.id);
+  const cartItemImgSrc = cartItem.dataset.image;
+  const cartItemName = cartItem.dataset.name;
+  const cartItemPrice = cartItem.dataset.price;
+  const cartItemStock = cartItem.dataset.stock;
+  const cartItemColor = cartItem.dataset.color;
+  const cartItemQty = cartItem.dataset.quantity;
+
+  return {
+    cartItem,
+    cartId,
+    cartItemImgSrc,
+    cartItemName,
+    cartItemPrice,
+    cartItemStock,
+    cartItemColor,
+    cartItemQty
+  };
+}
+
 
 // // //  //
 // ADD TO CART FUNCTIONS
 
 function checkIdPresent(event) {
-  const { productId } = pathCart(event);
+  const { productId } = pathProductToCart(event);
   const cartArray = Array.from(cartItemsContainer.children);
   const cartIDs = cartArray.map((item) => Number(item.dataset.id));
   const idPresent = cartIDs.includes(productId);
@@ -260,20 +284,20 @@ function checkIdPresent(event) {
 
 // // FIX: check if cart has same variant
 // function checkIdPresent(event) {
-//   const { productId, productColor } = pathCart(event);
+//   const { productId, productColor } = pathProductToCart(event);
 //   const cartIDs = cartArray.map((item) => Number(item.dataset.id));
 //   const idPresent = cartIDs.includes(productId);
 //   return idPresent;
 // }
 
 // function checkColorPresent(event) {
-//   const { productColor } = pathCart(event);
+//   const { productColor } = pathProductToCart(event);
 //   const cartIs = cartArray.map((item) => Number(item.dataset.id));
 //   const idPresent = cartIDs.includes(productId);
 // }
 
 function noQuantitySelected(event) {
-  const { productEl } = pathCart(event);
+  const { productEl } = pathProductToCart(event);
   const selectedProductQty = productEl.querySelector(
     ".product__quantity__value"
   ).value;
@@ -285,7 +309,7 @@ function noQuantitySelected(event) {
 }
 
 function outOfStock(event) {
-  const { productStock } = pathCart(event);
+  const { productStock } = pathProductToCart(event);
   if (Number(productStock) === 0) {
     return true;
   } else {
@@ -306,7 +330,6 @@ function btnAddToCartHandler(event) {
     ) {
       const cartItem = renderCartProduct(event);
       displayCartCount();
-      // clickcounter();
       addCartItemLocalStorage(event, cartItem)
     }
   } else {
@@ -314,55 +337,25 @@ function btnAddToCartHandler(event) {
   }
 }
 
-// function clickcounter() {
-//   if (localStorage.clickcount) {
-//     localStorage.clickcount = Number(localStorage.clickcount) + 1
-//   } else {
-//     localStorage.clickcount = 1;
-//   }
-
-//   console.log(localStorage.clickcount)
-// }
-
 
 
 
 // // //  //
-// CART AND CONTENT RENDERING FUNCTIONS 
+// CART AND CONTENT RENDERING FUNCTIONS
 
-function renderCartProduct(event) {
-  const {
-    productEl,
-    productId,
-    productImgSrc,
-    productName,
-    productPrice,
-    productStock
-  } = pathCart(event);
-
-  const selectedProductQty = productEl.querySelector(
-    ".product__quantity__value"
-  ).value;
-  const selectedProductColor = productEl.querySelector(".product__color").value;
-  productEl.dataset.quantity = selectedProductQty;
-  productEl.dataset.color = selectedProductColor;
-
-  const html = `<div class="cart__item" data-id="${productId}" data-name="${
-    productName
-  }" data-stock="${productStock}" data-price="${
-    productPrice
-  }" data-color="${selectedProductColor}" data-quantity="${selectedProductQty}">
+function createCartItemHtml(id, name, stock, price, color, quantity, img) {
+  const html = `<div class="cart__item" data-id="${id}" data-name="${name}" data-stock="${stock}" data-price="${price}" data-color="${color}" data-quantity="${quantity}" data-image="${img}">
             <div class="cart__item__image">
-              <img src="${productImgSrc}" alt="Product image">
+              <img src="${img}" alt="Product image">
             </div>
 
             <div class="cart__content">
-              <p class="cart__item__name order-1">${productName}</p>
+              <p class="cart__item__name order-1">${name}</p>
 
               <div class="product__quantity__container order-6">
                 <form id="product__quantity__form" class="product__quantity__form" action='#'>
                   <input type="button" value="-" class="product__quantity--decrement"/>
-                  <input type="text" name="product__quantity__value" value='${selectedProductQty}' class="product__quantity__value" disabled/>
+                  <input type="text" name="product__quantity__value" value='${quantity}' class="product__quantity__value" disabled/>
                   <input type="button" value="+" class="product__quantity--increment"/>
                 </form>
               </div>
@@ -377,24 +370,47 @@ function renderCartProduct(event) {
               <p class="cart__item__price order-3">${new Intl.NumberFormat(
                 "en-Ng",
                 { style: "currency", currency: "NGN" }
-              ).format(productPrice)} <span class="note">each</span></p>
+              ).format(price)} <span class="note">each</span></p>
 
               <p class="cart__item__subtotal order-5" data-subtotal="${
-                productPrice * selectedProductQty
-              }" > <span class="cart__item__subtotal__value">${new Intl.NumberFormat("en-Ng", {
-    style: "currency",
-    currency: "NGN",
-  }).format(
-    productPrice * selectedProductQty
+                price * quantity
+              }" > <span class="cart__item__subtotal__value">${new Intl.NumberFormat(
+    "en-Ng",
+    {
+      style: "currency",
+      currency: "NGN",
+    }
+  ).format(
+    price * quantity
   )} </span> <span class="note">Subtotal</span></p>
 
               <button class="btn__cart--remove-item order-2">X</button>
 
             </div>
           </div>`;
-  
-  cartItemsContainer.insertAdjacentHTML("beforeend", html);
 
+  return html;
+}
+
+function renderCartProduct(event) {
+  const {
+    productEl,
+    productId,
+    productImgSrc,
+    productName,
+    productPrice,
+    productStock
+  } = pathProductToCart(event);
+
+  const selectedProductQty = productEl.querySelector(
+    ".product__quantity__value"
+  ).value;
+  const selectedProductColor = productEl.querySelector(".product__color").value;
+  productEl.dataset.quantity = selectedProductQty;
+  productEl.dataset.color = selectedProductColor;
+  
+  const html = createCartItemHtml(productId, productName, productStock, productPrice, selectedProductColor, selectedProductQty, productImgSrc);
+  cartItemsContainer.insertAdjacentHTML("beforeend", html);
   return html;
 }
 
@@ -477,9 +493,9 @@ function btnDisplayCartHandler() {
 // CART ACTIONS
 function deleteCartItem(event) {
   if (event.target.className === "btn__cart--remove-item order-2") {
-    const item = event.path[2];
+    const {cartItem} = pathInCart(event)
 
-    item.remove();
+    cartItem.remove();
     delCartItemLocalStorage(event);
     calcItemSubtotal();
     calcCartTotal();
@@ -499,18 +515,20 @@ function clearCart() {
 }
   
 
-// STORAGE FUNCTIONS
+// CART STORAGE FUNCTIONS
+// USED THE PRODUCT TO CART PATH HERE BECAUSE THIS ACTION ACTUALLY HAPPENS ON THE PRODUCT PAGE BEFORE THE ITEM IS IN CART
 function addCartItemLocalStorage(event, item) {
-  const { productId } = pathCart(event);
+  const { productId } = pathProductToCart(event);
   localStorage.setItem(`${productId}`, item);
 }
 
-
+// USED THE IN CART PATH BECAUSE THE ITEM IS IN CART NOW AND THE ACTION OCCURS IN THE CART 
 function delCartItemLocalStorage(event) {
-  const { productId } = pathCart(event);
-  localStorage.removeItem(`${productId}`);
+  const { cartId } = pathInCart(event);
+  localStorage.removeItem(`${cartId}`);
 }
 
+// THIS WILL RENDER THE LOCALLY STORED CART ITEMS IN THE UI
 function renderCartStorage() {
   const cartStorage = Object.values(localStorage);
   cartStorage.forEach(function (item) {
@@ -518,6 +536,29 @@ function renderCartStorage() {
   })
   displayCartCount();
 }
+
+// THIS WILL UPDATE THE STORED CART ITEMS UPON CHANGES TO QUANTITY AND VARIANT IN THE CART
+function updateCartStorage(event) {
+  const update = changeQtyAttr(event);
+  const { cartItem,
+    cartId,
+    cartItemImgSrc,
+    cartItemName,
+    cartItemPrice,
+    cartItemStock,
+    cartItemColor,
+    cartItemQty } = pathInCart(event);
+  
+  if (update === true) {
+  const updatedItem = createCartItemHtml(cartId, cartItemName, cartItemStock, cartItemPrice, cartItemColor, cartItemQty, cartItemImgSrc)    
+    localStorage.setItem(`${cartId}`, updatedItem);
+  } else {
+    return;
+  }
+}
+
+
+
 
 // // //  //
 // MODAL FUNCTIONS
@@ -562,7 +603,7 @@ btnCloseCart.addEventListener("click", closeModals)
 cartItemsContainer.addEventListener("click", function (event) {
   btnIncreaseQtyHandler(event);
   btnDecreaseQtyHandler(event);
-  changeQtyAttr(event);
+  updateCartStorage(event);
 });
 
 cartItemsContainer.addEventListener("input", function (event) {
