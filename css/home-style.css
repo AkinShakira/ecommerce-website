@@ -32,7 +32,19 @@
 
 
 /* reviews css */
+/* .slider {
+  display: flex;
+  width: 300%;
+  justify-content: space-around;
+  align-items: center;
+  overflow-x: hidden;
+  border: 1px solid red;
+
+} */
+
 .review__slide  {
+  /* border: 1px solid red; */
+  position: relative;
   width: 75%;
   padding: 1rem 0;
   margin: 0 auto;
@@ -54,6 +66,17 @@
   column-gap: 0.5rem;
 }
 
+.slide--1 {
+  left: 0%;
+}
+
+.slide--2 {
+  left: 100%;
+}
+
+.slide--3 {
+  left: 200%;
+}
 
 
 
