@@ -579,7 +579,6 @@ function closeModals() {
 // SLIDER FUNCTIONS
 let curSlide = 0;
 const maxSlides = reviewSlides.length;
-console.log(maxSlides);
 
 function goToSlide(slide) {
   reviewSlides.forEach(function (s, i) {
