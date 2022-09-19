@@ -7,11 +7,13 @@ const cartPage = document.querySelector('.cart__page');
 const cartPageContent = document.querySelector(".cart__page__content ");
 const cartPageEmpty = document.querySelector(".cart__page__empty");
 // const overlay = document.querySelector(".overlay");
-const cartItemsContainer = document.querySelector(".cart__items")
-const cartTotal = document.querySelector(".cart__total__value")
-const cartSubotal = document.querySelector(".cart__subtotal__value")
-const cartShippingValue = document.querySelector(".cart__shipping__value")
-const shippingPrice = document.querySelector(".shipping__selector")
+const cartItemsContainer = document.querySelector(".cart__items");
+const cartTotal = document.querySelector(".cart__total__value");
+const cartSubotal = document.querySelector(".cart__subtotal__value");
+const cartShippingValue = document.querySelector(".cart__shipping__value");
+const shippingPrice = document.querySelector(".shipping__selector");
+const reviewSlides = document.querySelectorAll(".slide");
+
 
 
 // BUTTONS SELECTION
@@ -21,7 +23,8 @@ const btnDisplayCart = document.querySelector(".btn__cart")
 // const btnDisplayFavorites = document.querySelector(".btn__favorite")
 const btnClearCart = document.querySelector(".btn__cart--clear");
 const btnCloseCart = document.querySelector(".btn__cart--close")
-
+const btnPrevSlide = document.querySelector(".slider__btn--left");
+const btnNextSlide = document.querySelector(".slider__btn--right");
 
 
 
@@ -29,6 +32,8 @@ const btnCloseCart = document.querySelector(".btn__cart--close")
 // STARTING CONDITIONS
 displayProducts();
 renderCartStorage();
+// slider();
+goToSlide(0);
 
 
 
@@ -571,6 +576,38 @@ function closeModals() {
 
 
 
+// SLIDER FUNCTIONS
+let curSlide = 0;
+const maxSlides = reviewSlides.length;
+console.log(maxSlides);
+
+function goToSlide(slide) {
+  reviewSlides.forEach(function (s, i) {
+    s.style.transform = `translateX(${100 * (i - slide)}%)`;
+  });
+}
+
+goToSlide(0);
+
+// MOVE TO NEXT SLIDE ON THE RIGHT
+function nextSlide() {
+  if (curSlide === maxSlides - 1) {
+    curSlide = 0;
+  } else curSlide++;
+
+  goToSlide(curSlide);
+}
+
+// MOVE TO PREVIOUS SLIDE ON THE LEFT
+function prevSlide() {
+if (curSlide === 0) {
+  curSlide = maxSlides - 1;
+  } else curSlide--;
+
+  goToSlide(curSlide);
+}
+
+
 
 
 
@@ -591,6 +628,17 @@ productContainer.addEventListener("input", function (event) {
   validateQtyInput(event)
   changeColorAttribute(event);
 });
+
+btnPrevSlide.addEventListener("click", prevSlide);
+btnNextSlide.addEventListener("click", nextSlide);
+
+// USING THE KEYBOARD TO NAV THE SLIDER
+document.addEventListener("keydown", function (e) {
+  if (e.key !== "ArrowLeft" && e.key !== "ArrowRight") return;
+  if (e.key === "ArrowLeft") prevSlide();
+  if (e.key === "ArrowRight") nextSlide();
+});
+
 
 
 // MODALS
