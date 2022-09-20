@@ -17,6 +17,7 @@ const reviewSlides = document.querySelectorAll(".slide");
 const checkoutPage = document.querySelector(".checkout__page");
 const shippingForm = document.querySelector(".shipping__form__container");
 const userInputFields = Array.from(shippingForm.querySelectorAll("input"));
+const reviewPage = document.querySelector(".review__page");
 
 
 
@@ -577,7 +578,10 @@ function updateCartStorage(event) {
 
 
 // CHECKOUT
-function displayCheckoutPage() {
+function btnCheckoutHandler() {
+  // store selected shipping option
+  // sessionStorage.setItem
+
   displayOverlay();
   center(checkoutPage)
   checkoutPage.style.display = "block";
@@ -586,7 +590,6 @@ function displayCheckoutPage() {
 function storeBuyerData() {
   userInputFields.forEach(function (input) {
     sessionStorage.setItem(`${input.id}`, `${input.value}`);
-    console.log(input.id, input.value);
   });  
 }
 
@@ -596,13 +599,20 @@ function btnContinueHandler() {
   const formNotFilled = userInputFields.some(input => input.value === "")
 
   // FIX: FORM ERROR AND VALIDATION
-  if (formNotFilled) {
-    alert("All Fields Required!")
-  } else { 
+  // if (formNotFilled) {
+  //   alert("All Fields Required!")
+  // } else { 
     // proceed to review page
-    console.log("proceed to review page");
-  }
+  displayOverlay();
+  center(reviewPage);
+  reviewPage.style.display = "block";
+  // }
 }
+
+
+
+
+
 
 // // //  //
 // MODAL FUNCTIONS
@@ -620,6 +630,7 @@ function closeModals() {
   cartPageContent.style.display = "none";
   cartPageEmpty.style.display = "none";
   checkoutPage.style.display = "none";
+  reviewPage.style.display = "none";
   hideOverlay();
 }
 
@@ -723,7 +734,7 @@ btnClearCart.addEventListener("click", clearCart);
 
 btnCheckout.addEventListener("click", function () {
   closeModals();
-  displayCheckoutPage();
+  btnCheckoutHandler();
 })
 
 btnBackToCart.addEventListener("click", function () {
@@ -731,4 +742,7 @@ btnBackToCart.addEventListener("click", function () {
   btnDisplayCartHandler();
 });
 
-btnContinue.addEventListener("click", btnContinueHandler)
+btnContinue.addEventListener("click", function () {
+  closeModals();
+  btnContinueHandler();
+})

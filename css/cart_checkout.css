@@ -1,4 +1,4 @@
-  .cart__page, .checkout__page {
+  .cart__page, .checkout__page, .review__page {
     display: none;
     z-index: 15;
     position: absolute;
@@ -330,7 +330,7 @@
   }
 
   /* CHECKOUT PAGE */
-  .checkout__page {
+  .checkout__page, .review__page {
     width: 70vw;
     height: fit-content;
     border-radius: 1rem;
