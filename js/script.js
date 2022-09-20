@@ -10,7 +10,7 @@ const cartPageEmpty = document.querySelector(".cart__page__empty");
 const overlay = document.querySelector(".overlay");
 const cartItemsContainer = document.querySelector(".cart__items");
 const cartTotal = document.querySelector(".cart__total__value");
-const cartSubotal = document.querySelector(".cart__subtotal__value");
+const cartSubtotal = document.querySelector(".cart__subtotal__value");
 const cartShippingValue = document.querySelector(".cart__shipping__value");
 const shippingPrice = document.querySelector(".shipping__selector");
 const reviewSlides = document.querySelectorAll(".slide");
@@ -428,6 +428,7 @@ function renderCartProduct(event) {
 }
 
 function getShippingPrice() {
+  cartShippingValue.dataset.value = shippingPrice.value;
   cartShippingValue.textContent = `${new Intl.NumberFormat("en-Ng", {
     style: "currency",
     currency: "NGN",
@@ -468,7 +469,14 @@ function calcCartTotal() {
       return acc + subtotal;
     }, 0);
 
-  cartSubotal.textContent = `${new Intl.NumberFormat("en-Ng", {
+  const total = subtotal + Number(shipping);
+
+  // SETTING THE DATA ATTRIBUTE
+  cartSubtotal.dataset.value = subtotal;
+  cartTotal.dataset.value = total;
+
+  // INSERTING THE VALUE IN HTML
+  cartSubtotal.textContent = `${new Intl.NumberFormat("en-Ng", {
     style: "currency",
     currency: "NGN",
   }).format(subtotal)}`;
@@ -476,7 +484,7 @@ function calcCartTotal() {
   cartTotal.textContent = `${new Intl.NumberFormat("en-Ng", {
     style: "currency",
     currency: "NGN",
-  }).format(subtotal + Number(shipping))}`;
+  }).format(total)}`;
 }
 
 
@@ -578,19 +586,29 @@ function updateCartStorage(event) {
 
 
 // CHECKOUT
+function storeCartSummary() {
+  sessionStorage.setItem(`${cartTotal.id}`, `${cartTotal.dataset.value}`);
+  sessionStorage.setItem(`${cartSubtotal.id}`, `${cartSubtotal.dataset.value}`);
+  sessionStorage.setItem(`${cartShippingValue.id}`, `${cartShippingValue.dataset.value}`);
+}
+
 function btnCheckoutHandler() {
   // store selected shipping option
   // sessionStorage.setItem
-
-  displayOverlay();
-  center(checkoutPage)
-  checkoutPage.style.display = "block";
+  if (localStorage.length === 0) return;
+  else {
+    storeCartSummary();
+    displayOverlay();
+    center(checkoutPage)
+    checkoutPage.style.display = "block"; 
+  }
 }
 
 function storeBuyerData() {
   userInputFields.forEach(function (input) {
     sessionStorage.setItem(`${input.id}`, `${input.value}`);
-  });  
+  });
+  
 }
 
 
