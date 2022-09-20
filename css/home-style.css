@@ -54,16 +54,13 @@
 }
 
 .slider__btn {
+  border: 1px solid red;
   position: absolute;
   top: 40%;
   z-index: 2;
-
   border: none;
-  /* background: rgba(255, 255, 255, 0.8); */
   color: rgb(40, 40, 40);
-  /* border-radius: 50%; */
-  /* height: 2rem;
-  width: 2rem; */
+  padding: 0.5rem;
 }
 
 .slider__btn img{
@@ -72,12 +69,12 @@
 
 .slider__btn--left {
   left: 6%;
-  transform: translateX(-0.2rem);
+  transform: translateX(0.2rem);
 }
 
 .slider__btn--right {
   right: 6%;
-  transform: translateX(0.2rem);
+  transform: translateX(-0.2rem);
 }
 
 .review {
