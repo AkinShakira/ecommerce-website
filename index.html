@@ -280,44 +280,71 @@
 
     <!-- CHECKOUT VIEW -->
     <div class="checkout__page">
-      <div class="checkout__page__container page--width">
-        <div class="buyer__details">
-          <h1 class="heading">Personal Details</h1>
-          <form action="" aria-required="true" validate>
-            <label for="first__name">First Name</label>
-            <input type="text" id="first__name" placeholder="Shakira">
+      <div class="shipping__container page--width">
+        <h1 class="page__heading">
+          Shipping
+        </h1>
 
-            <label for="last__name">Last Name</label>
-            <input type="text" id="last__name" placeholder="Akinleye">
+        <!-- FIX: VALIDATE FORMV IMMEDIATELY -->
+        <div class="shipping__form__container">
+          <div class="buyer__details">
+            <h2 class="form__heading">Personal Details</h1>
+            <form class="buyer__details__form" action="" aria-required="true" validate>
+              <div class="form__item">
+                <label for="first__name">First Name:</label>
+                <input type="text" id="first__name" placeholder="Shakira">
+              </div>
 
-            <label for="email">Email Address</label>
-            <input type="email" id="email" placeholder="shakiraakinleye@gmail.com">
+              <div class="form__item">
+                <label for="last__name">Last Name:</label>
+                <input type="text" id="last__name" placeholder="Akinleye">
 
-            <label for="phone__number">Phone Number</label>
-            <input type="tel" id="phone__number" placeholder="08123456789">
-          </form>
+              </div>
+
+              <div class="form__item">
+                <label for="email">Email Address:</label>
+                <input type="email" id="email" placeholder="shakiraakinleye@gmail.com" validate>
+              </div>
+
+              <div class="form__item">
+                <label for="phone__number">Phone Number:</label>
+                <input type="tel" id="phone__number" placeholder="08123456789">
+              </div>
+            </form>
+          </div>
+
+          <div class="shipping__details">
+            <h2 class="form__heading">Address</h1>
+            <form class="shipping__details__form" action="" aria-required="true" validate>
+              <div class="form__item">
+                <label for="address">Address:</label>
+                <input type="text" id="address" placeholder="Unit 4, Eko Building">
+              </div>
+
+              <div class="form__item">
+                <label for="city">City:</label>
+                <input type="text" id="city" placeholder="Ikoyi">
+              </div>
+
+              <div class="form__item">
+                <label for="state">State</label>
+                <select name="state" id="state">
+                  <option value="lagos">Lagos</option>
+                </select>
+              </div>
+            </form>
+          </div>
         </div>
 
-        <div class="shipping__details">
-          <h1 class="heading">Shipping Address</h1>
-          <form action="" aria-required="true" validate>
-            <label for="address">Address</label>
-            <input type="text" id="address" placeholder="Unit 4, Eko Building">
+        <button class="btn__continue">
+          <img src="images/continue.png" alt="Continue">
+          <span class="continue__note">Continue</span>
+        </button>
 
-            <label for="city">City</label>
-            <input type="text" id="city" placeholder="Ikoyi">
-
-            <select name="state" id="state">
-              <option value="lagos">Lagos</option>
-            </select>
-          </form>
-        </div>
+        <button class="btn__back__to__cart">
+          ← Back To Cart
+        </button>
       </div>
-
-      <button class="btn__proceed">
-        <img src="" alt="">
-        <span class="proceed__note">Proceed</span>
-      </button>
     </div>
 
       

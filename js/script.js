@@ -15,19 +15,24 @@ const cartShippingValue = document.querySelector(".cart__shipping__value");
 const shippingPrice = document.querySelector(".shipping__selector");
 const reviewSlides = document.querySelectorAll(".slide");
 const checkoutPage = document.querySelector(".checkout__page");
+const shippingForm = document.querySelector(".shipping__form__container");
+const userInputFields = Array.from(shippingForm.querySelectorAll("input"));
 
 
 
 // BUTTONS SELECTION
+const btnPrevSlide = document.querySelector(".slider__btn--left");
+const btnNextSlide = document.querySelector(".slider__btn--right");
 const btnAddToCart =document.querySelector(".btn__add-cart")
 const btnAddToFavorites =document.querySelector(".btn__add-favorite")
 const btnDisplayCart = document.querySelector(".btn__cart")
-const btnCheckout = document.querySelector(".btn__checkout")
 // const btnDisplayFavorites = document.querySelector(".btn__favorite")
 const btnClearCart = document.querySelector(".btn__cart--clear");
 const btnCloseCart = document.querySelector(".btn__cart--close")
-const btnPrevSlide = document.querySelector(".slider__btn--left");
-const btnNextSlide = document.querySelector(".slider__btn--right");
+const btnCheckout = document.querySelector(".btn__checkout");
+const btnBackToCart = document.querySelector(".btn__back__to__cart");
+const btnContinue = document.querySelector(".btn__continue");
+
 
 
 
@@ -480,7 +485,6 @@ function calcCartTotal() {
 function center(page) {
   const scrollValue = window.scrollY;
   const halfWindowHeight = window.innerHeight / 2;
-  console.log(halfWindowHeight)
   page.style.top = `${scrollValue + halfWindowHeight}px`;
   page.style.transform = "translate(-50%, -50%)"
 }
@@ -545,7 +549,7 @@ function delCartItemLocalStorage(event) {
 function renderCartStorage() {
   const cartStorage = Object.values(localStorage);
   cartStorage.forEach(function (item) {
-    cartItemsContainer.insertAdjacentHTML("beforeend", item)
+    cartItemsContainer.insertAdjacentHTML("beforeend", item);
   })
   displayCartCount();
 }
@@ -579,7 +583,26 @@ function displayCheckoutPage() {
   checkoutPage.style.display = "block";
 }
 
+function storeBuyerData() {
+  userInputFields.forEach(function (input) {
+    sessionStorage.setItem(`${input.id}`, `${input.value}`);
+    console.log(input.id, input.value);
+  });  
+}
 
+
+function btnContinueHandler() {
+  storeBuyerData()
+  const formNotFilled = userInputFields.some(input => input.value === "")
+
+  // FIX: FORM ERROR AND VALIDATION
+  if (formNotFilled) {
+    alert("All Fields Required!")
+  } else { 
+    // proceed to review page
+    console.log("proceed to review page");
+  }
+}
 
 // // //  //
 // MODAL FUNCTIONS
@@ -666,13 +689,15 @@ document.addEventListener("keydown", function (e) {
 
 
 
-// MODALS
-btnDisplayCart.addEventListener("click", btnDisplayCartHandler)
-btnCloseCart.addEventListener("click", closeModals)
+// OVERLAY
 overlay.addEventListener("click", closeModals)
 
 
 // CART PAGE
+btnDisplayCart.addEventListener("click", btnDisplayCartHandler);
+
+btnCloseCart.addEventListener("click", closeModals);
+
 cartItemsContainer.addEventListener("click", function (event) {
   btnIncreaseQtyHandler(event);
   btnDecreaseQtyHandler(event);
@@ -700,3 +725,10 @@ btnCheckout.addEventListener("click", function () {
   closeModals();
   displayCheckoutPage();
 })
+
+btnBackToCart.addEventListener("click", function () {
+  closeModals();
+  btnDisplayCartHandler();
+});
+
+btnContinue.addEventListener("click", btnContinueHandler)
