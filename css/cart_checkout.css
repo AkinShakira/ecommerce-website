@@ -276,6 +276,10 @@
     outline: 1px solid rgb(255, 0, 0);
   }
 
+  .shipping__form::placeholder  {
+    color: rgb(150, 150, 150);
+  }
+
   .form__error__alert  {
     display: none;
     z-index: 20;
