@@ -5,26 +5,39 @@ const productContainer = document.querySelector(".product__list");
 const cartCount = document.querySelector('.cart__count');
 const cartPage = document.querySelector('.cart__page');
 const cartPageContent = document.querySelector(".cart__page__content ");
+// const orderSummary = document.querySelector(".order__summary")
 const cartPageEmpty = document.querySelector(".cart__page__empty");
-// const overlay = document.querySelector(".overlay");
+const overlay = document.querySelector(".overlay");
 const cartItemsContainer = document.querySelector(".cart__items");
 const cartTotal = document.querySelector(".cart__total__value");
-const cartSubotal = document.querySelector(".cart__subtotal__value");
+const cartSubtotal = document.querySelector(".cart__subtotal__value");
 const cartShippingValue = document.querySelector(".cart__shipping__value");
 const shippingPrice = document.querySelector(".shipping__selector");
 const reviewSlides = document.querySelectorAll(".slide");
+const checkoutPage = document.querySelector(".checkout__page");
+const shippingForm = document.querySelector(".shipping__form__container");
+const userInputFields = Array.from(shippingForm.querySelectorAll("input"));
+const reviewPage = document.querySelector(".review__page");
+const orderItemsContainer = document.querySelector(".order__items")
+const formErrorAlert = document.querySelector(".form__error__alert");
 
 
 
 // BUTTONS SELECTION
+const btnPrevSlide = document.querySelector(".slider__btn--left");
+const btnNextSlide = document.querySelector(".slider__btn--right");
 const btnAddToCart =document.querySelector(".btn__add-cart")
 const btnAddToFavorites =document.querySelector(".btn__add-favorite")
 const btnDisplayCart = document.querySelector(".btn__cart")
 // const btnDisplayFavorites = document.querySelector(".btn__favorite")
 const btnClearCart = document.querySelector(".btn__cart--clear");
 const btnCloseCart = document.querySelector(".btn__cart--close")
-const btnPrevSlide = document.querySelector(".slider__btn--left");
-const btnNextSlide = document.querySelector(".slider__btn--right");
+const btnCheckout = document.querySelector(".btn__checkout");
+const btnBackToCart = document.querySelector(".btn__back__to__cart");
+const btnContinue = document.querySelector(".btn__continue");
+const btnEditCart = document.querySelector(".btn__edit__cart");
+const btnEditUserData = document.querySelector(".btn__edit__user-data");
+
 
 
 
@@ -32,7 +45,6 @@ const btnNextSlide = document.querySelector(".slider__btn--right");
 // STARTING CONDITIONS
 displayProducts();
 renderCartStorage();
-// slider();
 goToSlide(0);
 
 
@@ -349,7 +361,7 @@ function btnAddToCartHandler(event) {
 // CART AND CONTENT RENDERING FUNCTIONS
 
 function createCartItemHtml(id, name, stock, price, color, quantity, img) {
-  const html = `<div class="cart__item" data-id="${id}" data-name="${name}" data-stock="${stock}" data-price="${price}" data-color="${color}" data-quantity="${quantity}" data-image="${img}">
+  const html = `<div class="cart__item" data-id="${id}" data-image="${img}" data-name="${name}" data-stock="${stock}" data-price="${price}" data-color="${color}" data-quantity="${quantity}" data-subtotal="${price * quantity}">
             <div class="cart__item__image">
               <img src="${img}" alt="Product image">
             </div>
@@ -385,9 +397,7 @@ function createCartItemHtml(id, name, stock, price, color, quantity, img) {
       style: "currency",
       currency: "NGN",
     }
-  ).format(
-    price * quantity
-  )} </span> <span class="note">Subtotal</span></p>
+  ).format(price * quantity)} </span> <span class="note">Subtotal</span></p>
 
               <button class="btn__cart--remove-item order-2">X</button>
 
@@ -420,6 +430,7 @@ function renderCartProduct(event) {
 }
 
 function getShippingPrice() {
+  cartShippingValue.dataset.value = shippingPrice.value;
   cartShippingValue.textContent = `${new Intl.NumberFormat("en-Ng", {
     style: "currency",
     currency: "NGN",
@@ -460,7 +471,14 @@ function calcCartTotal() {
       return acc + subtotal;
     }, 0);
 
-  cartSubotal.textContent = `${new Intl.NumberFormat("en-Ng", {
+  const total = subtotal + Number(shipping);
+
+  // SETTING THE DATA ATTRIBUTE
+  cartSubtotal.dataset.value = subtotal;
+  cartTotal.dataset.value = total;
+
+  // INSERTING THE VALUE IN HTML
+  cartSubtotal.textContent = `${new Intl.NumberFormat("en-Ng", {
     style: "currency",
     currency: "NGN",
   }).format(subtotal)}`;
@@ -468,7 +486,7 @@ function calcCartTotal() {
   cartTotal.textContent = `${new Intl.NumberFormat("en-Ng", {
     style: "currency",
     currency: "NGN",
-  }).format(subtotal + Number(shipping))}`;
+  }).format(total)}`;
 }
 
 
@@ -476,20 +494,25 @@ function calcCartTotal() {
 // CART DISPLAY FUNCTIONS
 
 function center(page) {
-  page.style.top = `${window.scrollY}px`;
+  const scrollValue = window.scrollY;
+  const halfWindowHeight = window.innerHeight / 2;
+  page.style.top = `${scrollValue + halfWindowHeight}px`;
+  page.style.transform = "translate(-50%, -50%)"
 }
 
 function btnDisplayCartHandler() {
   // FIX: PAGE SCROLL
   // cartPage.style.display = "block";
   // app.style.overflow = "hidden";
+
+  displayOverlay();
+  center(cartPage);
+  cartPage.style.display = "block";
+
   if (cartItemsContainer.childElementCount >= 1) {
-    center(cartPage);
-    cartPage.style.display = "block";
     cartPageContent.style.display = "flex";
     calcCartTotal();
   } else {
-    center(cartPageEmpty);
     cartPageEmpty.style.display = "flex";
   }
 }
@@ -537,7 +560,7 @@ function delCartItemLocalStorage(event) {
 function renderCartStorage() {
   const cartStorage = Object.values(localStorage);
   cartStorage.forEach(function (item) {
-    cartItemsContainer.insertAdjacentHTML("beforeend", item)
+    cartItemsContainer.insertAdjacentHTML("beforeend", item);
   })
   displayCartCount();
 }
@@ -564,14 +587,165 @@ function updateCartStorage(event) {
 
 
 
+// CHECKOUT
+function storeCartSummary() {
+  sessionStorage.setItem(`${cartTotal.id}`, `${cartTotal.dataset.value}`);
+  sessionStorage.setItem(`${cartSubtotal.id}`, `${cartSubtotal.dataset.value}`);
+  sessionStorage.setItem(`${cartShippingValue.id}`, `${cartShippingValue.dataset.value}`);
+}
+
+function displayShippingForm() {
+    displayOverlay();
+    center(checkoutPage);
+    checkoutPage.style.display = "block"; 
+}
+
+function btnCheckoutHandler() {
+  if (localStorage.length === 0) return;
+  else {
+    storeCartSummary();
+    displayShippingForm();
+  }
+}
+
+function validateUserData() {
+  const formNotFilled = userInputFields.some((input) => input.value === "");
+
+  return { formNotFilled };
+}
+
+function storeBuyerData() {
+  userInputFields.forEach(function (input) {
+    sessionStorage.setItem(`${input.id}`, `${input.value}`);
+  });
+  
+  const state = document.querySelector(".state");
+  sessionStorage.setItem(`${state.id}`, `${state.value}`)
+}
+
+function hideFormError() {
+  formErrorAlert.style.display = "none";
+}
+
+function displayFormError() {
+  center(formErrorAlert)
+  formErrorAlert.style.display = "flex";
+  setTimeout(hideFormError, 2000);
+}
+
+function btnContinueHandler() {
+  storeBuyerData()
+  const { formNotFilled } = validateUserData();
+
+  if (formNotFilled === false) {
+    closeModals()
+    displayOverlay();
+    center(reviewPage);
+    reviewPage.style.display = "block";
+    renderOrderItemHtml();
+    renderOrderPrice();
+    renderShippingDetails();
+  } else {
+    displayFormError()
+  }
+}
+
+function renderOrderItemHtml() {
+  const cartItemsArray = Array.from(cartItemsContainer.children);
+  const orderItemsArray = Array.from(orderItemsContainer.children);
+
+  cartItemsArray.forEach(function (item) {
+    if (orderItemsArray.some(item => item.dataset.id) === true) {
+      return;
+    } else {
+      const orderItemHtml = ` <div class="order__item__container" data-id="${item.dataset.id
+        }">
+                              <img src="${item.dataset.image
+        }" alt="product image" class="order__item__image">
+                              <div class="order__item">
+                                <p class="order__item__name">${item.dataset.name
+        }</p>
+                                <div class="order__item__options">
+                                  <p class="order__item__color">${item.dataset.color
+        }</p>
+                                  <p><span class="order__item__quantity">${item.dataset.quantity
+        }</span><span>pcs</span></p>
+                                </div>
+                              </div>
+                              <p class="order__item__price">${new Intl.NumberFormat(
+          "en-Ng",
+          {
+            style: "currency",
+            currency: "NGN",
+          }
+        ).format(item.dataset.subtotal)}</p>
+                            </div> `;
+
+      orderItemsContainer.insertAdjacentHTML("beforeend", orderItemHtml);
+    }
+  })
+}
+
+
+function renderOrderPrice() {
+  const subtotal = document.querySelector(".review__subtotal__value");
+  const shipping = document.querySelector(".review__shipping__value");
+  const total = document.querySelector(".review__total__value");
+
+  subtotal.textContent = `${new Intl.NumberFormat("en-Ng", {
+    style: "currency",
+    currency: "NGN",
+  }).format(sessionStorage.getItem("cart-subtotal"))}`;
+
+  shipping.textContent = `${new Intl.NumberFormat("en-Ng", {
+    style: "currency",
+    currency: "NGN",
+  }).format(sessionStorage.getItem("shipping-value"))}`;
+
+  total.textContent = `${new Intl.NumberFormat("en-Ng", {
+    style: "currency",
+    currency: "NGN",
+  }).format(sessionStorage.getItem("cart-total"))}`;
+}
+
+function renderShippingDetails() {
+  const firstName = document.querySelector(".first__name");
+  const lastName = document.querySelector(".last__name");
+  const email = document.querySelector(".user__email");
+  const phone = document.querySelector(".user__tel");
+  const address1 = document.querySelector(".user__address-1");
+  const address2 = document.querySelector(".user__address-2");
+  const address3 = document.querySelector(".user__address-3");
+
+  firstName.textContent = sessionStorage.getItem("first__name");
+  lastName.textContent = sessionStorage.getItem("last__name");
+  email.textContent = sessionStorage.getItem("email");
+  phone.textContent = sessionStorage.getItem("phone__number");
+  address1.textContent = sessionStorage.getItem("address");
+  address2.textContent = sessionStorage.getItem("city");
+  address3.textContent = sessionStorage.getItem("state");
+
+}
+
 
 // // //  //
 // MODAL FUNCTIONS
+function displayOverlay () {
+  overlay.classList.remove("hidden")
+}
+
+function hideOverlay () {
+  overlay.classList.add("hidden")
+}
+
+
 function closeModals() {
-  // app.style.overflow = "auto";
   cartPage.style.display = "none";
   cartPageContent.style.display = "none";
   cartPageEmpty.style.display = "none";
+  checkoutPage.style.display = "none";
+  reviewPage.style.display = "none";
+  hideOverlay();
 }
 
 
@@ -613,7 +787,6 @@ if (curSlide === 0) {
 
 
 
-
 // EVENT LISTENERS
 // HOME/PRODUCT PAGE
 productContainer.addEventListener("click", function (event) {
@@ -640,13 +813,15 @@ document.addEventListener("keydown", function (e) {
 
 
 
-// MODALS
-btnDisplayCart.addEventListener("click", btnDisplayCartHandler)
-btnCloseCart.addEventListener("click", closeModals)
-// overlay.addEventListener("click", closeModals)
+// OVERLAY
+overlay.addEventListener("click", closeModals)
 
 
 // CART PAGE
+btnDisplayCart.addEventListener("click", btnDisplayCartHandler);
+
+btnCloseCart.addEventListener("click", closeModals);
+
 cartItemsContainer.addEventListener("click", function (event) {
   btnIncreaseQtyHandler(event);
   btnDecreaseQtyHandler(event);
@@ -668,4 +843,29 @@ cartPage.addEventListener("input", function () {
   calcCartTotal();
 })
 
-btnClearCart.addEventListener("click", clearCart)
+btnClearCart.addEventListener("click", clearCart);
+
+btnCheckout.addEventListener("click", function () {
+  closeModals();
+  btnCheckoutHandler();
+})
+
+btnBackToCart.addEventListener("click", function () {
+  closeModals();
+  btnDisplayCartHandler();
+});
+
+btnContinue.addEventListener("click", function (event) {
+  btnContinueHandler();
+})
+
+btnEditCart.addEventListener("click", function () {
+  closeModals();
+  btnDisplayCartHandler();
+});
+
+btnEditUserData.addEventListener("click", function () {
+  closeModals();
+  displayShippingForm();
+})
+
