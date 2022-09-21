@@ -272,7 +272,28 @@
     padding: 0.2rem;
   }
 
-  /* REVIEW PAGE */
+  input:invalid {
+    outline: 1px solid rgb(255, 0, 0);
+  }
+
+  .form__error__alert  {
+    display: none;
+    z-index: 20;
+    position: absolute;
+    left: 50%;
+    width: 60vw;
+    height: 10vh;
+
+    justify-content: center;
+    align-items: center;
+
+    background-color: rgb(0, 0, 0);
+    color: rgb(255, 255, 255);
+    border: 0px solid;
+    border-radius: 0.5rem;
+  }
+
+   /* REVIEW PAGE */
   .review__page {
     padding-bottom: 1rem;
   }
@@ -294,7 +315,7 @@
     display: grid;
     grid-template-columns: 3rem 3fr 1fr;
     column-gap: 0.5rem;
-    align-items: center;
+    align-items: flex-start;
     padding: 0.5rem 0;
     border-bottom: 1px solid rgb(200, 200, 200);
   }
@@ -441,6 +462,11 @@
     transform: none;
   }
 
+  .form__error__alert  {
+    width: 40vw;
+    height: 10vh;
+  }
+
    /* REVIEW PAGE */
   .review__page__content {
     flex-direction: row;
@@ -536,6 +562,11 @@
 
   .btn__continue, .btn__place__order {
     width: 33%;
+  }
+
+  .form__error__alert  {
+    width: 25vw;
+    height: 10vh;
   }
 
 }

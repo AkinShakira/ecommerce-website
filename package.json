@@ -4,19 +4,20 @@
   "description": "A simple ecommerce website with just a list of products, a cart, and a checkout page.\r User will be able to add and delete products to and from cart.\r User will be also able to increase the quantities or change the variant of a product from the cart.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "json-server --watch db.json"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/AkinShakira/ecommerce-website.git"
+    "url": "git+https://github.com/shakiraakinleye/ecommerce-website.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/AkinShakira/ecommerce-website/issues"
+    "url": "https://github.com/shakiraakinleye/ecommerce-website/issues"
   },
-  "homepage": "https://github.com/AkinShakira/ecommerce-website#readme",
+  "homepage": "https://github.com/shakiraakinleye/ecommerce-website#readme",
   "dependencies": {
     "autoprefixer": "^10.4.8",
     "postcss": "^8.4.16",

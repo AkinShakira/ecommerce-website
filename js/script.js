@@ -18,6 +18,8 @@ const checkoutPage = document.querySelector(".checkout__page");
 const shippingForm = document.querySelector(".shipping__form__container");
 const userInputFields = Array.from(shippingForm.querySelectorAll("input"));
 const reviewPage = document.querySelector(".review__page");
+const orderItemsContainer = document.querySelector(".order__items")
+const formErrorAlert = document.querySelector(".form__error__alert");
 
 
 
@@ -33,6 +35,8 @@ const btnCloseCart = document.querySelector(".btn__cart--close")
 const btnCheckout = document.querySelector(".btn__checkout");
 const btnBackToCart = document.querySelector(".btn__back__to__cart");
 const btnContinue = document.querySelector(".btn__continue");
+const btnEditCart = document.querySelector(".btn__edit__cart");
+const btnEditUserData = document.querySelector(".btn__edit__user-data");
 
 
 
@@ -357,7 +361,7 @@ function btnAddToCartHandler(event) {
 // CART AND CONTENT RENDERING FUNCTIONS
 
 function createCartItemHtml(id, name, stock, price, color, quantity, img) {
-  const html = `<div class="cart__item" data-id="${id}" data-name="${name}" data-stock="${stock}" data-price="${price}" data-color="${color}" data-quantity="${quantity}" data-image="${img}">
+  const html = `<div class="cart__item" data-id="${id}" data-image="${img}" data-name="${name}" data-stock="${stock}" data-price="${price}" data-color="${color}" data-quantity="${quantity}" data-subtotal="${price * quantity}">
             <div class="cart__item__image">
               <img src="${img}" alt="Product image">
             </div>
@@ -393,9 +397,7 @@ function createCartItemHtml(id, name, stock, price, color, quantity, img) {
       style: "currency",
       currency: "NGN",
     }
-  ).format(
-    price * quantity
-  )} </span> <span class="note">Subtotal</span></p>
+  ).format(price * quantity)} </span> <span class="note">Subtotal</span></p>
 
               <button class="btn__cart--remove-item order-2">X</button>
 
@@ -592,16 +594,24 @@ function storeCartSummary() {
   sessionStorage.setItem(`${cartShippingValue.id}`, `${cartShippingValue.dataset.value}`);
 }
 
+function displayShippingForm() {
+    displayOverlay();
+    center(checkoutPage);
+    checkoutPage.style.display = "block"; 
+}
+
 function btnCheckoutHandler() {
-  // store selected shipping option
-  // sessionStorage.setItem
   if (localStorage.length === 0) return;
   else {
     storeCartSummary();
-    displayOverlay();
-    center(checkoutPage)
-    checkoutPage.style.display = "block"; 
+    displayShippingForm();
   }
+}
+
+function validateUserData() {
+  const formNotFilled = userInputFields.some((input) => input.value === "");
+
+  return { formNotFilled };
 }
 
 function storeBuyerData() {
@@ -609,27 +619,113 @@ function storeBuyerData() {
     sessionStorage.setItem(`${input.id}`, `${input.value}`);
   });
   
+  const state = document.querySelector(".state");
+  sessionStorage.setItem(`${state.id}`, `${state.value}`)
 }
 
+function hideFormError() {
+  formErrorAlert.style.display = "none";
+}
+
+function displayFormError() {
+  center(formErrorAlert)
+  formErrorAlert.style.display = "flex";
+  setTimeout(hideFormError, 2000);
+}
 
 function btnContinueHandler() {
   storeBuyerData()
-  const formNotFilled = userInputFields.some(input => input.value === "")
+  const { formNotFilled } = validateUserData();
 
-  // FIX: FORM ERROR AND VALIDATION
-  // if (formNotFilled) {
-  //   alert("All Fields Required!")
-  // } else { 
-    // proceed to review page
-  displayOverlay();
-  center(reviewPage);
-  reviewPage.style.display = "block";
-  // }
+  if (formNotFilled === false) {
+    closeModals()
+    displayOverlay();
+    center(reviewPage);
+    reviewPage.style.display = "block";
+    renderOrderItemHtml();
+    renderOrderPrice();
+    renderShippingDetails();
+  } else {
+    displayFormError()
+  }
+}
+
+function renderOrderItemHtml() {
+  const cartItemsArray = Array.from(cartItemsContainer.children);
+  const orderItemsArray = Array.from(orderItemsContainer.children);
+
+  cartItemsArray.forEach(function (item) {
+    if (orderItemsArray.some(item => item.dataset.id) === true) {
+      return;
+    } else {
+      const orderItemHtml = ` <div class="order__item__container" data-id="${item.dataset.id
+        }">
+                              <img src="${item.dataset.image
+        }" alt="product image" class="order__item__image">
+                              <div class="order__item">
+                                <p class="order__item__name">${item.dataset.name
+        }</p>
+                                <div class="order__item__options">
+                                  <p class="order__item__color">${item.dataset.color
+        }</p>
+                                  <p><span class="order__item__quantity">${item.dataset.quantity
+        }</span><span>pcs</span></p>
+                                </div>
+                              </div>
+                              <p class="order__item__price">${new Intl.NumberFormat(
+          "en-Ng",
+          {
+            style: "currency",
+            currency: "NGN",
+          }
+        ).format(item.dataset.subtotal)}</p>
+                            </div> `;
+
+      orderItemsContainer.insertAdjacentHTML("beforeend", orderItemHtml);
+    }
+  })
 }
 
 
+function renderOrderPrice() {
+  const subtotal = document.querySelector(".review__subtotal__value");
+  const shipping = document.querySelector(".review__shipping__value");
+  const total = document.querySelector(".review__total__value");
 
+  subtotal.textContent = `${new Intl.NumberFormat("en-Ng", {
+    style: "currency",
+    currency: "NGN",
+  }).format(sessionStorage.getItem("cart-subtotal"))}`;
 
+  shipping.textContent = `${new Intl.NumberFormat("en-Ng", {
+    style: "currency",
+    currency: "NGN",
+  }).format(sessionStorage.getItem("shipping-value"))}`;
+
+  total.textContent = `${new Intl.NumberFormat("en-Ng", {
+    style: "currency",
+    currency: "NGN",
+  }).format(sessionStorage.getItem("cart-total"))}`;
+}
+
+function renderShippingDetails() {
+  const firstName = document.querySelector(".first__name");
+  const lastName = document.querySelector(".last__name");
+  const email = document.querySelector(".user__email");
+  const phone = document.querySelector(".user__tel");
+  const address1 = document.querySelector(".user__address-1");
+  const address2 = document.querySelector(".user__address-2");
+  const address3 = document.querySelector(".user__address-3");
+
+  firstName.textContent = sessionStorage.getItem("first__name");
+  lastName.textContent = sessionStorage.getItem("last__name");
+  email.textContent = sessionStorage.getItem("email");
+  phone.textContent = sessionStorage.getItem("phone__number");
+  address1.textContent = sessionStorage.getItem("address");
+  address2.textContent = sessionStorage.getItem("city");
+  address3.textContent = sessionStorage.getItem("state");
+
+}
 
 
 // // //  //
@@ -683,7 +779,6 @@ if (curSlide === 0) {
 
   goToSlide(curSlide);
 }
-
 
 
 
@@ -760,7 +855,17 @@ btnBackToCart.addEventListener("click", function () {
   btnDisplayCartHandler();
 });
 
-btnContinue.addEventListener("click", function () {
-  closeModals();
+btnContinue.addEventListener("click", function (event) {
   btnContinueHandler();
 })
+
+btnEditCart.addEventListener("click", function () {
+  closeModals();
+  btnDisplayCartHandler();
+});
+
+btnEditUserData.addEventListener("click", function () {
+  closeModals();
+  displayShippingForm();
+})
+

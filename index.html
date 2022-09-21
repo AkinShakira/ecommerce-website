@@ -286,55 +286,57 @@
         </h1>
 
         <!-- FIX: VALIDATE FORM IMMEDIATELY -->
+      <form class="shipping__form" action="" aria-required="true" required validate       autocomplete="on">  
         <div class="shipping__form__container">
           <div class="buyer__details">
             <h2 class="form__heading">Personal Details</h1>
-            <form class="buyer__details__form" action="" aria-required="true" validate>
+            <div class="buyer__details__form">
               <div class="form__item">
                 <label for="first__name">First Name:</label>
-                <input type="text" id="first__name" placeholder="Shakira">
+                <input type="text" id="first__name" class="uppercase" placeholder="Shakira">
               </div>
 
               <div class="form__item">
                 <label for="last__name">Last Name:</label>
-                <input type="text" id="last__name" placeholder="Akinleye">
+                <input type="text" id="last__name" class="uppercase" placeholder="Akinleye">
 
               </div>
 
               <div class="form__item">
                 <label for="email">Email Address:</label>
-                <input type="email" id="email" placeholder="shakiraakinleye@gmail.com" validate>
+                <input type="email" id="email" placeholder="shakiraakinleye@gmail.com" validate autocomplete="on" >
               </div>
 
               <div class="form__item">
                 <label for="phone__number">Phone Number:</label>
-                <input type="tel" id="phone__number" placeholder="08123456789">
+                <input type="tel" id="phone__number" placeholder="08123456789"  min="13" max="13" validate>
               </div>
-            </form>
+            </div>
           </div>
 
           <div class="shipping__details">
             <h2 class="form__heading">Address</h1>
-            <form class="shipping__details__form" action="" aria-required="true" validate>
+            <div class="shipping__details__form">
               <div class="form__item">
                 <label for="address">Address:</label>
-                <input type="text" id="address" placeholder="Unit 4, Eko Building">
+                <input type="text" id="address" class="capitalize" placeholder="Unit 4, Eko Building">
               </div>
 
               <div class="form__item">
                 <label for="city">City:</label>
-                <input type="text" id="city" placeholder="Ikoyi">
+                <input type="text" id="city" class="capitalize" placeholder="Ikoyi">
               </div>
 
               <div class="form__item">
                 <label for="state">State</label>
-                <select name="state" id="state">
-                  <option value="lagos">Lagos</option>
+                <select name="state" id="state" class="state">
+                  <option value="Lagos">Lagos</option>
                 </select>
               </div>
-            </form>
+            </div>
           </div>
         </div>
+      </form>
 
         <button class="btn__continue">
           <img src="images/continue.png" alt="Continue">
@@ -359,18 +361,9 @@
           <div class="review__page__order__summary relative">
             <div class="order__items">
               <h2 class="order__heading">Order Summary</h2>
-              <!-- order item -->
-              <div class="order__item__container">
-                <img src="images/cora-necklace.jpg" alt="product image" class="order__item__image">
-                <div class="order__item">
-                  <p class="order__item__name">Item name</p>
-                  <div class="order__item__options">
-                    <p class="order__item__color">Gold</p>
-                    <p><span class="order__item__quantity">2</span><span>pcs</span></p>
-                  </div>
-                </div>
-                <p class="order__item__price">300</p>
-              </div>
+              <!-- add order item dynamically-->
+              <!-- add order item dynamically-->
+              <!-- add order item dynamically-->
             </div>
 
             <div class="review__price__summary">
@@ -401,8 +394,8 @@
               </h2>
               <div class="shipping__address">
                 <div class="user__name">
-                  <p class="first__name">First Name</p>
-                  <p class="last__name">Last Name</p>
+                  <p class="first__name capitalize">First Name</p>
+                  <p class="last__name capitalize">Last Name</p>
                 </div>
                 <p class="user__email">
                   shakia@yahoo.com
@@ -410,13 +403,13 @@
                 <p class="user__tel">
                   08143671737
                 </p>
-                <p class="user__address-1">
+                <p class="user__address-1 capitalize">
                   3 Odunlade Street
                 </p>
-                <p class="user__address-2">
+                <p class="user__address-2 capitalize">
                   Somolu
                 </p>
-                <p class="user__address-3">
+                <p class="user__address-3 capitalize">
                   Lagos
                 </p>
               </div>
@@ -436,6 +429,12 @@
           <span class="place__order__note">Place order</span>
         </button>
       </div>
+    </div>
+
+
+    <!-- ALERT MODALS -->
+    <div class="form__error__alert">
+        Please, Fill In All Input Areas!
     </div>
   </div>
 </body>
