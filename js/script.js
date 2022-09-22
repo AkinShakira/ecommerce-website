@@ -135,21 +135,7 @@ function renderProducts(product) {
 
 async function getProductJson() {
   try {
-    // const response = await fetch("http://localhost:3000/products");
-    const response = await fetch("EW INTERN WELCOME MAIL
-
-We want to express our heartfelt congratulations and best wishes on your acceptance into our internship program.
-
-Obigtech is glad to welcome you as an intern on the Software Engineering Track. We recognize how important your choice to change careers is, and we are happy to assist you along the way.
-
-Obigtech has long been identified with transparency, success, growth, and the development of world-class skilled personnel. Regarding your track, Software Engineering is about problem-solving first, coding second. Why? Computers must be informed clearly what to do; they cannot make guesses like humans do when given ambiguous instructions. We would be studying the concepts of problem solving and programming. It will educate you about Software Engineering philosophy, programming, the software development life cycle, Test Driven Development, and how we perform product development at obigtech, as well as how to develop your personality. You made an excellent decision to pursue an internship in your area of interest.
-
-We hope that your internship with us will be fruitful and rewarding. We wish you the best of luck. Hello and welcome to Obigtech!. It's bigger than you imagined.
-
-What's Next? Oka (still me) will be in touch and walk you through your first day tomorrow and plan your onboarding with you 😎.
-
-Emmanuel Okanlawon
-CEO/CTO, Obig Technologies");
+    const response = await fetch("https://shakiraakinleye.github.io/Data/db.json");
     const json = await response.json();
     return json;
     // Handle errors
@@ -165,7 +151,7 @@ CEO/CTO, Obig Technologies");
 async function displayProducts() {
   try {
     const data = await getProductJson();
-    data.forEach((product) => renderProducts(product));
+    data.products.forEach((product) => renderProducts(product));
   }
   catch (err) {
     console.log(err)
