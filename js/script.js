@@ -137,7 +137,9 @@ function renderProducts(product) {
 
 async function getProductJson() {
   try {
-    const response = await fetch("http://localhost:3000/products");
+    const response = await fetch(
+      "https://shakiraakinleye.github.io/Data/db.json"
+    );
     const json = await response.json();
     return json;
     // Handle errors
@@ -153,7 +155,7 @@ async function getProductJson() {
 async function displayProducts() {
   try {
     const data = await getProductJson();
-    data.forEach((product) => renderProducts(product));
+    data.products.forEach((product) => renderProducts(product));
   }
   catch (err) {
     console.log(err)
