@@ -1,3 +1,4 @@
+cd
 "use strict";
 // ELEMENT SELECTION
 const app = document.querySelector('.app')
