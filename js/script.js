@@ -135,7 +135,9 @@ function renderProducts(product) {
 
 async function getProductJson() {
   try {
-    const response = await fetch("https://shakiraakinleye.github.io/Data/db.json");
+    const response = await fetch(
+      "https://shakiraakinleye.github.io/Data/db.json"
+    );
     const json = await response.json();
     return json;
     // Handle errors
