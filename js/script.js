@@ -37,6 +37,8 @@ const btnBackToCart = document.querySelector(".btn__back__to__cart");
 const btnContinue = document.querySelector(".btn__continue");
 const btnEditCart = document.querySelector(".btn__edit__cart");
 const btnEditUserData = document.querySelector(".btn__edit__user-data");
+const btnPlaceOrder = document.querySelector(".btn__place__order");
+
 
 
 
@@ -781,11 +783,6 @@ if (curSlide === 0) {
 
   goToSlide(curSlide);
 }
-
-
-
-
-
 
 
 
