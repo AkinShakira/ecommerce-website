@@ -45,9 +45,8 @@ function app() {
 
   // STARTING CONDITIONS
   createProductDataStr();
-  displayProducts();
+  addProductsAndAttributes(); 
   renderCartStorage();
-
 
 
   // EVENTS
@@ -60,7 +59,7 @@ function app() {
 
   // FUNCTIONS
   // // //  //
-  // PRODUCT RENDERING FUNTIONS
+  // PRODUCT, PRODUCT VALUES AND ATTRIBUTES RENDERING FUNTIONS
 
   async function getProductJson() {
     try {
@@ -96,6 +95,12 @@ function app() {
     }
   }
 
+  function convertPriceToLocalCurrency(value) {
+    return new Intl.NumberFormat("en-Ng", {
+      style: "currency",
+      currency: "NGN",
+    }).format(value);
+  }
 
 
   function renderVariants(option) {
@@ -105,8 +110,7 @@ function app() {
 
   function renderProducts(id, imageUrl, name, price, stock, variants) {
     const html = `
-          <div class="product" data-id="${id}" data-color="" data-quantity="">
-            <!-- product image -->
+          <div class="product">
             <div class="product__image__container mb-2">
               <img src= "${imageUrl}" alt="Product Image" class="product__image" >
             </div>
@@ -118,10 +122,7 @@ function app() {
                 
               <p class="product__stock__note mr-4">${stock > 0 ? "In Stock" : "Sold Out"}</p>
                 
-              <p class="product__price">${new Intl.NumberFormat("en-Ng", {
-                style: "currency",
-                currency: "NGN",
-              }).format(price)}</p>
+              <p class="product__price">${convertPriceToLocalCurrency(price)}</p>
             </div>
 
             <div class="product__options">
@@ -152,39 +153,55 @@ function app() {
     productContainer.insertAdjacentHTML("beforeend", html);
   }
 
+  function setProductDataAtrributes(id, stock) {
+    const lastProduct = productContainer.lastElementChild;
+    lastProduct.dataset.id = id;
+    lastProduct.dataset.stock = stock;
+  }
 
 
   // // //  //
   // PRODUCT DISPLAY FUNCTIONS
-  async function displayProducts() {
+  async function addProductsAndAttributes() {
     try {
       const { productsData } = await createProductDataStr();
-      productsData.forEach((product) => renderProducts(product.id, product.imageUrl, product.name, product.price, product.stock, product.variants));
+      productsData.forEach((product) => {
+        renderProducts(product.id, product.imageUrl, product.name, product.price, product.stock, product.variants);
+        setProductDataAtrributes(product.id, product.stock);
+        return document.querySelectorAll(".product");
+      });
     } catch (error) {
       console.log(error);
     }
   }
 
 
-
   // // //  //
   // PRODUCT OPTION FUNCTIONS
-  function pathQuantityChange(event) {
-    const parentEl = event.path[1];
-    const productEl = event.path[4];
-    const productStock = Number(productEl.dataset.stock);
-    const productQtyEl = parentEl.querySelector(".product__quantity__value");
+  function productDOMSelection(event) {
+    const productEl = event.target.closest(".product");
+    const productStock = productEl.dataset.stock;  
+    return {productEl, productStock}
+  }
 
-    return { parentEl, productEl, productStock, productQtyEl };
+
+  function quantityChangeEventDOM(event) {
+    const { productEl, productStock } = productDOMSelection(event);
+    const quantityForm = event.path[1];
+    const quantityInput = quantityForm.querySelector(
+      ".product__quantity__value"
+    );
+
+    return { quantityForm, productEl, productStock, quantityInput };
   }
 
   function btnIncreaseQtyHandler(event) {
     if (event.target.className === "product__quantity--increment") {
-      const { productQtyEl, productStock } = pathQuantityChange(event);
-      let productQty = Number(productQtyEl.value);
+      const { quantityInput, productStock } = quantityChangeEventDOM(event);
+      let productQty = Number(quantityInput.value);
       if (productQty < productStock) {
         productQty++;
-        productQtyEl.value = productQty;
+        quantityInput.value = productQty;
       } else {
         return;
       }
@@ -193,12 +210,12 @@ function app() {
 
   function btnDecreaseQtyHandler(event) {
     if (event.target.className === "product__quantity--decrement") {
-      const { productQtyEl } = pathQuantityChange(event);
+      const { quantityInput } = quantityChangeEventDOM(event);
 
-      let productQty = Number(productQtyEl.value);
+      let productQty = Number(quantityInput.value);
       if (productQty > 0) {
         productQty--;
-        productQtyEl.value = productQty;
+        quantityInput.value = productQty;
       } else {
         return;
       }
@@ -207,24 +224,25 @@ function app() {
 
   function validateQtyInput(event) {
     if (event.target.className === "product__quantity__value") {
-      const { parentEl, productStock } = pathQuantityChange(event);
-      if (event.target.value < 0) {
-        parentEl.classList.add("quantity--invalid");
-      } else if (event.target.value > productStock) {
-        parentEl.classList.add("quantity--invalid");
+      const { quantityForm, productStock } = quantityChangeEventDOM(event);
+      if (Number(event.target.value) < 0) {
+        quantityForm.classList.add("quantity--invalid");
+      } else if (Number(event.target.value) > productStock) {
+        quantityForm.classList.add("quantity--invalid");
       } else {
-        parentEl.classList.remove("quantity--invalid");
+        quantityForm.classList.remove("quantity--invalid");
       }
     }
   }
 
-  function changeQtyAttr(event) {
+  function changeQuantityDataset(event) {
     if (
       event.target.className === "product__quantity--decrement" ||
-      event.target.className === "product__quantity--increment"
+      event.target.className === "product__quantity--increment" ||
+      event.target.className === "product__quantity__value"
     ) {
-      const { productEl, productQtyEl } = pathQuantityChange(event);
-      let productQty = Number(productQtyEl.value);
+      const { productEl, quantityInput } = quantityChangeEventDOM(event);
+      let productQty = Number(quantityInput.value);
       productEl.dataset.quantity = productQty;
       return true;
     } else {
@@ -234,10 +252,15 @@ function app() {
 
   function changeColorAttribute(event) {
     if (event.target.className === "product__color") {
-      let product = event.path[3];
-      product.dataset.color = event.target.value;
+      const { productEl } = productDOMSelection(event);
+      productEl.dataset.color = event.target.value;
     }
   }
+
+
+
+
+
 
   // MISC CART FUNCTIONS
   function displayCartCount() {
@@ -574,7 +597,7 @@ function app() {
 
   // THIS WILL UPDATE THE STORED CART ITEMS UPON CHANGES TO QUANTITY AND VARIANT IN THE CART
   function updateCartStorage(event) {
-    const update = changeQtyAttr(event);
+    const update = changeQuantityDataset(event);
     const {
       cartItem,
       cartId,
@@ -862,12 +885,13 @@ function app() {
       btnIncreaseQtyHandler(event);
       btnDecreaseQtyHandler(event);
       btnAddToCartHandler(event);
-      changeQtyAttr(event);
+      changeQuantityDataset(event);
     });
 
     productContainer.addEventListener("input", function (event) {
       validateQtyInput(event);
       changeColorAttribute(event);
+      changeQuantityDataset(event);
     });
   }
 
