@@ -1,4 +1,3 @@
-cd
 "use strict";
 // ELEMENT SELECTION
 const app = document.querySelector('.app')
@@ -21,6 +20,7 @@ const userInputFields = Array.from(shippingForm.querySelectorAll("input"));
 const reviewPage = document.querySelector(".review__page");
 const orderItemsContainer = document.querySelector(".order__items")
 const formErrorAlert = document.querySelector(".form__error__alert");
+const alertModal = document.querySelector(".alert__modal");
 
 
 
@@ -628,15 +628,6 @@ function storeBuyerData() {
   sessionStorage.setItem(`${state.id}`, `${state.value}`)
 }
 
-function hideFormError() {
-  formErrorAlert.style.display = "none";
-}
-
-function displayFormError() {
-  center(formErrorAlert)
-  formErrorAlert.style.display = "flex";
-  setTimeout(hideFormError, 2000);
-}
 
 function btnContinueHandler() {
   storeBuyerData()
@@ -651,7 +642,8 @@ function btnContinueHandler() {
     renderOrderPrice();
     renderShippingDetails();
   } else {
-    displayFormError()
+    displayAlertModal("All Input Fields Are Required!")
+    hideAlertModal();
   }
 }
 
@@ -729,8 +721,42 @@ function renderShippingDetails() {
   address1.textContent = sessionStorage.getItem("address");
   address2.textContent = sessionStorage.getItem("city");
   address3.textContent = sessionStorage.getItem("state");
-
 }
+
+function clearStoredUserData (){
+  sessionStorage.clear();
+}
+
+
+function sendOrderToWhatsapp() {
+  const message = `${sessionStorage.getItem("first__name")} ${sessionStorage.getItem("last__name")} has placed an order`;
+  // New Order!! \n Order details \n Item (2pcs, color)\n \n Contact details\n Name \n phone \n Address
+  const urlMessage = message.replace(" ", "%20").replace("\n", "%0A");
+  console.log("test", urlMessage)
+  const href = `https://wa.me/2348143671737?text=${urlMessage}`
+  window.open(href, "_blank");
+  return true;
+}
+
+
+function btnPlaceOrderHandler() {
+  const orderPromise = new Promise(function (resolve, reject) {
+    if (sendOrderToWhatsapp()) resolve("Your Order Has Been Placed!");
+    else reject("Please, Try Again Soon")
+  })
+
+  orderPromise
+    .then((res) => {
+      clearCart();
+      clearStoredUserData();
+      displayAlertModal(res);
+      window.addEventListener("focus", function () {
+        setTimeout(location.reload(), 2000);
+      });
+    })
+    .catch((err) => displayAlertModal(err));
+}
+
 
 
 // // //  //
@@ -743,7 +769,6 @@ function hideOverlay () {
   overlay.classList.add("hidden")
 }
 
-
 function closeModals() {
   cartPage.style.display = "none";
   cartPageContent.style.display = "none";
@@ -753,8 +778,22 @@ function closeModals() {
   hideOverlay();
 }
 
+function actionAlert(message) {
+  alertModal.textContent = message;
+}
+
+function hideAlertModal() {
+  setTimeout(alertModal.style.display = "none", 2000);
+}
+
+function displayAlertModal(message) {
+  actionAlert(message);
+  center(alertModal);
+  alertModal.style.display = "flex";
+}
 
 
+  
 // SLIDER FUNCTIONS
 let curSlide = 0;
 const maxSlides = reviewSlides.length;
@@ -869,3 +908,4 @@ btnEditUserData.addEventListener("click", function () {
   displayShippingForm();
 })
 
+btnPlaceOrder.addEventListener("click", btnPlaceOrderHandler);
