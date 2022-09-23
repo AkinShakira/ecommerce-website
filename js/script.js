@@ -159,13 +159,13 @@ function app() {
   async function displayProducts() {
     try {
       const { productsData } = await createProductDataStr();
-      // console.log(productsData.entries())
-      productsData.forEach((product) => console.log(product));
       productsData.forEach((product) => renderProducts(product.id, product.imageUrl, product.name, product.price, product.stock, product.variants));
     } catch (error) {
       console.log(error);
     }
   }
+
+
 
   // // //  //
   // PRODUCT OPTION FUNCTIONS
