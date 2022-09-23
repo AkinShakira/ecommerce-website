@@ -408,20 +408,15 @@ function app() {
                   </select>
                 </div>
 
-                <p class="cart__item__price order-3">${new Intl.NumberFormat(
-                  "en-Ng",
-                  { style: "currency", currency: "NGN" }
-                ).format(price)} <span class="note">each</span></p>
+                <p class="cart__item__price order-3">${convertPriceToLocalCurrency(
+                  price
+                )} <span class="note">each</span></p>
 
                 <p class="cart__item__subtotal order-5" data-subtotal="${
                   price * quantity
-                }" > <span class="cart__item__subtotal__value">${new Intl.NumberFormat(
-      "en-Ng",
-      {
-        style: "currency",
-        currency: "NGN",
-      }
-    ).format(price * quantity)} </span> <span class="note">Subtotal</span></p>
+                }" > <span class="cart__item__subtotal__value">${convertPriceToLocalCurrency(
+      price * quantity
+    )} </span> <span class="note">Subtotal</span></p>
 
                 <button class="btn__cart--remove-item order-2">X</button>
 
@@ -464,10 +459,9 @@ function app() {
 
   function getShippingPrice() {
     cartShippingValue.dataset.value = shippingPrice.value;
-    cartShippingValue.textContent = `${new Intl.NumberFormat("en-Ng", {
-      style: "currency",
-      currency: "NGN",
-    }).format(shippingPrice.value)}`;
+    cartShippingValue.textContent = `${nconvertPriceToLocalCurrency(
+      shippingPrice.value
+    )}`;
     return shippingPrice.value;
   }
 
@@ -482,10 +476,8 @@ function app() {
       const cartItemSubtotalValue = item.querySelector(
         ".cart__item__subtotal__value"
       );
-      cartItemSubtotalValue.textContent = new Intl.NumberFormat("en-Ng", {
-        style: "currency",
-        currency: "NGN",
-      }).format(itemSubtotal);
+      cartItemSubtotalValue.textContent =
+        convertPriceToLocalCurrency(itemSubtotal);
     });
   }
 
@@ -511,15 +503,9 @@ function app() {
     cartTotal.dataset.value = total;
 
     // INSERTING THE VALUE IN HTML
-    cartSubtotal.textContent = `${new Intl.NumberFormat("en-Ng", {
-      style: "currency",
-      currency: "NGN",
-    }).format(subtotal)}`;
+    cartSubtotal.textContent = `${convertPriceToLocalCurrency(subtotal)}`;
 
-    cartTotal.textContent = `${new Intl.NumberFormat("en-Ng", {
-      style: "currency",
-      currency: "NGN",
-    }).format(total)}`;
+    cartTotal.textContent = `${convertPriceToLocalCurrency(total)}`;
   }
 
   // // //  //
@@ -711,13 +697,9 @@ function app() {
                                     }</span><span>pcs</span></p>
                                   </div>
                                 </div>
-                                <p class="order__item__price">${new Intl.NumberFormat(
-                                  "en-Ng",
-                                  {
-                                    style: "currency",
-                                    currency: "NGN",
-                                  }
-                                ).format(item.dataset.subtotal)}</p>
+                                <p class="order__item__price">${convertPriceToLocalCurrency(
+                                  item.dataset.subtotal
+                                )}</p>
                               </div> `;
 
         orderItemsContainer.insertAdjacentHTML("beforeend", orderItemHtml);
@@ -730,20 +712,17 @@ function app() {
     const shipping = document.querySelector(".review__shipping__value");
     const total = document.querySelector(".review__total__value");
 
-    subtotal.textContent = `${new Intl.NumberFormat("en-Ng", {
-      style: "currency",
-      currency: "NGN",
-    }).format(sessionStorage.getItem("cart-subtotal"))}`;
+    subtotal.textContent = `${convertPriceToLocalCurrency(
+      sessionStorage.getItem("cart-subtotal")
+    )}`;
 
-    shipping.textContent = `${new Intl.NumberFormat("en-Ng", {
-      style: "currency",
-      currency: "NGN",
-    }).format(sessionStorage.getItem("shipping-value"))}`;
+    shipping.textContent = `${convertPriceToLocalCurrency(
+      sessionStorage.getItem("shipping-value")
+    )}`;
 
-    total.textContent = `${new Intl.NumberFormat("en-Ng", {
-      style: "currency",
-      currency: "NGN",
-    }).format(sessionStorage.getItem("cart-total"))}`;
+    total.textContent = `${convertPriceToLocalCurrency(
+      sessionStorage.getItem("cart-total")
+    )}`;
   }
 
   function renderShippingDetails() {
