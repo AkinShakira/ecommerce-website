@@ -45,7 +45,7 @@ function app() {
 
   // STARTING CONDITIONS
   createProductDataStr();
-  addProductsAndAttributes(); 
+  addProductsAndAttributesToUI(); 
   renderCartStorage();
 
 
@@ -108,7 +108,7 @@ function app() {
     return variant;
   }
 
-  function renderProducts(id, imageUrl, name, price, stock, variants) {
+  function generateProductsHTML(id, imageUrl, name, price, stock, variants) {
     const html = `
           <div class="product">
             <div class="product__image__container mb-2">
@@ -162,11 +162,11 @@ function app() {
 
   // // //  //
   // PRODUCT DISPLAY FUNCTIONS
-  async function addProductsAndAttributes() {
+  async function addProductsAndAttributesToUI() {
     try {
       const { productsData } = await createProductDataStr();
       productsData.forEach((product) => {
-        renderProducts(product.id, product.imageUrl, product.name, product.price, product.stock, product.variants);
+        generateProductsHTML(product.id, product.imageUrl, product.name, product.price, product.stock, product.variants);
         setProductDataAtrributes(product.id, product.stock);
         return document.querySelectorAll(".product");
       });
@@ -250,7 +250,7 @@ function app() {
     }
   }
 
-  function changeColorAttribute(event) {
+  function changeColorDataset(event) {
     if (event.target.className === "product__color") {
       const { productEl } = productDOMSelection(event);
       productEl.dataset.color = event.target.value;
@@ -869,7 +869,7 @@ function app() {
 
     productContainer.addEventListener("input", function (event) {
       validateQtyInput(event);
-      changeColorAttribute(event);
+      changeColorDataset(event);
       changeQuantityDataset(event);
     });
   }
@@ -887,7 +887,7 @@ function app() {
     });
 
     cartItemsContainer.addEventListener("input", function (event) {
-      changeColorAttribute(event);
+      changeColorDataset(event);
     });
 
     cartPage.addEventListener("click", function (event) {
