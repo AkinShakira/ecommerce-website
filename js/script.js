@@ -40,9 +40,15 @@ function app() {
   const btnEditUserData = document.querySelector(".btn__edit__user-data");
   const btnPlaceOrder = document.querySelector(".btn__place__order");
 
+
+
+
   // STARTING CONDITIONS
+  createProductDataStr();
   displayProducts();
   renderCartStorage();
+
+
 
   // EVENTS
   initProductActions();
@@ -50,79 +56,92 @@ function app() {
   initCart();
   initCheckout();
 
+
+
   // FUNCTIONS
   // // //  //
   // PRODUCT RENDERING FUNTIONS
+
+  async function getProductJson() {
+    try {
+      const response = await fetch(
+        "https://shakiraakinleye.github.io/Data/db.json"
+      );
+      const productsJSON = await response.json();
+      return {productsJSON};
+      // Handle errors
+    } catch {
+      console.log(error);
+    }
+  }
+
+  async function createProductDataStr() {
+    try {
+      const {productsJSON} = await getProductJson();
+      const products = productsJSON.products;
+      const productsData = new Map();
+      products.forEach((product) => {
+        productsData.set(product.productID, {
+          id: product.productID,
+          imageUrl: product.imageUrl,
+          name: product.name,
+          price: product.price,
+          stock: product.stock,
+          variants: [...product.variant],
+        });
+      });
+      return { productsData };
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+
 
   function renderVariants(option) {
     const variant = `<option value="${option}">${option}</option>`;
     return variant;
   }
 
-  function renderProducts(product) {
+  function renderProducts(id, imageUrl, name, price, stock, variants) {
     const html = `
-          <div class="product" data-id="${product.productID}" data-image="${
-      product.imageUrl
-    }" data-name="${product.name}" data-stock="${product.stock}" data-price="${
-      product.price
-    }" data-color="" data-quantity="">
+          <div class="product" data-id="${id}" data-color="" data-quantity="">
             <!-- product image -->
             <div class="product__image__container mb-2">
-              <img src= "${
-                product.imageUrl
-              }" alt="Product Image" class="product__image" >
+              <img src= "${imageUrl}" alt="Product Image" class="product__image" >
             </div>
 
-            <p class="product__name">${product.name}</p>
+            <p class="product__name">${name}</p>
 
             <div class="product__info">
-              <p class="product__stock__icon ${
-                product.stock > 0 ? "product--instock" : "product--soldout"
-              }"></p>
+              <p class="product__stock__icon ${stock > 0 ? "product--instock" : "product--soldout"}"></p>
                 
-              <p class="product__stock__note mr-4">${
-                product.stock > 0 ? "In Stock" : "Sold Out"
-              }</p>
+              <p class="product__stock__note mr-4">${stock > 0 ? "In Stock" : "Sold Out"}</p>
                 
               <p class="product__price">${new Intl.NumberFormat("en-Ng", {
                 style: "currency",
                 currency: "NGN",
-              }).format(product.price)}</p>
+              }).format(price)}</p>
             </div>
 
             <div class="product__options">
-              <div class="product__quantity__container" id="${
-                product.stock > 0 ? "" : "action--disabled"
-              }">
+              <div class="product__quantity__container" id="${stock > 0 ? "" : "action--disabled"}">
                 <form id="product__quantity__form" class="product__quantity__form" action="#">
-                  <input type="button" value="-" class="product__quantity--decrement" id="${
-                    product.stock > 0 ? "" : "action--disabled"
-                  }"/>
-                  <input type="text" name="product__quantity__value" value="${
-                    product.stock > 0 ? 1 : 0
-                  }" class="product__quantity__value" id="${
-      product.stock > 0 ? "" : "action--disabled"
-    }"/>
-                  <input type="button" value="+" class="product__quantity--increment" id="${
-                    product.stock > 0 ? "" : "action--disabled"
-                  }"/>
+                  <input type="button" value="-" class="product__quantity--decrement" id="${stock > 0 ? "" : "action--disabled"}"/>
+                  <input type="text" name="product__quantity__value" value="${stock > 0 ? 1 : 0}" 
+                  class="product__quantity__value" id="${stock > 0 ? "" : "action--disabled"}"/>
+                  <input type="button" value="+" class="product__quantity--increment" id="${stock > 0 ? "" : "action--disabled"}"/>
                 </form>
               </div>
 
               <div class="product__variant" >
-                <select name="product__color" class="product__color" id="${
-                  product.stock > 0 ? "" : "action--disabled"
-                }">
-                    ${product.variant.map((option) =>
-                      renderVariants(option)
-                    )}               
+                <select name="product__color" class="product__color" id="${stock > 0 ? "" : "action--disabled"}">
+                    ${variants.map((option) => renderVariants(option))}               
                 </select>
               </div>
             </div>
 
-            <div class="product__actions" id="${
-              product.stock > 0 ? "" : "action--disabled"
-            }">
+            <div class="product__actions" id="${stock > 0 ? "" : "action--disabled"}">
               <button class="btn__add-cart">
                 <img src="images/add-to-cart.png" alt="Add To Cart">
                 <span> Add To Bag </span>
@@ -133,27 +152,18 @@ function app() {
     productContainer.insertAdjacentHTML("beforeend", html);
   }
 
-  async function getProductJson() {
-    try {
-      const response = await fetch(
-        "https://shakiraakinleye.github.io/Data/db.json"
-      );
-      const json = await response.json();
-      return json;
-      // Handle errors
-    } catch {
-      console.log(error);
-    }
-  }
+
 
   // // //  //
-  // PRODUCT DISPLAY FUNTIONS
+  // PRODUCT DISPLAY FUNCTIONS
   async function displayProducts() {
     try {
-      const data = await getProductJson();
-      data.products.forEach((product) => renderProducts(product));
-    } catch (err) {
-      console.log(err);
+      const { productsData } = await createProductDataStr();
+      // console.log(productsData.entries())
+      productsData.forEach((product) => console.log(product));
+      productsData.forEach((product) => renderProducts(product.id, product.imageUrl, product.name, product.price, product.stock, product.variants));
+    } catch (error) {
+      console.log(error);
     }
   }
 
