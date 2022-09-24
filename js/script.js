@@ -40,22 +40,15 @@ function app() {
   const btnEditUserData = document.querySelector(".btn__edit__user-data");
   const btnPlaceOrder = document.querySelector(".btn__place__order");
 
-
-
-
   // STARTING CONDITIONS
-  createProductDataStr();
-  addProductsAndAttributesToUI(); 
-  renderCartStorage();
-
+  addProductsAndAttributesToUI();
+  // renderCartStorage();
 
   // EVENTS
   initProductActions();
   initSlider();
   initCart();
   initCheckout();
-
-
 
   // FUNCTIONS
   // // //  //
@@ -67,7 +60,7 @@ function app() {
         "https://shakiraakinleye.github.io/Data/db.json"
       );
       const productsJSON = await response.json();
-      return {productsJSON};
+      return { productsJSON };
       // Handle errors
     } catch {
       console.log(error);
@@ -76,11 +69,11 @@ function app() {
 
   async function createProductDataStr() {
     try {
-      const {productsJSON} = await getProductJson();
+      const { productsJSON } = await getProductJson();
       const products = productsJSON.products;
-      const productsData = new Map();
+      const productsDataMap = new Map();
       products.forEach((product) => {
-        productsData.set(product.productID, {
+        productsDataMap.set(product.productID, {
           id: product.productID,
           imageUrl: product.imageUrl,
           name: product.name,
@@ -89,9 +82,9 @@ function app() {
           variants: [...product.variant],
         });
       });
-      return { productsData };
+      return { productsDataMap };
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
   }
 
@@ -101,7 +94,6 @@ function app() {
       currency: "NGN",
     }).format(value);
   }
-
 
   function renderVariants(option) {
     const variant = `<option value="${option}">${option}</option>`;
@@ -118,31 +110,53 @@ function app() {
             <p class="product__name">${name}</p>
 
             <div class="product__info">
-              <p class="product__stock__icon ${stock > 0 ? "product--instock" : "product--soldout"}"></p>
+              <p class="product__stock__icon ${
+                stock > 0 ? "product--instock" : "product--soldout"
+              }"></p>
                 
-              <p class="product__stock__note mr-4">${stock > 0 ? "In Stock" : "Sold Out"}</p>
+              <p class="product__stock__note mr-4">${
+                stock > 0 ? "In Stock" : "Sold Out"
+              }</p>
                 
-              <p class="product__price">${convertPriceToLocalCurrency(price)}</p>
+              <p class="product__price">${convertPriceToLocalCurrency(
+                price
+              )}</p>
             </div>
 
             <div class="product__options">
-              <div class="product__quantity__container" id="${stock > 0 ? "" : "action--disabled"}">
+              <div class="product__quantity__container" id="${
+                stock > 0 ? "" : "action--disabled"
+              }">
                 <form id="product__quantity__form" class="product__quantity__form" action="#">
-                  <input type="button" value="-" class="product__quantity--decrement" id="${stock > 0 ? "" : "action--disabled"}"/>
-                  <input type="text" name="product__quantity__value" value="${stock > 0 ? 1 : 0}" 
-                  class="product__quantity__value" id="${stock > 0 ? "" : "action--disabled"}"/>
-                  <input type="button" value="+" class="product__quantity--increment" id="${stock > 0 ? "" : "action--disabled"}"/>
+                  <input type="button" value="-" class="product__quantity--decrement" id="${
+                    stock > 0 ? "" : "action--disabled"
+                  }"/>
+                  <input type="text" name="product__quantity__value" value="${
+                    stock > 0 ? 1 : 0
+                  }" 
+                  class="product__quantity__value" id="${
+                    stock > 0 ? "" : "action--disabled"
+                  }"/>
+                  <input type="button" value="+" class="product__quantity--increment" id="${
+                    stock > 0 ? "" : "action--disabled"
+                  }"/>
                 </form>
               </div>
 
               <div class="product__variant" >
-                <select name="product__color" class="product__color" id="${stock > 0 ? "" : "action--disabled"}">
-                    ${variants.map((option) => renderVariants(option))}               
+                <select name="product__color" class="product__color" id="${
+                  stock > 0 ? "" : "action--disabled"
+                }">
+                    ${variants.map((option) =>
+                      renderVariants(option)
+                    )}               
                 </select>
               </div>
             </div>
 
-            <div class="product__actions" id="${stock > 0 ? "" : "action--disabled"}">
+            <div class="product__actions" id="${
+              stock > 0 ? "" : "action--disabled"
+            }">
               <button class="btn__add-cart">
                 <img src="images/add-to-cart.png" alt="Add To Cart">
                 <span> Add To Bag </span>
@@ -150,7 +164,8 @@ function app() {
             </div>
           </div>
         `;
-    productContainer.insertAdjacentHTML("beforeend", html);
+
+    return { html };
   }
 
   function setProductDataAtrributes(id, stock) {
@@ -159,35 +174,44 @@ function app() {
     lastProduct.dataset.stock = stock;
   }
 
-
   // // //  //
   // PRODUCT DISPLAY FUNCTIONS
   async function addProductsAndAttributesToUI() {
     try {
-      const { productsData } = await createProductDataStr();
-      productsData.forEach((product) => {
-        generateProductsHTML(product.id, product.imageUrl, product.name, product.price, product.stock, product.variants);
+      const { productsDataMap } = await createProductDataStr();
+      productsDataMap.forEach((product) => {
+        const { html } = generateProductsHTML(
+          product.id,
+          product.imageUrl,
+          product.name,
+          product.price,
+          product.stock,
+          product.variants
+        );
+        productContainer.insertAdjacentHTML("beforeend", html);
         setProductDataAtrributes(product.id, product.stock);
-        return document.querySelectorAll(".product");
       });
     } catch (error) {
       console.log(error);
     }
   }
 
-
   // // //  //
   // PRODUCT OPTION FUNCTIONS
   function productDOMSelection(event) {
     const productEl = event.target.closest(".product");
-    const productStock = productEl.dataset.stock;  
-    return {productEl, productStock}
+    const productId = productEl.dataset.id;
+    const productStock = productEl.dataset.stock;
+    const productQuantityValue = productEl.querySelector(
+      ".product__quantity__value"
+    ).value;
+    const productColorValue = productEl.querySelector(".product__color").value;
+    return { productEl, productId, productStock, productQuantityValue, productColorValue };
   }
 
-
-  function quantityChangeEventDOM(event) {
+  function quantityChangeEventDOMSelection(event) {
     const { productEl, productStock } = productDOMSelection(event);
-    const quantityForm = event.path[1];
+    const quantityForm = event.target.closest(".product__quantity__form");
     const quantityInput = quantityForm.querySelector(
       ".product__quantity__value"
     );
@@ -197,8 +221,9 @@ function app() {
 
   function btnIncreaseQtyHandler(event) {
     if (event.target.className === "product__quantity--increment") {
-      const { quantityInput, productStock } = quantityChangeEventDOM(event);
-      let productQty = Number(quantityInput.value);
+      const { quantityInput, productStock } =
+        quantityChangeEventDOMSelection(event);
+      let productQty = +quantityInput.value;
       if (productQty < productStock) {
         productQty++;
         quantityInput.value = productQty;
@@ -210,9 +235,9 @@ function app() {
 
   function btnDecreaseQtyHandler(event) {
     if (event.target.className === "product__quantity--decrement") {
-      const { quantityInput } = quantityChangeEventDOM(event);
+      const { quantityInput } = quantityChangeEventDOMSelection(event);
 
-      let productQty = Number(quantityInput.value);
+      let productQty = +quantityInput.value;
       if (productQty > 0) {
         productQty--;
         quantityInput.value = productQty;
@@ -224,10 +249,11 @@ function app() {
 
   function validateQtyInput(event) {
     if (event.target.className === "product__quantity__value") {
-      const { quantityForm, productStock } = quantityChangeEventDOM(event);
-      if (Number(event.target.value) < 0) {
+      const { quantityForm, productStock } =
+        quantityChangeEventDOMSelection(event);
+      if (+event.target.value < 0) {
         quantityForm.classList.add("quantity--invalid");
-      } else if (Number(event.target.value) > productStock) {
+      } else if (+event.target.value > productStock) {
         quantityForm.classList.add("quantity--invalid");
       } else {
         quantityForm.classList.remove("quantity--invalid");
@@ -241,8 +267,9 @@ function app() {
       event.target.className === "product__quantity--increment" ||
       event.target.className === "product__quantity__value"
     ) {
-      const { productEl, quantityInput } = quantityChangeEventDOM(event);
-      let productQty = Number(quantityInput.value);
+      const { productEl, quantityInput } =
+        quantityChangeEventDOMSelection(event);
+      let productQty = +quantityInput.value;
       productEl.dataset.quantity = productQty;
       return true;
     } else {
@@ -257,137 +284,14 @@ function app() {
     }
   }
 
-
-
-
-
-
-  // MISC CART FUNCTIONS
-  function displayCartCount() {
-    if (cartItemsContainer.childElementCount >= 1) {
-      cartCount.style.display = "block";
-      cartCount.textContent = cartItemsContainer.childElementCount;
-    } else {
-      cartCount.style.display = "none";
-    }
-  }
-
-  function pathProductToCart(event) {
-    const productEl = event.target.closest(".product");
-    const productId = Number(productEl.dataset.id);
-    const productImgSrc = productEl.dataset.image;
-    const productName = productEl.dataset.name;
-    const productPrice = productEl.dataset.price;
-    const productStock = productEl.dataset.stock;
-    const productColor = productEl.dataset.color;
-    return {
-      productEl,
-      productId,
-      productImgSrc,
-      productName,
-      productPrice,
-      productStock,
-      productColor,
-    };
-  }
-
-  function pathInCart(event) {
-    const cartItem = event.target.closest(".cart__item");
-    const cartId = Number(cartItem.dataset.id);
-    const cartItemImgSrc = cartItem.dataset.image;
-    const cartItemName = cartItem.dataset.name;
-    const cartItemPrice = cartItem.dataset.price;
-    const cartItemStock = cartItem.dataset.stock;
-    const cartItemColor = cartItem.dataset.color;
-    const cartItemQty = cartItem.dataset.quantity;
-
-    return {
-      cartItem,
-      cartId,
-      cartItemImgSrc,
-      cartItemName,
-      cartItemPrice,
-      cartItemStock,
-      cartItemColor,
-      cartItemQty,
-    };
-  }
-
-  // // //  //
-  // ADD TO CART FUNCTIONS
-
-  function checkIdPresent(event) {
-    const { productId } = pathProductToCart(event);
-    const cartArray = Array.from(cartItemsContainer.children);
-    const cartIDs = cartArray.map((item) => Number(item.dataset.id));
-    const idPresent = cartIDs.includes(productId);
-    return idPresent;
-  }
-
-  // // FIX: check if cart has same variant
-  // function checkIdPresent(event) {
-  //   const { productId, productColor } = pathProductToCart(event);
-  //   const cartIDs = cartArray.map((item) => Number(item.dataset.id));
-  //   const idPresent = cartIDs.includes(productId);
-  //   return idPresent;
-  // }
-
-  // function checkColorPresent(event) {
-  //   const { productColor } = pathProductToCart(event);
-  //   const cartIs = cartArray.map((item) => Number(item.dataset.id));
-  //   const idPresent = cartIDs.includes(productId);
-  // }
-
-  function noQuantitySelected(event) {
-    const { productEl } = pathProductToCart(event);
-    const selectedProductQty = productEl.querySelector(
-      ".product__quantity__value"
-    ).value;
-    if (Number(selectedProductQty) === 0) {
-      return true;
-    } else {
-      return false;
-    }
-  }
-
-  function outOfStock(event) {
-    const { productStock } = pathProductToCart(event);
-    if (Number(productStock) === 0) {
-      return true;
-    } else {
-      return false;
-    }
-  }
-
-  function btnAddToCartHandler(event) {
-    if (event.target.className === "btn__add-cart") {
-      const idPresent = checkIdPresent(event);
-      const QuantitySelected = noQuantitySelected(event);
-      const stockOut = outOfStock(event);
-
-      if (
-        idPresent === false &&
-        QuantitySelected === false &&
-        stockOut === false
-      ) {
-        const cartItem = renderCartProduct(event);
-        displayCartCount();
-        addCartItemLocalStorage(event, cartItem);
-      }
-    } else {
-      return;
-    }
-  }
-
-  // // //  //
-  // CART AND CONTENT RENDERING FUNCTIONS
-
-  function createCartItemHtml(id, name, stock, price, color, quantity, img) {
-    const html = `<div class="cart__item" data-id="${id}" data-image="${img}" data-name="${name}" data-stock="${stock}" data-price="${price}" data-color="${color}" data-quantity="${quantity}" data-subtotal="${
-      price * quantity
-    }">
+  // CART
+  // CART
+  // CART
+  
+  function generateCartItemHTML(color, id, imageUrl, name, price, quantity) {
+    const html = `<div class="cart__item">
               <div class="cart__item__image">
-                <img src="${img}" alt="Product image">
+                <img src="${imageUrl}" alt="Product image">
               </div>
 
               <div class="cart__content">
@@ -426,36 +330,176 @@ function app() {
     return html;
   }
 
-  function renderCartProduct(event) {
-    const {
-      productEl,
-      productId,
-      productImgSrc,
-      productName,
-      productPrice,
-      productStock,
-    } = pathProductToCart(event);
-
-    const selectedProductQty = productEl.querySelector(
-      ".product__quantity__value"
-    ).value;
-    const selectedProductColor =
-      productEl.querySelector(".product__color").value;
-    productEl.dataset.quantity = selectedProductQty;
-    productEl.dataset.color = selectedProductColor;
-
-    const html = createCartItemHtml(
-      productId,
-      productName,
-      productStock,
-      productPrice,
-      selectedProductColor,
-      selectedProductQty,
-      productImgSrc
-    );
-    cartItemsContainer.insertAdjacentHTML("beforeend", html);
-    return html;
+  function setCartItemDataset(id, color, price, quantity) {
+    const latestCartItem = cartItemsContainer.lastElementChild;
+    latestCartItem.dataset.id = id;
+    latestCartItem.dataset.color = color;
+    latestCartItem.dataset.quantity = quantity;
+    latestCartItem.dataset.subtotal = price * quantity;
+    return { latestCartItem };
   }
+
+  function generateCartUI(html) {
+    cartItemsContainer.insertAdjacentHTML("beforeend", html);
+    console.log(cartItemsContainer)
+  }
+
+  function addCartItemToLocalStorage(
+    id,
+    color,
+    imageUrl,
+    name,
+    price,
+    quantity
+  ) {
+    const cartObject = {
+      id: id,
+      color: color,
+      image: imageUrl,
+      name: name,
+      price: price,
+      quantity: quantity,
+    };
+    const cartObjectString = JSON.stringify(cartObject);
+    localStorage.setItem(id, cartObjectString);
+  }
+
+  function updateAndDisplayCartCount() {
+    if (cartItemsContainer.childElementCount > 0) {
+      cartCount.style.display = "block";
+      cartCount.textContent = cartItemsContainer.childElementCount;
+    } else {
+      cartCount.style.display = "none";
+    }
+  }
+
+
+  async function addItemToCart(event, key) {
+    try {
+      const { productsDataMap } = await createProductDataStr();
+      const product = productsDataMap.get(+key);
+      const { productQuantityValue, productColorValue } =
+      productDOMSelection(event);
+
+      const html = generateCartItemHTML(
+        productColorValue,
+        product.id,
+        product.imageUrl,
+        product.name,
+        product.price,
+        productQuantityValue
+      );
+
+      generateCartUI(html);
+
+      const { latestCartItem } = setCartItemDataset(
+        product.id,
+        productColorValue,
+        product.price,
+        productQuantityValue
+      );
+
+      addCartItemToLocalStorage(
+        product.id,
+        productColorValue,
+        product.imageUrl,
+        product.name,
+        product.price,
+        productQuantityValue
+      );
+
+      updateAndDisplayCartCount();
+
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  function checkIdPresentInCart(id) {
+    const cartItemsArray = Array.from(cartItemsContainer.children);
+    const cartIDs = cartItemsArray.map((item) => +item.dataset.id);
+    const idPresent = cartIDs.includes(+id);
+    return { idPresent };
+  }
+
+  function checkQuantitySelected(quantity) {
+    if (+quantity === 0) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  async function btnAddToCartHandler(event) {
+    try {
+      const { productId, productQuantityValue } = productDOMSelection(event);
+
+      if (event.target.className === "btn__add-cart") {
+        const { idPresent } = checkIdPresentInCart(productId);
+        const noQuantitySelected = checkQuantitySelected(productQuantityValue);
+
+        console.log(idPresent, productQuantityValue);
+        if (idPresent === false && noQuantitySelected === false) {
+          addItemToCart(event, productId);
+        } else {
+          return;
+        }
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+
+
+
+
+
+  
+  // undone
+
+  function pathInCart(event) {
+    const cartItem = event.target.closest(".cart__item");
+    const cartId = Number(cartItem.dataset.id);
+    const cartItemImgSrc = cartItem.dataset.image;
+    const cartItemName = cartItem.dataset.name;
+    const cartItemPrice = cartItem.dataset.price;
+    const cartItemStock = cartItem.dataset.stock;
+    const cartItemColor = cartItem.dataset.color;
+    const cartItemQty = cartItem.dataset.quantity;
+
+    return {
+      cartItem,
+      cartId,
+      cartItemImgSrc,
+      cartItemName,
+      cartItemPrice,
+      cartItemStock,
+      cartItemColor,
+      cartItemQty,
+    };
+  }
+
+  // // //  //
+  // ADD TO CART FUNCTIONS
+
+
+
+  // // FIX: check if cart has same variant
+  // function checkIdPresentInCart(event) {
+  //   const { productId, productColor } = pathProductToCart(event);
+  //   const cartIDs = cartArray.map((item) => Number(item.dataset.id));
+  //   const idPresent = cartIDs.includes(productId);
+  //   return idPresent;
+  // }
+
+  // function checkColorPresent(event) {
+  //   const { productColor } = pathProductToCart(event);
+  //   const cartIs = cartArray.map((item) => Number(item.dataset.id));
+  //   const idPresent = cartIDs.includes(productId);
+  // }
+
+
 
   function getShippingPrice() {
     cartShippingValue.dataset.value = shippingPrice.value;
@@ -544,7 +588,7 @@ function app() {
       delCartItemLocalStorage(event);
       calcItemSubtotal();
       calcCartTotal();
-      displayCartCount();
+      updateAndDisplayCartCount();
     }
   }
 
@@ -555,16 +599,12 @@ function app() {
     });
     calcItemSubtotal();
     calcCartTotal();
-    displayCartCount();
+    updateAndDisplayCartCount();
     localStorage.clear();
   }
 
   // CART STORAGE FUNCTIONS
-  // USED THE PRODUCT TO CART PATH HERE BECAUSE THIS ACTION ACTUALLY HAPPENS ON THE PRODUCT PAGE BEFORE THE ITEM IS IN CART
-  function addCartItemLocalStorage(event, item) {
-    const { productId } = pathProductToCart(event);
-    localStorage.setItem(`${productId}`, item);
-  }
+
 
   // USED THE IN CART PATH BECAUSE THE ITEM IS IN CART NOW AND THE ACTION OCCURS IN THE CART
   function delCartItemLocalStorage(event) {
@@ -578,7 +618,7 @@ function app() {
     cartStorage.forEach(function (item) {
       cartItemsContainer.insertAdjacentHTML("beforeend", item);
     });
-    displayCartCount();
+    updateAndDisplayCartCount();
   }
 
   // THIS WILL UPDATE THE STORED CART ITEMS UPON CHANGES TO QUANTITY AND VARIANT IN THE CART
@@ -596,7 +636,7 @@ function app() {
     } = pathInCart(event);
 
     if (update === true) {
-      const updatedItem = createCartItemHtml(
+      const updatedItem = generateCartItemHTML(
         cartId,
         cartItemName,
         cartItemStock,
@@ -845,7 +885,6 @@ function app() {
     goToSlide(curSlide);
   }
 
-  
   // EVENTS
 
   function initSlider() {
@@ -933,5 +972,4 @@ function app() {
 
     btnPlaceOrder.addEventListener("click", btnPlaceOrderHandler);
   }
-} 
-
+}
