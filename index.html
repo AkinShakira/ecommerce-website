@@ -12,11 +12,11 @@
   <link rel="stylesheet" href="css/product.css">
   <link rel="stylesheet" href="css/footer-style.css">
   <link rel="stylesheet" href="css/error.css">
-  <link rel="stylesheet" href="css/cart.css">
+  <link rel="stylesheet" href="css/cart_checkout.css">
   <script defer src="js/script.js"></script>
   <title>Anythingpretty.ng</title>
 </head>
-<body>
+<body class="body">
   <div class="app">
     <!-- The announcement banner -->
     <div class="banner__announcement">
@@ -47,10 +47,10 @@
         </div>
 
         <!-- Links to cart and list of favorites -->
-        <div class="nav__btns flex gap-4">
-          <button class="btn__favorite">
+        <div class="nav__btns flex">
+          <!-- <button class="btn__favorite">
             <img src="images/favorite.png" alt="Favorite List Image">
-          </button>
+          </button> -->
 
           <button class="btn__cart">
             <img src="images/cart.png" alt="Cart Image">
@@ -93,14 +93,47 @@
       <!-- reveiw slides container -->
       <div class="slider page--width">
         <!-- each review slide -->
-        <div class="review__slide slide">
-          <blockquote class="review__body">The accessories are super stylish and minimalist. The earrings I got are lightweight just as advertised.</blockquote>
+        <div class="slide">
+          <div class="review">
+            <blockquote class="review__body">The accessories are super stylish and minimalist. The earrings I got are lightweight just as advertised.</blockquote>
 
           <div class="review__footer">
             <span>Temilade</span>
             <span>● Lagos, NG</span>
           </div>
+          </div>
         </div>
+
+        <!-- each review slide -->
+        <div class="slide">
+          <div class="review">
+            <blockquote class="review__body">The necklace set I got is so pretty and long-lasting. I definitely got my money's worth.</blockquote>
+
+            <div class="review__footer">
+              <span>Nenye</span>
+              <span>● Ogun, NG</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- each review slide -->
+        <div class="slide">
+          <div class="review">
+            <blockquote class="review__body">AP is my forever plug! I just love the pieces, they are so pretty and comfy!</blockquote>
+
+            <div class="review__footer">
+              <span>Fave</span>
+              <span>● Abuja, NG</span>
+            </div>
+          </div>
+        </div>
+
+        <button class="slider__btn slider__btn--left">
+          <img src="images/left-arrow.png" alt="left-arrow">
+        </button>
+        <button class="slider__btn slider__btn--right">
+          <img src="images/right-arrow.png" alt="right-arrow">
+        </button>
       </div>
     </section>
 
@@ -164,12 +197,11 @@
     <!-- FOR POP UPS/OVERLAYS -->
 
     <!-- OVERLAY -->
-    <!-- <div class="overlay hidden absolute w-full top-0 bottom-0 left-0 bg-black bg-opacity-50 z-10">  -->
-    </div>
+    <div class="overlay hidden absolute w-full top-0 bottom-0 left-0 bg-black bg-opacity-50 z-10"> </div>
 
     <!-- CART PAGE -->
     <div class="cart__page ">
-      <div class="cart__page__content">
+      <div class="cart__page__content page--width">
         <div class="cart__container">
           <div class="cart__title__container">
             <p class="cart__title">
@@ -196,11 +228,11 @@
 
             <div class="price__summary">
               <div class="cart__subtotal">
-                <span>Subtotal</span> <span class="cart__subtotal__value">00000</span>
+                <span>Subtotal</span> <span class="cart__subtotal__value" id="cart-subtotal" data-value="">00000</span>
               </div>
 
               <div class="cart__shipping">
-                <span>Shipping</span> <span class="cart__shipping__value">00000</span>
+                <span>Shipping</span> <span class="cart__shipping__value" id="shipping-value" data-value="">00000</span>
               </div>
 
               <div class="shipping__selector__container">
@@ -216,7 +248,7 @@
 
             <div class="cart__total">
               <span class="">TOTAL</span> 
-              <span class="cart__total__value">
+              <span class="cart__total__value" id="cart-total" data-value="">
                 000000
               </span>
             </div>
@@ -231,6 +263,16 @@
           
       </div>
 
+      <!-- FIX: EMPTY CART ALERT -->
+      <div class="cart__page__empty">
+        <div class="empty__cart__message">
+          <p>
+            You haven't added any item to cart...
+          </p>
+          <img src="" alt="Sad Face">
+        </div>
+      </div>
+
       <button class="btn__cart--close ">
         &times;
       </button>
@@ -238,18 +280,165 @@
     </div>
     <!-- CART END -->
 
-      <!-- FIX: EMPTY CART ALERT -->
-    <div class="cart__page__empty ">
-      <div class="empty__cart__message">
-        <div>
-        You haven't added any item to cart..
-        </div>
-        <img src="" alt="Sad Face">
-      </div>
 
-      <button class="btn__cart--close ">
-        &times;
-      </button>
+
+    <!-- CHECKOUT VIEW -->
+    <div class="checkout__page">
+      <div class="shipping__container page--width">
+        <h1 class="page__heading">
+          Shipping
+        </h1>
+
+        <!-- FIX: VALIDATE FORM IMMEDIATELY -->
+      <form class="shipping__form" action="" aria-required="true" required validate       autocomplete="on">  
+        <div class="shipping__form__container">
+          <div class="buyer__details">
+            <h2 class="form__heading">Personal Details</h1>
+            <div class="buyer__details__form">
+              <div class="form__item">
+                <label for="first__name">First Name:</label>
+                <input type="text" id="first__name" class="capitalize" placeholder="Jane">
+              </div>
+
+              <div class="form__item">
+                <label for="last__name">Last Name:</label>
+                <input type="text" id="last__name" class="capitalize" placeholder="Doe">
+
+              </div>
+
+              <div class="form__item">
+                <label for="email">Email Address:</label>
+                <input type="email" id="email" placeholder="name@example.com" validate autocomplete="on" >
+              </div>
+
+              <div class="form__item">
+                <label for="phone__number">Phone Number:</label>
+                <input type="tel" id="phone__number" placeholder="08123456789"  min="13" max="13" validate>
+              </div>
+            </div>
+          </div>
+
+          <div class="shipping__details">
+            <h2 class="form__heading">Address</h1>
+            <div class="shipping__details__form">
+              <div class="form__item">
+                <label for="address">Address:</label>
+                <input type="text" id="address" class="capitalize" placeholder="Unit 4, Alantic  Building">
+              </div>
+
+              <div class="form__item">
+                <label for="city">City:</label>
+                <input type="text" id="city" class="capitalize" placeholder="Ikeja">
+              </div>
+
+              <div class="form__item">
+                <label for="state">State</label>
+                <select name="state" id="state" class="state">
+                  <option value="Lagos">Lagos</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+
+        <button class="btn__continue">
+          <img src="images/continue.png" alt="Continue">
+          <span class="continue__note">Continue</span>
+        </button>
+
+        <button class="btn__back__to__cart">
+          ← Back To Cart
+        </button>
+      </div>
+    </div>
+
+
+    <!-- ORDER REVIEW PAGE  -->
+    <div class="review__page">
+      <div class="review__page__container page--width">
+        <h1 class="page__heading">
+          Review Your Order
+        </h1>
+
+        <div class="review__page__content">
+          <div class="review__page__order__summary relative">
+            <div class="order__items">
+              <h2 class="order__heading">Order Summary</h2>
+              <!-- add order item dynamically-->
+              <!-- add order item dynamically-->
+              <!-- add order item dynamically-->
+            </div>
+
+            <div class="review__price__summary">
+              <div class="review__price__container">
+                <p class="review__subtotal">Subtotal</p>
+                <p class="review__subtotal__value">000</p>
+              </div>
+              <div class="review__price__container">
+                <p class="review__shipping">Shipping</p>
+                <p class="review__shipping__value">000</p>
+              </div>
+              <div class="review__price__container total__review__price__container">
+                <p class="review__total">Total</p>
+                <p class="review__total__value">0000</p>
+              </div>
+            </div>
+
+            <button class="btn__edit__cart">
+              Edit Cart
+            </button>
+          </div>
+
+
+          <div class="shipping__review relative">
+            <div class="shipping__address__container">
+              <h2 class="shipping__review__heading">
+                Delivery
+              </h2>
+              <div class="shipping__address">
+                <div class="user__name">
+                  <p class="first__name capitalize">First Name</p>
+                  <p class="last__name capitalize">Last Name</p>
+                </div>
+                <p class="user__email">
+                  shakia@yahoo.com
+                </p>
+                <p class="user__tel">
+                  08143671737
+                </p>
+                <p class="user__address-1 capitalize">
+                  3 Odunlade Street
+                </p>
+                <p class="user__address-2 capitalize">
+                  Somolu
+                </p>
+                <p class="user__address-3 capitalize">
+                  Lagos
+                </p>
+              </div>
+              <p class="delivery">
+                *Delivery takes 1-2 working days after order has been placed.
+              </p>
+            </div>
+
+            <button class="btn__edit__user-data">
+              Edit Details
+            </button>
+          </div>
+        </div>
+        
+        <button class="btn__place__order">
+          <img src="images/check-mark.png" alt="check-mark">
+          <span class="place__order__note">Place order</span>
+        </button>
+      </div>
+    </div>
+
+
+    <!-- ALERT MODALS -->
+    <div class="alert__modal">
+        Your Order has been placed
     </div>
   </div>
 </body>

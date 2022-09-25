@@ -5,18 +5,18 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
-  },
+    },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/AkinShakira/ecommerce-website.git"
+    "url": "git+https://github.com/shakiraakinleye/ecommerce-website.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/AkinShakira/ecommerce-website/issues"
+    "url": "https://github.com/shakiraakinleye/ecommerce-website/issues"
   },
-  "homepage": "https://github.com/AkinShakira/ecommerce-website#readme",
+  "homepage": "https://github.com/shakiraakinleye/ecommerce-website#readme",
   "dependencies": {
     "autoprefixer": "^10.4.8",
     "postcss": "^8.4.16",
