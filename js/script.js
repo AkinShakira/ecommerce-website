@@ -1,8 +1,12 @@
 "use strict";
 document.addEventListener("DOMContentLoaded", productsFetch);
-// window.addEventListener("load", console.log(document.querySelectorAll(".product")));
+
+const cartItemsContainer = document.querySelector(".cart__items");
+const cartCount = document.querySelector(".cart__count");
+
 
 initSlider();
+// updateAndDisplayCartCount();
 
 function convertPriceToLocalCurrency(value) {
   return new Intl.NumberFormat("en-Ng", {
@@ -19,53 +23,61 @@ function initSlider() {
   const maxSlides = reviewSlides.length;
 
   function goToSlide(slide) {
-     reviewSlides.forEach(function (s, i) {
-       s.style.transform = `translateX(${100 * (i - slide)}%)`;
-     });
+    reviewSlides.forEach(function (s, i) {
+      s.style.transform = `translateX(${100 * (i - slide)}%)`;
+    });
   }
 
   goToSlide(0);
 
   // MOVE TO NEXT SLIDE ON THE RIGHT
   function nextSlide() {
-     if (curSlide === maxSlides - 1) {
-       curSlide = 0;
-     } else curSlide++;
+    if (curSlide === maxSlides - 1) {
+      curSlide = 0;
+    } else curSlide++;
 
-     goToSlide(curSlide);
+    goToSlide(curSlide);
   }
 
   // MOVE TO PREVIOUS SLIDE ON THE LEFT
   function prevSlide() {
-     if (curSlide === 0) {
-       curSlide = maxSlides - 1;
-     } else curSlide--;
+    if (curSlide === 0) {
+      curSlide = maxSlides - 1;
+    } else curSlide--;
 
-     goToSlide(curSlide);
+    goToSlide(curSlide);
   }
 
   btnPrevSlide.addEventListener("click", prevSlide);
   btnNextSlide.addEventListener("click", nextSlide);
-   // USING THE KEYBOARD TO NAV THE SLIDER
+  // USING THE KEYBOARD TO NAV THE SLIDER
   document.addEventListener("keydown", function (e) {
-     if (e.key !== "ArrowLeft" && e.key !== "ArrowRight") return;
-     if (e.key === "ArrowLeft") prevSlide();
-     if (e.key === "ArrowRight") nextSlide();
+    if (e.key !== "ArrowLeft" && e.key !== "ArrowRight") return;
+    if (e.key === "ArrowLeft") prevSlide();
+    if (e.key === "ArrowRight") nextSlide();
   });
+}
+
+function updateAndDisplayCartCount() {
+  if (cartItemsContainer.childElementCount > 0) {
+    cartCount.style.display = "block";
+    cartCount.textContent = cartItemsContainer.childElementCount;
+  } else {
+    cartCount.style.display = "none";
+  }
 }
 
 function productsFetch() {
   const app = document.querySelector(".app");
   const productContainer = document.querySelector(".product__list");
 
-
   function renderVariants(option) {
-     const variant = `<option value="${option}">${option}</option>`;
-     return variant;
+    const variant = `<option value="${option}">${option}</option>`;
+    return variant;
   }
 
   function generateProductsHTML(id, imageUrl, name, price, stock, variants) {
-     const html = `
+    const html = `
           <div class="product">
             <div class="product__image__container mb-2">
               <img src= "${imageUrl}" alt="Product Image" class="product__image" >
@@ -121,7 +133,7 @@ function productsFetch() {
             <div class="product__actions" id="${
               stock > 0 ? "" : "action--disabled"
             }">
-              <button class="btn__add-cart">
+              <button class="btn__add-to-cart">
                 <img src="images/add-to-cart.png" alt="Add To Cart">
                 <span> Add To Bag </span>
               </button>
@@ -129,19 +141,21 @@ function productsFetch() {
           </div>
         `;
 
-     return { html };
+    return { html };
   }
 
-  function setProductDataAtrributes(id, stock) {
+  function setProductDataAtrributes(id, stock, variants) {
     const lastProduct = productContainer.lastElementChild;
     lastProduct.dataset.id = id;
     lastProduct.dataset.stock = stock;
+    lastProduct.dataset.quantity = 1;
+    lastProduct.dataset.color = variants[0];
   }
-  
+
   // FETCH THE PRODUCTS FROM API
   fetch("https://shakiraakinleye.github.io/Data/db.json")
-    .then(response => response.json())
-    .then(productsJSON => {
+    .then((response) => response.json())
+    .then((productsJSON) => {
       const products = productsJSON.products;
       // CREATE A MAP COPY OF PRODUCTS DATA
       const productsDataMap = new Map();
@@ -154,11 +168,11 @@ function productsFetch() {
           stock: product.stock,
           variants: [...product.variant],
         });
-      })
+      });
       return productsDataMap;
     })
-    .then(productsDataMap => {
-      // GENERATE PRODUCTS UI FROM THE DATA COPIED  
+    .then((productsDataMap) => {
+      // GENERATE PRODUCTS UI FROM THE DATA COPIED
       productsDataMap.forEach((product) => {
         const { html } = generateProductsHTML(
           product.id,
@@ -169,26 +183,26 @@ function productsFetch() {
           product.variants
         );
         productContainer.insertAdjacentHTML("beforeend", html);
-        setProductDataAtrributes(product.id, product.stock);
+        setProductDataAtrributes(product.id, product.stock, product.variants);
       });
       return productsDataMap;
     })
-    .then(productsDataMap => initApp(productsDataMap));   
+    .then((productsDataMap) => initApp(productsDataMap));
 }
 
-function initApp(productsDataMap){
+function initApp(productsDataMap) {
   const products = document.querySelectorAll(".product");
 
   // STARTING CONDITIONS
   initProductOptions();
 
-  const cartCount = document.querySelector(".cart__count");
+  // const cartCount = document.querySelector(".cart__count");
   const cartPage = document.querySelector(".cart__page");
   const cartPageContent = document.querySelector(".cart__page__content ");
   // const orderSummary = document.querySelector(".order__summary")
   const cartPageEmpty = document.querySelector(".cart__page__empty");
   const overlay = document.querySelector(".overlay");
-  const cartItemsContainer = document.querySelector(".cart__items");
+  // const cartItemsContainer = document.querySelector(".cart__items");
   const cartTotal = document.querySelector(".cart__total__value");
   const cartSubtotal = document.querySelector(".cart__subtotal__value");
   const cartShippingValue = document.querySelector(".cart__shipping__value");
@@ -201,7 +215,6 @@ function initApp(productsDataMap){
   const alertModal = document.querySelector(".alert__modal");
 
   // BUTTONS SELECTION
-  const btnsAddToCart = document.querySelectorAll(".btn__add-cart");
   const btnDisplayCart = document.querySelector(".btn__cart");
   const btnClearCart = document.querySelector(".btn__cart--clear");
   const btnCloseCart = document.querySelector(".btn__cart--close");
@@ -218,28 +231,50 @@ function initApp(productsDataMap){
   // initCart();
   // initCheckout();
 
-  // // //  //
-  // PRODUCT OPTION FUNCTIONS
-
-  //   function productDOMSelection(event) {
-  //     const productEl = event.target.closest(".product");
-  //     const productId = productEl.dataset.id;
-  //     const productStock = productEl.dataset.stock;
-  //     const productQuantityValue = productEl.querySelector(
-  //       ".product__quantity__value"
-  //     ).value;
-  //     const productColorValue =
-  //       productEl.querySelector(".product__color").value;
-  //     return {
-  //       productEl,
-  //       productId,
-  //       productStock,
-  //       productQuantityValue,
-  //       productColorValue,
-  //     };
-  // }
-
   function initProductOptions() {
+    function increaseProductQuantity(quantityInput, stock) {
+      let productQty = +quantityInput.value;
+      if (productQty < stock) {
+        productQty++;
+        quantityInput.value = productQty;
+      } else {
+        return;
+      }
+    }
+
+    function decreaseProductQuantity(quantityInput) {
+      let productQty = +quantityInput.value;
+      if (productQty > 0) {
+        productQty--;
+        quantityInput.value = productQty;
+      } else {
+        return;
+      }
+    }
+
+    function validateQuantityInput(quantityInput, quantityForm, stock) {
+      if (+quantityInput.value < 0) {
+        quantityForm.classList.add("quantity--invalid");
+      } else if (+quantityInput.value > stock) {
+        quantityForm.classList.add("quantity--invalid");
+      } else {
+        quantityForm.classList.remove("quantity--invalid");
+      }
+    }
+
+    function changeQuantityDataset(quantityInput, element) {
+      if (element.dataset.quantity === quantityInput.value) {
+        return false;
+      } else {
+        element.dataset.quantity = +quantityInput.value;
+        return true;
+      }
+    }
+
+    function changeColorDataset(element, selector) {
+      element.dataset.color = selector.value;
+    }
+
     products.forEach((product) => {
       const btnIncreaseProductQuantity = product.querySelector(
         ".product__quantity--increment"
@@ -254,79 +289,31 @@ function initApp(productsDataMap){
       const productColorSelector = product.querySelector(".product__color");
       const productStock = product.dataset.stock;
 
-      function increaseProductQuantity(quantityInput, stock) {
-        let productQty = +quantityInput.value;
-        if (productQty < stock) {
-          productQty++;
-          quantityInput.value = productQty;
-        } else {
-          return;
-        }
-      }
-
-      function decreaseProductQuantity(quantityInput) {
-        let productQty = +quantityInput.value;
-        if (productQty > 0) {
-          productQty--;
-          quantityInput.value = productQty;
-        } else {
-          return;
-        }
-      }
-
-      function validateQuantityInput(quantityInput, quantityForm, stock) {
-        if (+quantityInput.value < 0) {
-          quantityForm.classList.add("quantity--invalid");
-        } else if (+quantityInput.value > stock) {
-          quantityForm.classList.add("quantity--invalid");
-        } else {
-          quantityForm.classList.remove("quantity--invalid");
-        }
-      }
-
-      function changeQuantityDataset(quantityInput, element) {
-        if (element.dataset.quantity === quantityInput.value) {
-          return false;
-        } else {
-          element.dataset.quantity = +quantityInput.value;
-          return true;
-        }
-      }
-
-      function changeColorDataset(element, selector) {
-        element.dataset.color = selector.value;
-      }
-
       btnIncreaseProductQuantity.addEventListener("click", function () {
         increaseProductQuantity(inputProductQuantity, productStock);
         changeQuantityDataset(inputProductQuantity, product);
-        console.log(product);
       });
 
       btnDecreaseProductQuantity.addEventListener("click", function () {
         decreaseProductQuantity(inputProductQuantity);
         changeQuantityDataset(inputProductQuantity, product);
-        console.log(product);
       });
 
       inputProductQuantity.addEventListener("input", function (event) {
         validateQuantityInput(inputProductQuantity, quantityForm, productStock);
         changeQuantityDataset(inputProductQuantity, product);
-        console.log(product);
       });
 
       productColorSelector.addEventListener("input", function () {
         changeColorDataset(product, productColorSelector);
-        console.log(product);
       });
     });
   }
 
-  // CART
-  // CART
-  // CART
-  function initCart() {
-    function generateCartItemHTML(color, id, imageUrl, name, price, quantity) {
+  initAddToCart();
+
+  function initAddToCart() {
+    function generateCartItemHTML(color, imageUrl, name, price, quantity) {
       const html = `<div class="cart__item">
               <div class="cart__item__image">
                 <img src="${imageUrl}" alt="Product image">
@@ -368,7 +355,7 @@ function initApp(productsDataMap){
       return html;
     }
 
-    function setCartItemDataset(id, color, price, quantity) {
+    function setCartItemDataset(color, id, price, quantity) {
       const latestCartItem = cartItemsContainer.lastElementChild;
       latestCartItem.dataset.id = id;
       latestCartItem.dataset.color = color;
@@ -383,8 +370,8 @@ function initApp(productsDataMap){
     }
 
     function addCartItemToLocalStorage(
-      id,
       color,
+      id,
       imageUrl,
       name,
       price,
@@ -402,53 +389,34 @@ function initApp(productsDataMap){
       localStorage.setItem(id, cartItemJSON);
     }
 
-    function updateAndDisplayCartCount() {
-      if (cartItemsContainer.childElementCount > 0) {
-        cartCount.style.display = "block";
-        cartCount.textContent = cartItemsContainer.childElementCount;
-      } else {
-        cartCount.style.display = "none";
-      }
-    }
+    function addItemToCart(color, id, image, name, price, quantity) {
+      const html = generateCartItemHTML(
+        color,
+        image,
+        name,
+        price,
+        quantity
+      );
 
-    async function addItemToCart(event, key) {
-      try {
-        const { productsDataMap } = await createProductDataStr();
-        const product = productsDataMap.get(+key);
-        const { productQuantityValue, productColorValue } =
-          productDOMSelection(event);
+      generateCartUI(html);
 
-        const html = generateCartItemHTML(
-          productColorValue,
-          product.id,
-          product.imageUrl,
-          product.name,
-          product.price,
-          productQuantityValue
-        );
+      const { latestCartItem } = setCartItemDataset(
+        color, 
+        id,
+        price,
+        quantity
+      );
 
-        generateCartUI(html);
+      addCartItemToLocalStorage(
+        color, 
+        id,
+        image,
+        name,
+        price,
+        quantity
+      );
 
-        const { latestCartItem } = setCartItemDataset(
-          product.id,
-          productColorValue,
-          product.price,
-          productQuantityValue
-        );
-
-        addCartItemToLocalStorage(
-          product.id,
-          productColorValue,
-          product.imageUrl,
-          product.name,
-          product.price,
-          productQuantityValue
-        );
-
-        updateAndDisplayCartCount();
-      } catch (error) {
-        console.log(error);
-      }
+      updateAndDisplayCartCount();
     }
 
     function checkIdPresentInCart(id) {
@@ -466,26 +434,42 @@ function initApp(productsDataMap){
       }
     }
 
-    async function btnAddToCartHandler(event) {
-      try {
-        const { productId, productQuantityValue } = productDOMSelection(event);
+    function btnAddToCartHandler(color, id, image, name, price, quantity) {
+      const { idPresent } = checkIdPresentInCart(id);
+      const noQuantitySelected = checkQuantitySelected(quantity);
 
-        if (event.target.className === "btn__add-cart") {
-          const { idPresent } = checkIdPresentInCart(productId);
-          const noQuantitySelected =
-            checkQuantitySelected(productQuantityValue);
-
-          if (idPresent === false && noQuantitySelected === false) {
-            addItemToCart(event, productId);
-          } else {
-            return;
-          }
-        }
-      } catch (error) {
-        console.log(error);
+      if (idPresent === false && noQuantitySelected === false) {
+        addItemToCart(color, id, image, name, price, quantity);
+      } else {
+        return;
       }
     }
 
+    products.forEach((product) => {
+      const productMap = productsDataMap.get(+product.dataset.id);
+      const productId = product.dataset.id;
+      const selectedProductQuantity = product.dataset.quantity;
+      const selectedProductColor = product.dataset.quantity;
+      const productImage = productMap.imageUrl;
+      const productPrice = productMap.price;
+      const productName = productMap.name;
+
+      const btnAddToCart = product.querySelector(".btn__add-to-cart");
+
+      btnAddToCart.addEventListener("click", function () {
+        btnAddToCartHandler(
+          selectedProductColor,
+          productId,
+          productImage,
+          productName,
+          productPrice,
+          selectedProductQuantity
+        );
+      })
+    });
+  }
+
+  function initCart() {
     function getShippingPrice() {
       const shippingPrice = shippingSelector.value;
       cartShippingValue.textContent = `${convertPriceToLocalCurrency(
@@ -648,9 +632,9 @@ function initApp(productsDataMap){
 
       updateAndDisplayCartCount();
     }
-    
+
     // initCart END
-}
+  }
   // NOT DONE
 
   // // FIX: check if cart has same variant

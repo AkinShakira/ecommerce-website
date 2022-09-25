@@ -110,7 +110,7 @@
   width: 100%;
 }
 
-.btn__add-cart {
+.btn__add-to-cart {
   width: 90%;
   display: flex;
   justify-content: center;
@@ -124,15 +124,15 @@
   font-weight: 600;
 }
 
-.btn__add-cart:hover{
+.btn__add-to-cart:hover{
   background-color: rgb(35, 35, 35);
 }
 
-.btn__add-cart img{
+.btn__add-to-cart img{
   width: 1.2rem;
 }
 
-.btn__add-cart img, .btn__add-cart span {
+.btn__add-to-cart img, .btn__add-to-cart span {
   pointer-events: none;
 }
 
