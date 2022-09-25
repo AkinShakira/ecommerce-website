@@ -15,7 +15,7 @@ function app() {
   const cartTotal = document.querySelector(".cart__total__value");
   const cartSubtotal = document.querySelector(".cart__subtotal__value");
   const cartShippingValue = document.querySelector(".cart__shipping__value");
-  const shippingPrice = document.querySelector(".shipping__selector");
+  const shippingSelector = document.querySelector(".shipping__selector");
   const reviewSlides = document.querySelectorAll(".slide");
   const checkoutPage = document.querySelector(".checkout__page");
   const shippingForm = document.querySelector(".shipping__form__container");
@@ -41,8 +41,8 @@ function app() {
   const btnPlaceOrder = document.querySelector(".btn__place__order");
 
   // STARTING CONDITIONS
-  displayProducts();
-  renderCartStorage();
+  addProductsAndAttributesToUI();
+  // renderCartStorage();
 
   // EVENTS
   initProductActions();
@@ -52,68 +52,102 @@ function app() {
 
   // FUNCTIONS
   // // //  //
-  // PRODUCT RENDERING FUNTIONS
+  // PRODUCT, PRODUCT VALUES AND ATTRIBUTES RENDERING FUNTIONS
+
+  async function getProductJson() {
+    try {
+      const response = await fetch(
+        "https://shakiraakinleye.github.io/Data/db.json"
+      );
+      const productsJSON = await response.json();
+      return { productsJSON };
+      // Handle errors
+    } catch {
+      console.log(error);
+    }
+  }
+
+  async function createProductDataStr() {
+    try {
+      const { productsJSON } = await getProductJson();
+      const products = productsJSON.products;
+      const productsDataMap = new Map();
+      products.forEach((product) => {
+        productsDataMap.set(product.productID, {
+          id: product.productID,
+          imageUrl: product.imageUrl,
+          name: product.name,
+          price: product.price,
+          stock: product.stock,
+          variants: [...product.variant],
+        });
+      });
+      return { productsDataMap };
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  function convertPriceToLocalCurrency(value) {
+    return new Intl.NumberFormat("en-Ng", {
+      style: "currency",
+      currency: "NGN",
+    }).format(value);
+  }
 
   function renderVariants(option) {
     const variant = `<option value="${option}">${option}</option>`;
     return variant;
   }
 
-  function renderProducts(product) {
+  function generateProductsHTML(id, imageUrl, name, price, stock, variants) {
     const html = `
-          <div class="product" data-id="${product.productID}" data-image="${
-      product.imageUrl
-    }" data-name="${product.name}" data-stock="${product.stock}" data-price="${
-      product.price
-    }" data-color="" data-quantity="">
-            <!-- product image -->
+          <div class="product">
             <div class="product__image__container mb-2">
-              <img src= "${
-                product.imageUrl
-              }" alt="Product Image" class="product__image" >
+              <img src= "${imageUrl}" alt="Product Image" class="product__image" >
             </div>
 
-            <p class="product__name">${product.name}</p>
+            <p class="product__name">${name}</p>
 
             <div class="product__info">
               <p class="product__stock__icon ${
-                product.stock > 0 ? "product--instock" : "product--soldout"
+                stock > 0 ? "product--instock" : "product--soldout"
               }"></p>
                 
               <p class="product__stock__note mr-4">${
-                product.stock > 0 ? "In Stock" : "Sold Out"
+                stock > 0 ? "In Stock" : "Sold Out"
               }</p>
                 
-              <p class="product__price">${new Intl.NumberFormat("en-Ng", {
-                style: "currency",
-                currency: "NGN",
-              }).format(product.price)}</p>
+              <p class="product__price">${convertPriceToLocalCurrency(
+                price
+              )}</p>
             </div>
 
             <div class="product__options">
               <div class="product__quantity__container" id="${
-                product.stock > 0 ? "" : "action--disabled"
+                stock > 0 ? "" : "action--disabled"
               }">
                 <form id="product__quantity__form" class="product__quantity__form" action="#">
                   <input type="button" value="-" class="product__quantity--decrement" id="${
-                    product.stock > 0 ? "" : "action--disabled"
+                    stock > 0 ? "" : "action--disabled"
                   }"/>
                   <input type="text" name="product__quantity__value" value="${
-                    product.stock > 0 ? 1 : 0
-                  }" class="product__quantity__value" id="${
-      product.stock > 0 ? "" : "action--disabled"
-    }"/>
+                    stock > 0 ? 1 : 0
+                  }" 
+                  class="product__quantity__value" id="${
+                    stock > 0 ? "" : "action--disabled"
+                  }"/>
                   <input type="button" value="+" class="product__quantity--increment" id="${
-                    product.stock > 0 ? "" : "action--disabled"
+                    stock > 0 ? "" : "action--disabled"
                   }"/>
                 </form>
               </div>
 
               <div class="product__variant" >
                 <select name="product__color" class="product__color" id="${
-                  product.stock > 0 ? "" : "action--disabled"
+                  stock > 0 ? "" : "action--disabled"
                 }">
-                    ${product.variant.map((option) =>
+                    ${variants.map((option) =>
                       renderVariants(option)
                     )}               
                 </select>
@@ -121,7 +155,7 @@ function app() {
             </div>
 
             <div class="product__actions" id="${
-              product.stock > 0 ? "" : "action--disabled"
+              stock > 0 ? "" : "action--disabled"
             }">
               <button class="btn__add-cart">
                 <img src="images/add-to-cart.png" alt="Add To Cart">
@@ -130,51 +164,69 @@ function app() {
             </div>
           </div>
         `;
-    productContainer.insertAdjacentHTML("beforeend", html);
+
+    return { html };
   }
 
-  async function getProductJson() {
+  function setProductDataAtrributes(id, stock) {
+    const lastProduct = productContainer.lastElementChild;
+    lastProduct.dataset.id = id;
+    lastProduct.dataset.stock = stock;
+  }
+
+  // // //  //
+  // PRODUCT DISPLAY FUNCTIONS
+  async function addProductsAndAttributesToUI() {
     try {
-      const response = await fetch(
-        "https://shakiraakinleye.github.io/Data/db.json"
-      );
-      const json = await response.json();
-      return json;
-      // Handle errors
-    } catch {
+      const { productsDataMap } = await createProductDataStr();
+      productsDataMap.forEach((product) => {
+        const { html } = generateProductsHTML(
+          product.id,
+          product.imageUrl,
+          product.name,
+          product.price,
+          product.stock,
+          product.variants
+        );
+        productContainer.insertAdjacentHTML("beforeend", html);
+        setProductDataAtrributes(product.id, product.stock);
+      });
+    } catch (error) {
       console.log(error);
     }
   }
 
   // // //  //
-  // PRODUCT DISPLAY FUNTIONS
-  async function displayProducts() {
-    try {
-      const data = await getProductJson();
-      data.products.forEach((product) => renderProducts(product));
-    } catch (err) {
-      console.log(err);
-    }
+  // PRODUCT OPTION FUNCTIONS
+  function productDOMSelection(event) {
+    const productEl = event.target.closest(".product");
+    const productId = productEl.dataset.id;
+    const productStock = productEl.dataset.stock;
+    const productQuantityValue = productEl.querySelector(
+      ".product__quantity__value"
+    ).value;
+    const productColorValue = productEl.querySelector(".product__color").value;
+    return { productEl, productId, productStock, productQuantityValue, productColorValue };
   }
 
-  // // //  //
-  // PRODUCT OPTION FUNCTIONS
-  function pathQuantityChange(event) {
-    const parentEl = event.path[1];
-    const productEl = event.path[4];
-    const productStock = Number(productEl.dataset.stock);
-    const productQtyEl = parentEl.querySelector(".product__quantity__value");
+  function quantityChangeEventDOMSelection(event) {
+    const { productEl, productStock } = productDOMSelection(event);
+    const quantityForm = event.target.closest(".product__quantity__form");
+    const quantityInput = quantityForm.querySelector(
+      ".product__quantity__value"
+    );
 
-    return { parentEl, productEl, productStock, productQtyEl };
+    return { quantityForm, productEl, productStock, quantityInput };
   }
 
   function btnIncreaseQtyHandler(event) {
     if (event.target.className === "product__quantity--increment") {
-      const { productQtyEl, productStock } = pathQuantityChange(event);
-      let productQty = Number(productQtyEl.value);
+      const { quantityInput, productStock } =
+        quantityChangeEventDOMSelection(event);
+      let productQty = +quantityInput.value;
       if (productQty < productStock) {
         productQty++;
-        productQtyEl.value = productQty;
+        quantityInput.value = productQty;
       } else {
         return;
       }
@@ -183,12 +235,12 @@ function app() {
 
   function btnDecreaseQtyHandler(event) {
     if (event.target.className === "product__quantity--decrement") {
-      const { productQtyEl } = pathQuantityChange(event);
+      const { quantityInput } = quantityChangeEventDOMSelection(event);
 
-      let productQty = Number(productQtyEl.value);
+      let productQty = +quantityInput.value;
       if (productQty > 0) {
         productQty--;
-        productQtyEl.value = productQty;
+        quantityInput.value = productQty;
       } else {
         return;
       }
@@ -197,24 +249,27 @@ function app() {
 
   function validateQtyInput(event) {
     if (event.target.className === "product__quantity__value") {
-      const { parentEl, productStock } = pathQuantityChange(event);
-      if (event.target.value < 0) {
-        parentEl.classList.add("quantity--invalid");
-      } else if (event.target.value > productStock) {
-        parentEl.classList.add("quantity--invalid");
+      const { quantityForm, productStock } =
+        quantityChangeEventDOMSelection(event);
+      if (+event.target.value < 0) {
+        quantityForm.classList.add("quantity--invalid");
+      } else if (+event.target.value > productStock) {
+        quantityForm.classList.add("quantity--invalid");
       } else {
-        parentEl.classList.remove("quantity--invalid");
+        quantityForm.classList.remove("quantity--invalid");
       }
     }
   }
 
-  function changeQtyAttr(event) {
+  function changeQuantityDataset(event) {
     if (
       event.target.className === "product__quantity--decrement" ||
-      event.target.className === "product__quantity--increment"
+      event.target.className === "product__quantity--increment" ||
+      event.target.className === "product__quantity__value"
     ) {
-      const { productEl, productQtyEl } = pathQuantityChange(event);
-      let productQty = Number(productQtyEl.value);
+      const { productEl, quantityInput } =
+        quantityChangeEventDOMSelection(event);
+      let productQty = +quantityInput.value;
       productEl.dataset.quantity = productQty;
       return true;
     } else {
@@ -222,16 +277,96 @@ function app() {
     }
   }
 
-  function changeColorAttribute(event) {
+  function changeColorDataset(event) {
     if (event.target.className === "product__color") {
-      let product = event.path[3];
-      product.dataset.color = event.target.value;
+      const { productEl } = productDOMSelection(event);
+      productEl.dataset.color = event.target.value;
     }
   }
 
-  // MISC CART FUNCTIONS
-  function displayCartCount() {
-    if (cartItemsContainer.childElementCount >= 1) {
+  // CART
+  // CART
+  // CART
+  
+  function generateCartItemHTML(color, id, imageUrl, name, price, quantity) {
+    const html = `<div class="cart__item">
+              <div class="cart__item__image">
+                <img src="${imageUrl}" alt="Product image">
+              </div>
+
+              <div class="cart__content">
+                <p class="cart__item__name order-1">${name}</p>
+
+                <div class="product__quantity__container order-6">
+                  <form id="product__quantity__form" class="product__quantity__form" action='#'>
+                    <input type="button" value="-" class="product__quantity--decrement"/>
+                    <input type="text" name="product__quantity__value" value='${quantity}' class="product__quantity__value" disabled/>
+                    <input type="button" value="+" class="product__quantity--increment"/>
+                  </form>
+                </div>
+
+                <div class="product__variant order-4">
+                  <select name="product__color" class="product__color">
+                    <option value="gold">Gold</option>              
+                    <option value="rosegold">Rosegold</option>              
+                  </select>
+                </div>
+
+                <p class="cart__item__price order-3">${convertPriceToLocalCurrency(
+                  price
+                )} <span class="note">each</span></p>
+
+                <p class="cart__item__subtotal order-5" data-subtotal="${
+                  price * quantity
+                }" > <span class="cart__item__subtotal__value">${convertPriceToLocalCurrency(
+      price * quantity
+    )} </span> <span class="note">Subtotal</span></p>
+
+                <button class="btn__cart--remove-item order-2">X</button>
+
+              </div>
+            </div>`;
+
+    return html;
+  }
+
+  function setCartItemDataset(id, color, price, quantity) {
+    const latestCartItem = cartItemsContainer.lastElementChild;
+    latestCartItem.dataset.id = id;
+    latestCartItem.dataset.color = color;
+    latestCartItem.dataset.price = price
+    latestCartItem.dataset.quantity = quantity;
+    latestCartItem.dataset.subtotal = price * quantity;
+    return { latestCartItem };
+  }
+
+  function generateCartUI(html) {
+    cartItemsContainer.insertAdjacentHTML("beforeend", html);
+    console.log(cartItemsContainer)
+  }
+
+  function addCartItemToLocalStorage(
+    id,
+    color,
+    imageUrl,
+    name,
+    price,
+    quantity
+  ) {
+    const cartObject = {
+      id: id,
+      color: color,
+      image: imageUrl,
+      name: name,
+      price: price,
+      quantity: quantity,
+    };
+    const cartObjectString = JSON.stringify(cartObject);
+    localStorage.setItem(id, cartObjectString);
+  }
+
+  function updateAndDisplayCartCount() {
+    if (cartItemsContainer.childElementCount > 0) {
       cartCount.style.display = "block";
       cartCount.textContent = cartItemsContainer.childElementCount;
     } else {
@@ -239,24 +374,156 @@ function app() {
     }
   }
 
-  function pathProductToCart(event) {
-    const productEl = event.target.closest(".product");
-    const productId = Number(productEl.dataset.id);
-    const productImgSrc = productEl.dataset.image;
-    const productName = productEl.dataset.name;
-    const productPrice = productEl.dataset.price;
-    const productStock = productEl.dataset.stock;
-    const productColor = productEl.dataset.color;
-    return {
-      productEl,
-      productId,
-      productImgSrc,
-      productName,
-      productPrice,
-      productStock,
-      productColor,
-    };
+  // function addCartItemToDataMap(key, cartItem) {
+  //   const cartMap = new Map();
+  //   cartMap.set(key, cartItem);
+  //             console.log(cartMap, );
+
+  // }
+
+  async function addItemToCart(event, key) {
+    try {
+      const { productsDataMap } = await createProductDataStr();
+      const product = productsDataMap.get(+key);
+      const { productQuantityValue, productColorValue } =
+      productDOMSelection(event);
+
+      const html = generateCartItemHTML(
+        productColorValue,
+        product.id,
+        product.imageUrl,
+        product.name,
+        product.price,
+        productQuantityValue
+      );
+
+      generateCartUI(html);
+
+      const { latestCartItem } = setCartItemDataset(
+        product.id,
+        productColorValue,
+        product.price,
+        productQuantityValue
+      );
+
+      // addCartItemToDataMap(product.id, latestCartItem)
+
+      addCartItemToLocalStorage(
+        product.id,
+        productColorValue,
+        product.imageUrl,
+        product.name,
+        product.price,
+        productQuantityValue
+      );
+
+      updateAndDisplayCartCount();
+
+    } catch (error) {
+      console.log(error);
+    }
   }
+
+  function checkIdPresentInCart(id) {
+    const cartItemsArray = Array.from(cartItemsContainer.children);
+    const cartIDs = cartItemsArray.map((item) => +item.dataset.id);
+    const idPresent = cartIDs.includes(+id);
+    return { idPresent };
+  }
+
+  function checkQuantitySelected(quantity) {
+    if (+quantity === 0) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  async function btnAddToCartHandler(event) {
+    try {
+      const { productId, productQuantityValue } = productDOMSelection(event);
+
+      if (event.target.className === "btn__add-cart") {
+        const { idPresent } = checkIdPresentInCart(productId);
+        const noQuantitySelected = checkQuantitySelected(productQuantityValue);
+
+        console.log(idPresent, productQuantityValue);
+        if (idPresent === false && noQuantitySelected === false) {
+          addItemToCart(event, productId);
+        } else {
+          return;
+        }
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  function getShippingPrice() {
+    const shippingPrice = shippingSelector.value;
+    cartShippingValue.textContent = `${convertPriceToLocalCurrency(
+      shippingPrice
+    )}`;
+    return shippingPrice;
+  }
+
+  function calcCartItemSubtotal(cartItem) {
+    const cartItemQuantity = cartItem.dataset.quantity;
+    const cartItemPrice = cartItem.dataset.price;
+    const cartItemSubtotal = cartItemQuantity * cartItemPrice;
+    cartItem.dataset.subtotal = cartItemSubtotal;
+    console.log(cartItemSubtotal);
+    return { cartItemSubtotal };
+  }
+
+  function addCartItemSubtotalToUI(cartItem, subtotal) {
+    const cartItemSubtotalValue = cartItem.querySelector(
+      ".cart__item__subtotal__value"
+    );
+    cartItemSubtotalValue.textContent = convertPriceToLocalCurrency(subtotal);
+  }
+
+  function calcAndDisplayCartItemSubtotal(cartItem) {
+    const { cartItemSubtotal } = calcCartItemSubtotal(cartItem);
+    addCartItemSubtotalToUI(cartItem, cartItemSubtotal);
+  }
+
+  function CartItemSubtotal() {
+    const cartItems = Array.from(document.querySelectorAll(".cart__item"));
+    cartItems.forEach((cartItem) => calcAndDisplayCartItemSubtotal(cartItem));
+  }
+
+  function calcCartSubtotalAndTotal() {
+    const cartItems = Array.from(document.querySelectorAll(".cart__item"));
+    const shipping = getShippingPrice();
+
+    const subtotal = cartItems
+      .map(function (cartItem) {
+        return +cartItem.dataset.subtotal;
+      })
+      .reduce(function (subtotal, acc) {
+        return acc + subtotal;
+      }, 0);
+
+    const total = subtotal + Number(shipping);
+
+    cartSubtotal.dataset.value = subtotal;
+    cartTotal.dataset.value = total;
+    console.log(subtotal, total);
+    return { subtotal, total };
+  }
+
+  function DisplayCartSubtotalAndTotal() {
+    const { subtotal, total } = calcCartSubtotalAndTotal();
+    cartSubtotal.textContent = `${convertPriceToLocalCurrency(subtotal)}`;
+    cartTotal.textContent = `${convertPriceToLocalCurrency(total)}`;
+  }
+
+
+
+
+
+  // undone
 
   function pathInCart(event) {
     const cartItem = event.target.closest(".cart__item");
@@ -280,19 +547,12 @@ function app() {
     };
   }
 
-  // // //  //
-  // ADD TO CART FUNCTIONS
 
-  function checkIdPresent(event) {
-    const { productId } = pathProductToCart(event);
-    const cartArray = Array.from(cartItemsContainer.children);
-    const cartIDs = cartArray.map((item) => Number(item.dataset.id));
-    const idPresent = cartIDs.includes(productId);
-    return idPresent;
-  }
+
+
 
   // // FIX: check if cart has same variant
-  // function checkIdPresent(event) {
+  // function checkIdPresentInCart(event) {
   //   const { productId, productColor } = pathProductToCart(event);
   //   const cartIDs = cartArray.map((item) => Number(item.dataset.id));
   //   const idPresent = cartIDs.includes(productId);
@@ -305,189 +565,9 @@ function app() {
   //   const idPresent = cartIDs.includes(productId);
   // }
 
-  function noQuantitySelected(event) {
-    const { productEl } = pathProductToCart(event);
-    const selectedProductQty = productEl.querySelector(
-      ".product__quantity__value"
-    ).value;
-    if (Number(selectedProductQty) === 0) {
-      return true;
-    } else {
-      return false;
-    }
-  }
 
-  function outOfStock(event) {
-    const { productStock } = pathProductToCart(event);
-    if (Number(productStock) === 0) {
-      return true;
-    } else {
-      return false;
-    }
-  }
 
-  function btnAddToCartHandler(event) {
-    if (event.target.className === "btn__add-cart") {
-      const idPresent = checkIdPresent(event);
-      const QuantitySelected = noQuantitySelected(event);
-      const stockOut = outOfStock(event);
-
-      if (
-        idPresent === false &&
-        QuantitySelected === false &&
-        stockOut === false
-      ) {
-        const cartItem = renderCartProduct(event);
-        displayCartCount();
-        addCartItemLocalStorage(event, cartItem);
-      }
-    } else {
-      return;
-    }
-  }
-
-  // // //  //
-  // CART AND CONTENT RENDERING FUNCTIONS
-
-  function createCartItemHtml(id, name, stock, price, color, quantity, img) {
-    const html = `<div class="cart__item" data-id="${id}" data-image="${img}" data-name="${name}" data-stock="${stock}" data-price="${price}" data-color="${color}" data-quantity="${quantity}" data-subtotal="${
-      price * quantity
-    }">
-              <div class="cart__item__image">
-                <img src="${img}" alt="Product image">
-              </div>
-
-              <div class="cart__content">
-                <p class="cart__item__name order-1">${name}</p>
-
-                <div class="product__quantity__container order-6">
-                  <form id="product__quantity__form" class="product__quantity__form" action='#'>
-                    <input type="button" value="-" class="product__quantity--decrement"/>
-                    <input type="text" name="product__quantity__value" value='${quantity}' class="product__quantity__value" disabled/>
-                    <input type="button" value="+" class="product__quantity--increment"/>
-                  </form>
-                </div>
-
-                <div class="product__variant order-4">
-                  <select name="product__color" class="product__color">
-                    <option value="gold">Gold</option>              
-                    <option value="rosegold">Rosegold</option>              
-                  </select>
-                </div>
-
-                <p class="cart__item__price order-3">${new Intl.NumberFormat(
-                  "en-Ng",
-                  { style: "currency", currency: "NGN" }
-                ).format(price)} <span class="note">each</span></p>
-
-                <p class="cart__item__subtotal order-5" data-subtotal="${
-                  price * quantity
-                }" > <span class="cart__item__subtotal__value">${new Intl.NumberFormat(
-      "en-Ng",
-      {
-        style: "currency",
-        currency: "NGN",
-      }
-    ).format(price * quantity)} </span> <span class="note">Subtotal</span></p>
-
-                <button class="btn__cart--remove-item order-2">X</button>
-
-              </div>
-            </div>`;
-
-    return html;
-  }
-
-  function renderCartProduct(event) {
-    const {
-      productEl,
-      productId,
-      productImgSrc,
-      productName,
-      productPrice,
-      productStock,
-    } = pathProductToCart(event);
-
-    const selectedProductQty = productEl.querySelector(
-      ".product__quantity__value"
-    ).value;
-    const selectedProductColor =
-      productEl.querySelector(".product__color").value;
-    productEl.dataset.quantity = selectedProductQty;
-    productEl.dataset.color = selectedProductColor;
-
-    const html = createCartItemHtml(
-      productId,
-      productName,
-      productStock,
-      productPrice,
-      selectedProductColor,
-      selectedProductQty,
-      productImgSrc
-    );
-    cartItemsContainer.insertAdjacentHTML("beforeend", html);
-    return html;
-  }
-
-  function getShippingPrice() {
-    cartShippingValue.dataset.value = shippingPrice.value;
-    cartShippingValue.textContent = `${new Intl.NumberFormat("en-Ng", {
-      style: "currency",
-      currency: "NGN",
-    }).format(shippingPrice.value)}`;
-    return shippingPrice.value;
-  }
-
-  function calcItemSubtotal() {
-    const cartItems = Array.from(document.querySelectorAll(".cart__item"));
-    cartItems.forEach(function (item) {
-      const itemQty = item.dataset.quantity;
-      const itemPrice = item.dataset.price;
-      const itemSubtotal = itemQty * itemPrice;
-      const itemSubtotalEl = item.querySelector(".cart__item__subtotal");
-      itemSubtotalEl.dataset.subtotal = itemSubtotal;
-      const cartItemSubtotalValue = item.querySelector(
-        ".cart__item__subtotal__value"
-      );
-      cartItemSubtotalValue.textContent = new Intl.NumberFormat("en-Ng", {
-        style: "currency",
-        currency: "NGN",
-      }).format(itemSubtotal);
-    });
-  }
-
-  function calcCartTotal() {
-    const cartItemsSubtotal = Array.from(
-      document.querySelectorAll(".cart__item__subtotal")
-    );
-
-    const shipping = getShippingPrice();
-
-    const subtotal = cartItemsSubtotal
-      .map(function (item) {
-        return +item.dataset.subtotal;
-      })
-      .reduce(function (subtotal, acc) {
-        return acc + subtotal;
-      }, 0);
-
-    const total = subtotal + Number(shipping);
-
-    // SETTING THE DATA ATTRIBUTE
-    cartSubtotal.dataset.value = subtotal;
-    cartTotal.dataset.value = total;
-
-    // INSERTING THE VALUE IN HTML
-    cartSubtotal.textContent = `${new Intl.NumberFormat("en-Ng", {
-      style: "currency",
-      currency: "NGN",
-    }).format(subtotal)}`;
-
-    cartTotal.textContent = `${new Intl.NumberFormat("en-Ng", {
-      style: "currency",
-      currency: "NGN",
-    }).format(total)}`;
-  }
+  
 
   // // //  //
   // CART DISPLAY FUNCTIONS
@@ -510,7 +590,7 @@ function app() {
 
     if (cartItemsContainer.childElementCount >= 1) {
       cartPageContent.style.display = "flex";
-      calcCartTotal();
+      DisplayCartSubtotalAndTotal();
     } else {
       cartPageEmpty.style.display = "flex";
     }
@@ -523,9 +603,9 @@ function app() {
 
       cartItem.remove();
       delCartItemLocalStorage(event);
-      calcItemSubtotal();
-      calcCartTotal();
-      displayCartCount();
+      CartItemSubtotal();
+      DisplayCartSubtotalAndTotal();
+      updateAndDisplayCartCount();
     }
   }
 
@@ -534,18 +614,14 @@ function app() {
     itemsContainer.forEach(function (item) {
       item.remove();
     });
-    calcItemSubtotal();
-    calcCartTotal();
-    displayCartCount();
+    CartItemSubtotal();
+    DisplayCartSubtotalAndTotal();
+    updateAndDisplayCartCount();
     localStorage.clear();
   }
 
   // CART STORAGE FUNCTIONS
-  // USED THE PRODUCT TO CART PATH HERE BECAUSE THIS ACTION ACTUALLY HAPPENS ON THE PRODUCT PAGE BEFORE THE ITEM IS IN CART
-  function addCartItemLocalStorage(event, item) {
-    const { productId } = pathProductToCart(event);
-    localStorage.setItem(`${productId}`, item);
-  }
+
 
   // USED THE IN CART PATH BECAUSE THE ITEM IS IN CART NOW AND THE ACTION OCCURS IN THE CART
   function delCartItemLocalStorage(event) {
@@ -559,12 +635,12 @@ function app() {
     cartStorage.forEach(function (item) {
       cartItemsContainer.insertAdjacentHTML("beforeend", item);
     });
-    displayCartCount();
+    updateAndDisplayCartCount();
   }
 
   // THIS WILL UPDATE THE STORED CART ITEMS UPON CHANGES TO QUANTITY AND VARIANT IN THE CART
   function updateCartStorage(event) {
-    const update = changeQtyAttr(event);
+    const update = changeQuantityDataset(event);
     const {
       cartItem,
       cartId,
@@ -577,7 +653,7 @@ function app() {
     } = pathInCart(event);
 
     if (update === true) {
-      const updatedItem = createCartItemHtml(
+      const updatedItem = generateCartItemHTML(
         cartId,
         cartItemName,
         cartItemStock,
@@ -678,13 +754,9 @@ function app() {
                                     }</span><span>pcs</span></p>
                                   </div>
                                 </div>
-                                <p class="order__item__price">${new Intl.NumberFormat(
-                                  "en-Ng",
-                                  {
-                                    style: "currency",
-                                    currency: "NGN",
-                                  }
-                                ).format(item.dataset.subtotal)}</p>
+                                <p class="order__item__price">${convertPriceToLocalCurrency(
+                                  item.dataset.subtotal
+                                )}</p>
                               </div> `;
 
         orderItemsContainer.insertAdjacentHTML("beforeend", orderItemHtml);
@@ -697,20 +769,17 @@ function app() {
     const shipping = document.querySelector(".review__shipping__value");
     const total = document.querySelector(".review__total__value");
 
-    subtotal.textContent = `${new Intl.NumberFormat("en-Ng", {
-      style: "currency",
-      currency: "NGN",
-    }).format(sessionStorage.getItem("cart-subtotal"))}`;
+    subtotal.textContent = `${convertPriceToLocalCurrency(
+      sessionStorage.getItem("cart-subtotal")
+    )}`;
 
-    shipping.textContent = `${new Intl.NumberFormat("en-Ng", {
-      style: "currency",
-      currency: "NGN",
-    }).format(sessionStorage.getItem("shipping-value"))}`;
+    shipping.textContent = `${convertPriceToLocalCurrency(
+      sessionStorage.getItem("shipping-value")
+    )}`;
 
-    total.textContent = `${new Intl.NumberFormat("en-Ng", {
-      style: "currency",
-      currency: "NGN",
-    }).format(sessionStorage.getItem("cart-total"))}`;
+    total.textContent = `${convertPriceToLocalCurrency(
+      sessionStorage.getItem("cart-total")
+    )}`;
   }
 
   function renderShippingDetails() {
@@ -833,7 +902,6 @@ function app() {
     goToSlide(curSlide);
   }
 
-  
   // EVENTS
 
   function initSlider() {
@@ -852,12 +920,13 @@ function app() {
       btnIncreaseQtyHandler(event);
       btnDecreaseQtyHandler(event);
       btnAddToCartHandler(event);
-      changeQtyAttr(event);
+      changeQuantityDataset(event);
     });
 
     productContainer.addEventListener("input", function (event) {
       validateQtyInput(event);
-      changeColorAttribute(event);
+      changeColorDataset(event);
+      changeQuantityDataset(event);
     });
   }
 
@@ -874,18 +943,18 @@ function app() {
     });
 
     cartItemsContainer.addEventListener("input", function (event) {
-      changeColorAttribute(event);
+      changeColorDataset(event);
     });
 
     cartPage.addEventListener("click", function (event) {
-      calcItemSubtotal();
-      calcCartTotal();
+      CartItemSubtotal();
+      DisplayCartSubtotalAndTotal();
       deleteCartItem(event);
     });
 
     cartPage.addEventListener("input", function () {
-      calcItemSubtotal();
-      calcCartTotal();
+      CartItemSubtotal();
+      DisplayCartSubtotalAndTotal();
     });
 
     btnCloseCart.addEventListener("click", closeModals);
@@ -920,5 +989,4 @@ function app() {
 
     btnPlaceOrder.addEventListener("click", btnPlaceOrderHandler);
   }
-} 
-
+}
