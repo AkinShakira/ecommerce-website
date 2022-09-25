@@ -15,7 +15,7 @@ function app() {
   const cartTotal = document.querySelector(".cart__total__value");
   const cartSubtotal = document.querySelector(".cart__subtotal__value");
   const cartShippingValue = document.querySelector(".cart__shipping__value");
-  const shippingPrice = document.querySelector(".shipping__selector");
+  const shippingSelector = document.querySelector(".shipping__selector");
   const reviewSlides = document.querySelectorAll(".slide");
   const checkoutPage = document.querySelector(".checkout__page");
   const shippingForm = document.querySelector(".shipping__form__container");
@@ -334,6 +334,7 @@ function app() {
     const latestCartItem = cartItemsContainer.lastElementChild;
     latestCartItem.dataset.id = id;
     latestCartItem.dataset.color = color;
+    latestCartItem.dataset.price = price
     latestCartItem.dataset.quantity = quantity;
     latestCartItem.dataset.subtotal = price * quantity;
     return { latestCartItem };
@@ -373,6 +374,12 @@ function app() {
     }
   }
 
+  // function addCartItemToDataMap(key, cartItem) {
+  //   const cartMap = new Map();
+  //   cartMap.set(key, cartItem);
+  //             console.log(cartMap, );
+
+  // }
 
   async function addItemToCart(event, key) {
     try {
@@ -398,6 +405,8 @@ function app() {
         product.price,
         productQuantityValue
       );
+
+      // addCartItemToDataMap(product.id, latestCartItem)
 
       addCartItemToLocalStorage(
         product.id,
@@ -450,12 +459,70 @@ function app() {
     }
   }
 
+  function getShippingPrice() {
+    const shippingPrice = shippingSelector.value;
+    cartShippingValue.textContent = `${convertPriceToLocalCurrency(
+      shippingPrice
+    )}`;
+    return shippingPrice;
+  }
+
+  function calcCartItemSubtotal(cartItem) {
+    const cartItemQuantity = cartItem.dataset.quantity;
+    const cartItemPrice = cartItem.dataset.price;
+    const cartItemSubtotal = cartItemQuantity * cartItemPrice;
+    cartItem.dataset.subtotal = cartItemSubtotal;
+    console.log(cartItemSubtotal);
+    return { cartItemSubtotal };
+  }
+
+  function addCartItemSubtotalToUI(cartItem, subtotal) {
+    const cartItemSubtotalValue = cartItem.querySelector(
+      ".cart__item__subtotal__value"
+    );
+    cartItemSubtotalValue.textContent = convertPriceToLocalCurrency(subtotal);
+  }
+
+  function calcAndDisplayCartItemSubtotal(cartItem) {
+    const { cartItemSubtotal } = calcCartItemSubtotal(cartItem);
+    addCartItemSubtotalToUI(cartItem, cartItemSubtotal);
+  }
+
+  function CartItemSubtotal() {
+    const cartItems = Array.from(document.querySelectorAll(".cart__item"));
+    cartItems.forEach((cartItem) => calcAndDisplayCartItemSubtotal(cartItem));
+  }
+
+  function calcCartSubtotalAndTotal() {
+    const cartItems = Array.from(document.querySelectorAll(".cart__item"));
+    const shipping = getShippingPrice();
+
+    const subtotal = cartItems
+      .map(function (cartItem) {
+        return +cartItem.dataset.subtotal;
+      })
+      .reduce(function (subtotal, acc) {
+        return acc + subtotal;
+      }, 0);
+
+    const total = subtotal + Number(shipping);
+
+    cartSubtotal.dataset.value = subtotal;
+    cartTotal.dataset.value = total;
+    console.log(subtotal, total);
+    return { subtotal, total };
+  }
+
+  function DisplayCartSubtotalAndTotal() {
+    const { subtotal, total } = calcCartSubtotalAndTotal();
+    cartSubtotal.textContent = `${convertPriceToLocalCurrency(subtotal)}`;
+    cartTotal.textContent = `${convertPriceToLocalCurrency(total)}`;
+  }
 
 
 
 
 
-  
   // undone
 
   function pathInCart(event) {
@@ -480,8 +547,7 @@ function app() {
     };
   }
 
-  // // //  //
-  // ADD TO CART FUNCTIONS
+
 
 
 
@@ -501,56 +567,7 @@ function app() {
 
 
 
-  function getShippingPrice() {
-    cartShippingValue.dataset.value = shippingPrice.value;
-    cartShippingValue.textContent = `${nconvertPriceToLocalCurrency(
-      shippingPrice.value
-    )}`;
-    return shippingPrice.value;
-  }
-
-  function calcItemSubtotal() {
-    const cartItems = Array.from(document.querySelectorAll(".cart__item"));
-    cartItems.forEach(function (item) {
-      const itemQty = item.dataset.quantity;
-      const itemPrice = item.dataset.price;
-      const itemSubtotal = itemQty * itemPrice;
-      const itemSubtotalEl = item.querySelector(".cart__item__subtotal");
-      itemSubtotalEl.dataset.subtotal = itemSubtotal;
-      const cartItemSubtotalValue = item.querySelector(
-        ".cart__item__subtotal__value"
-      );
-      cartItemSubtotalValue.textContent =
-        convertPriceToLocalCurrency(itemSubtotal);
-    });
-  }
-
-  function calcCartTotal() {
-    const cartItemsSubtotal = Array.from(
-      document.querySelectorAll(".cart__item__subtotal")
-    );
-
-    const shipping = getShippingPrice();
-
-    const subtotal = cartItemsSubtotal
-      .map(function (item) {
-        return +item.dataset.subtotal;
-      })
-      .reduce(function (subtotal, acc) {
-        return acc + subtotal;
-      }, 0);
-
-    const total = subtotal + Number(shipping);
-
-    // SETTING THE DATA ATTRIBUTE
-    cartSubtotal.dataset.value = subtotal;
-    cartTotal.dataset.value = total;
-
-    // INSERTING THE VALUE IN HTML
-    cartSubtotal.textContent = `${convertPriceToLocalCurrency(subtotal)}`;
-
-    cartTotal.textContent = `${convertPriceToLocalCurrency(total)}`;
-  }
+  
 
   // // //  //
   // CART DISPLAY FUNCTIONS
@@ -573,7 +590,7 @@ function app() {
 
     if (cartItemsContainer.childElementCount >= 1) {
       cartPageContent.style.display = "flex";
-      calcCartTotal();
+      DisplayCartSubtotalAndTotal();
     } else {
       cartPageEmpty.style.display = "flex";
     }
@@ -586,8 +603,8 @@ function app() {
 
       cartItem.remove();
       delCartItemLocalStorage(event);
-      calcItemSubtotal();
-      calcCartTotal();
+      CartItemSubtotal();
+      DisplayCartSubtotalAndTotal();
       updateAndDisplayCartCount();
     }
   }
@@ -597,8 +614,8 @@ function app() {
     itemsContainer.forEach(function (item) {
       item.remove();
     });
-    calcItemSubtotal();
-    calcCartTotal();
+    CartItemSubtotal();
+    DisplayCartSubtotalAndTotal();
     updateAndDisplayCartCount();
     localStorage.clear();
   }
@@ -930,14 +947,14 @@ function app() {
     });
 
     cartPage.addEventListener("click", function (event) {
-      calcItemSubtotal();
-      calcCartTotal();
+      CartItemSubtotal();
+      DisplayCartSubtotalAndTotal();
       deleteCartItem(event);
     });
 
     cartPage.addEventListener("input", function () {
-      calcItemSubtotal();
-      calcCartTotal();
+      CartItemSubtotal();
+      DisplayCartSubtotalAndTotal();
     });
 
     btnCloseCart.addEventListener("click", closeModals);
