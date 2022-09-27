@@ -176,6 +176,7 @@ function productsFetch() {
 function initApp(productsDataMap) {
   // ELEMENTS
   // HOME PAGE
+  const body = document.querySelector("body");
   const products = document.querySelectorAll(".product");
   const cartCount = document.querySelector(".cart__count");
   // CART PAGE
@@ -236,6 +237,7 @@ function initApp(productsDataMap) {
   /////////////////
 
   function center(page) {
+    body.style.overflow = "hidden";
     const scrollValue = window.scrollY;
     const halfWindowHeight = window.innerHeight / 2;
     page.style.top = `${scrollValue + halfWindowHeight}px`;
@@ -624,10 +626,6 @@ function initApp(productsDataMap) {
   }
 
   function btnDisplayCartHandler() {
-    // FIX: PAGE SCROLL
-    // cartPage.style.display = "block";
-    // app.style.overflow = "hidden";
-
     displayOverlay();
     center(cartPage);
     cartPage.style.display = "block";
@@ -952,6 +950,7 @@ function initApp(productsDataMap) {
     cartPageEmpty.style.display = "none";
     checkoutPage.style.display = "none";
     reviewPage.style.display = "none";
+    body.style.overflow = "auto";
     hideOverlay();
   }
 
