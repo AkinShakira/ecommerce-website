@@ -8,8 +8,6 @@
 
     background-color: rgb(255, 255, 255);
     border: 0px solid;
-    
-    font-size: 0.9rem;
   }
   
   .cart__page__content  {
@@ -25,7 +23,7 @@
   }
 
   .order__summary  {
-    padding: 0.5rem 1.5rem 0;
+    padding: 0.5rem 0 0;
   }
 
   .cart__title__container {
@@ -46,7 +44,7 @@
 
   .cart__title, .order__summary__heading {
     color: rgb(0, 0, 0);
-    font-size: 1.2rem;
+    font-size: 1rem;
     font-weight: 500;
   }
 
@@ -167,7 +165,7 @@
 
   .cart__total__value {
     color: rgb(0, 0, 0);
-    font-size: 1.2rem;
+    font-size: 1rem;
     font-weight: 500;
   }
 
@@ -190,7 +188,7 @@
   }
 
   .checkout__note, .continue__note, .place__order__note {
-    font-size: 1.2rem;
+    font-size: 1rem;
     color: rgb(255, 255, 255);
     font-weight: 500;
   }
@@ -221,7 +219,7 @@
   /* CHECKOUT PAGE */
   .page__heading  {
     padding: 1rem 0;
-    font-size: 1.8rem;
+    font-size: 1.2rem;
     font-weight: 400;
     border-bottom: 1px solid rgb(200, 200, 200);
   }
@@ -240,7 +238,7 @@
   .form__heading {
     padding: 0.5rem 0 0;
     margin-bottom: 0.5rem;
-    font-size: 1.2rem;
+    font-size: 1rem;
     font-weight: 500;
     color: rgb(0, 0, 0);
     border-bottom: 1px solid rgb(200, 200, 200);
@@ -320,7 +318,7 @@
 
   .order__heading, .shipping__review__heading {
     padding: 0.5rem 0;
-    font-size: 1.2rem;
+    font-size: 1rem;
     font-weight: 500;
     border-bottom: 1px solid rgb(200, 200, 200);
   }
@@ -436,6 +434,10 @@
     display: flex;
     align-items: center;
     border-bottom: 1px solid rgb(200, 200, 200);
+  }
+
+ .cart__title, .order__summary__heading {
+    font-size: 1.2rem;
   }
 
   .cart__items {
