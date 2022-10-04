@@ -77,7 +77,7 @@
 
 /* fix: The banner animation is too slow on tablets and desktop */
 /* Tablet css */
-@media only screen and (min-width: 450px) {
+@media only screen and (min-width: 500px) {
   .banner__announcement__content {
     animation: banner 17s linear -2s infinite backwards;
   }

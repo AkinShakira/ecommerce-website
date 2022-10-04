@@ -116,7 +116,7 @@
 
 
 /* Tablet css */
-@media only screen and (min-width: 450px) {
+@media only screen and (min-width: 500px) {
   .section__brand {
     background-image: url(../images/brand-image-tablet.jpg);
     padding: 2.5rem 0;

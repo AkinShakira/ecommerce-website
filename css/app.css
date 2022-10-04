@@ -18,7 +18,7 @@ button:active{
 }
 
 /* Tablet css */
-@media only screen and (min-width: 450px) {
+@media only screen and (min-width: 500px) {
   .page--width  {
   padding: 0 2rem;
   }
