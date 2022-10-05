@@ -87,7 +87,7 @@ function productsFetch() {
             <div class="product__options">
               <div class="product__quantity__container" id="${
                 stock > 0 ? "" : "action--disabled"
-              }">
+                }">
                 <form id="product__quantity__form" class="product__quantity__form" action="#">
                   <input type="button" value="-" class="product__quantity--decrement" id="${
                     stock > 0 ? "" : "action--disabled"
@@ -911,7 +911,7 @@ function initApp(productsDataMap) {
         clearCart();
         clearStoredUserData();
         window.addEventListener("focus", function () {
-          setTimeout(location.reload(), 2000);
+          setTimeout(location.reload(), 1000);
         });
       })
       .catch((err) => displayAlertModal(err));

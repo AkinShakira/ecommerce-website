@@ -511,6 +511,10 @@
 
 /* Desktop css */
 @media only screen and (min-width: 960px) {
+  .cart__page {
+    width: 90vw;
+  }
+
   .cart__container  {
     width: 65%;
     padding: 2rem 0;
@@ -599,6 +603,10 @@
 
 /* Bigger desktop */
 @media only screen and (min-width: 1110px) {
+  .cart__page {
+    width: 80vw;
+  }
+
   .cart__items {
     max-height: 380px;
   }
