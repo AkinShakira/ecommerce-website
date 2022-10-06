@@ -20,7 +20,8 @@ function initSlider() {
   // MOVE TO NEXT SLIDE ON THE RIGHT
   function nextSlide() {
     if (curSlide === maxSlides - 1) {
-      curSlide = 0;
+      // curSlide = 0;
+      return;
     } else curSlide++;
 
     goToSlide(curSlide);
@@ -29,7 +30,8 @@ function initSlider() {
   // MOVE TO PREVIOUS SLIDE ON THE LEFT
   function prevSlide() {
     if (curSlide === 0) {
-      curSlide = maxSlides - 1;
+      // curSlide = maxSlides - 1;
+      return;
     } else curSlide--;
 
     goToSlide(curSlide);
