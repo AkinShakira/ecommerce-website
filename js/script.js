@@ -145,13 +145,13 @@ function productsFetch() {
       // CREATE A MAP COPY OF PRODUCTS DATA
       const productsDataMap = new Map();
       products.forEach((product) => {
-        productsDataMap.set(product.productID, {
-          id: product.productID,
+        productsDataMap.set(product.id, {
+          id: product.id,
           imageUrl: product.imageUrl,
           name: product.name,
           price: product.price,
           stock: product.stock,
-          variants: [...product.variant],
+          variants: [...product.variants],
         });
       });
       return productsDataMap;
