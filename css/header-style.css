@@ -8,20 +8,21 @@
 
 .banner__announcement__content {
   position: relative;
-  /* margin: 0 auto; */
+  margin: 0 auto;
   color: rgb(255, 255, 255);
   text-transform: uppercase;
   width: fit-content;
-  animation: banner 10s linear 0s infinite backwards;
+  /* animation: banner 10s linear 0s infinite backwards; */
 }
 
-@keyframes banner {
+/* Disabled the animation because it was giving the webpage a weird zoom transition */
+/* @keyframes banner {
   0% {left: 100%;}
   25% {left: 50%;}
   50% {left: 0%;}
   75% {left: -50%;}
   100% {left: -100%;}
-} 
+}  */
 
 .banner__help {
   display: flex;
@@ -29,6 +30,7 @@
   background-color: rgb(220, 220, 220);
   border-bottom: 0.1rem solid rgb(200, 200, 200);
   color: rgb(40, 40, 40);
+  font-size: 0.7rem;
 }
 
 .banner__help__link:hover  {
@@ -74,13 +76,11 @@
 }
 
 
-
-/* fix: The banner animation is too slow on tablets and desktop */
 /* Tablet css */
-@media only screen and (min-width: 450px) {
-  .banner__announcement__content {
+@media only screen and (min-width: 500px) {
+  /* .banner__announcement__content {
     animation: banner 17s linear -2s infinite backwards;
-  }
+  } */
 
   .banner__help, .brand__items {
     font-size: 0.8rem;

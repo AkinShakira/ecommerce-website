@@ -4,7 +4,7 @@ body{
 
 .app  {
   position: relative;
-  max-width: 100vw;
+  max-width: 100%;
   font-size: 0.8rem;
   letter-spacing: 0.025rem;
 }
@@ -15,10 +15,11 @@ body{
 
 button:active{
   transform: translateY(5px);
+  transition: transform 0.5s;
 }
 
 /* Tablet css */
-@media only screen and (min-width: 450px) {
+@media only screen and (min-width: 500px) {
   .page--width  {
   padding: 0 2rem;
   }
